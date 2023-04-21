@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZHMMi/tmzngY/qOcwiIwnGn3Ywcl2aygpIGLEJaHJ56F/vmpOdnBf6Qm3myQ4rsCJCI6hdWN0FEEcUPuVemK9g==",
+  "success": true,
+  "projectFilePath": "/home/fox/uni/impl-anwend/PraktikumIvA1/MicroVerseAPI/MicroVerseAPI.csproj",
+  "expectedPackageFiles": [
+    "/home/fox/.nuget/packages/microsoft.aspnetcore.app.ref/7.0.3/microsoft.aspnetcore.app.ref.7.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
