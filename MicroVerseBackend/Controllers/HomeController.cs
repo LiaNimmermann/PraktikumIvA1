@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MicroVerseAPI.Models;
+using MicroVerseBackend.Models;
 
-namespace MicroVerseAPI.Controllers;
+namespace MicroVerseBackend.Controllers;
 
 public class HomeController : Controller
 {

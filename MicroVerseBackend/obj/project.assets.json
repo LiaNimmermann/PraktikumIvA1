@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/fox/uni/impl-anwend/PraktikumIvA1/MicroVerseAPI/MicroVerseAPI.csproj",
-      "projectName": "MicroVerseAPI",
-      "projectPath": "/home/fox/uni/impl-anwend/PraktikumIvA1/MicroVerseAPI/MicroVerseAPI.csproj",
+      "projectUniqueName": "/home/fox/uni/impl-anwend/PraktikumIvA1/MicroVerseBackend/MicroVerseBackend.csproj",
+      "projectName": "MicroVerseBackend",
+      "projectPath": "/home/fox/uni/impl-anwend/PraktikumIvA1/MicroVerseBackend/MicroVerseBackend.csproj",
       "packagesPath": "/home/fox/.nuget/packages/",
-      "outputPath": "/home/fox/uni/impl-anwend/PraktikumIvA1/MicroVerseAPI/obj/",
+      "outputPath": "/home/fox/uni/impl-anwend/PraktikumIvA1/MicroVerseBackend/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/fox/.nuget/NuGet/NuGet.Config"
