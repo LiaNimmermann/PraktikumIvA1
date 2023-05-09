@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MicroVerse.Models;
+using MicroVerse.ViewModels;
 using System.Diagnostics;
 
 namespace MicroVerse.Controllers
@@ -15,7 +16,8 @@ namespace MicroVerse.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            HomeViewModel vm = new HomeViewModel(null, null, null);
+            return View(vm);
         }
 
         public IActionResult Privacy()

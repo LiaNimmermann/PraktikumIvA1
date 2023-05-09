@@ -1,4 +1,4 @@
-namespace MicroVerse.Models
+namespace MicroVerse.ViewModels
 {
     public class ErrorViewModel
     {
