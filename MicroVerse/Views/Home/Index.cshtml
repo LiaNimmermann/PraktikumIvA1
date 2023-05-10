@@ -1,8 +1,54 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@using MicroVerse.ViewModels
+@model HomeViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    
+    
+        var followsList = new List<UserModel>();
+        var postsList = new List<PostViewModel>();
+        Random r = new Random();
+        UserModel f;
+        PostViewModel p;
+        for(int i=0; i<5; i++)
+        {
+            f = new UserModel();
+            f.DisplayedName = "Followed User " + i;
+            followsList.Add(f);
+            p = new PostViewModel("This is a Post from User " + i, f, null, DateTime.Now, "Followed User " + i, "user@email.com", (int)r.Next(0,100), (int)r.Next(0,50));
+            postsList.Add(p);
+        }
+        var mockModel = new HomeViewModel(new UserModel(), followsList, postsList);
+    
+}
+
+
+<!-- Side Follow-List-->
+<div class="sidenav">
+    @foreach (var follow in mockModel.Follows)
+    {
+        <a href="#">@follow.DisplayedName</a>
+    }
+</div>
+
+<!-- Page content -->
+<div class="main">
+    @foreach (var post in mockModel.Posts)
+    {
+        <div class="post-containter">
+            <div >
+                <a class="post-header" href="#">@post.DisplayedName</a>
+            </div>
+            <hr></hr>
+            <div class="post-body">
+                @post.Body
+            </div>
+            <div class="post-footer">
+                <span class="k-icon k-i-caret-alt-up"></span> @post.Upvotes
+                <span class="k-icon k-i-caret-alt-down"></span> @post.Downvotes
+            </div>
+        </div>
+    }
 </div>

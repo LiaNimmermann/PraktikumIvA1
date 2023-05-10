@@ -2,6 +2,11 @@ namespace MicroVerse.Models
 {
     public class UserModel
     {
+        public UserModel()
+        {
+            CreatedAt = DateTime.Now;
+        }
+
         public EMail Id { get; } = new EMail();
 
         public Username Username { get; } = new Username();
@@ -19,5 +24,7 @@ namespace MicroVerse.Models
         public DateTime CreatedAt { get; }
 
         public String Password { get; set; } = "";
+
+
     }
 }

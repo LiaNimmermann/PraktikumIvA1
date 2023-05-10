@@ -3,6 +3,14 @@
     //not finished
     public class Post
     {
+        public Post(string body, UserModel author)
+        {
+            Body = body;
+            Author = author;
+            CreatedAt = DateTime.Now;
+
+        }
+
         public int Id { get; set; }
         public string Body { get; set; }    
         public UserModel Author { get; set; }
