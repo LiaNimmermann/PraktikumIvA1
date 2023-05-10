@@ -18,10 +18,14 @@ body {
     background-color: #b0ed97
 }
 
+.profile-picture {
+    border-radius: 50px;
+}
+
 /* The sidebar menu */
 .sidenav {
     /*height: 100%; /* Full-height: remove this if you want "auto" height */
-    width: 200px; /* Set the width of the sidebar */
+    width: 250px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
     z-index: 1; /* Stay on top */
     top: 0; /* Stay at the top */
@@ -30,16 +34,20 @@ body {
     overflow-x: hidden; /* Disable horizontal scroll */
     margin: 89px 25px 0px 35px;
     padding: 20px;
+    box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.4);
 }
 
     /* The navigation menu links */
     .sidenav a {
-        padding: 6px 8px 6px 16px;
+        padding: 6px 8px 6px 6px;
         text-decoration: none;
-        font-size: 25px;
+        font-size: 20px;
         color: #000000;
-        display: block;
+        display: flex;
     }
+        .sidenav a img{
+            margin: 0 10px 0 0;
+        }
 
         /* When you mouse over the navigation links, change their color */
         .sidenav a:hover {
@@ -49,20 +57,30 @@ body {
 
 /* Style page content */
 .main {
-    margin-left: 200px; /* Same as the width of the sidebar */
+    margin-left: 250px; /* Same as the width of the sidebar */
     padding: 20px;
 }
+
 
     .main .post-containter {
         background-color: white;
         margin-bottom: 30px;
         padding: 20px;
+        box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.4);
     }
 
-    .main .post-header {
+    .main .post-author {
         color: #43802a;
         text-decoration: none;
-        font-weight: 600
+        font-weight: 600;    
+    }
+
+    .main i.fa-circle-up {
+        color: green;
+    }
+
+    .main i.fa-circle-down {
+        color: red;
     }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
