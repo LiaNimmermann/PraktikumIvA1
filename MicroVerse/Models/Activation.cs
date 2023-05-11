@@ -2,8 +2,8 @@ namespace MicroVerse.Models
 {
     public enum Activation
     {
-        user = 0,
-        mod = 1,
-        admin = 2
+        active = 0,
+        blocked = 1,
+        deleted = 2
     }
 }

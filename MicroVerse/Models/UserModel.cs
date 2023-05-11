@@ -1,10 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MicroVerse.Models
 {
     public class UserModel
     {
         public UserModel()
         {
-            CreatedAt = DateTime.Now;
         }
 
         //Just for mock data
@@ -16,24 +17,34 @@ namespace MicroVerse.Models
             CreatedAt = DateTime.Now;
         }
 
-        public EMail Id { get; } = new EMail();
+        [Required]
+        [EmailAddress]
+        public String Email { get; set; } = "";
 
-        public Username Username { get; } = new Username();
+        [Required]
+        public Username Username { get; set; } = new Username();
 
+        [Required]
         public String DisplayedName { get; set; } = "";
 
+        [Required]
         public Role Role { get; set; }
 
         public String Picture { get; set; } = "";
 
         public String Bio { get; set; } = "";
 
+        [Required]
         public Activation Activation { get; set; }
 
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; } = DateTime.Now;
 
+        [Required]
+        [DataType(DataType.Password)]
         public String Password { get; set; } = "";
 
-
+        public void Delete() {
+            throw new NotImplementedException();
+        }
     }
 }
