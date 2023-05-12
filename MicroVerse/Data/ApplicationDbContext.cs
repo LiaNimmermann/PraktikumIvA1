@@ -9,5 +9,7 @@ namespace MicroVerse.Data
             : base(options)
         {
         }
+
+        public ApplicationDbContext() : base() {}
     }
 }

@@ -2,6 +2,8 @@
 using MicroVerse.Models;
 using MicroVerse.ViewModels;
 using System.Diagnostics;
+using MicroVerse.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MicroVerse.Controllers
 {
@@ -61,15 +63,16 @@ namespace MicroVerse.Controllers
         [HttpGet("User/Create/{email}/{username}/{name}/{password}")]
         public IActionResult CreateUser(String email, String username, String name, String password)
         {
-            UserModel user = new UserModel()
+            var db = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
+
+            var user = new UserModel()
             {
                 Email = email,
                 Username = new Username() { Name = username },
                 DisplayedName = name,
-                Role = Role.user,
-                Activation = Activation.active,
                 Password = password
             };
+
             return Json(user);
         }
 

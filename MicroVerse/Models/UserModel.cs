@@ -28,14 +28,14 @@ namespace MicroVerse.Models
         public String DisplayedName { get; set; } = "";
 
         [Required]
-        public Role Role { get; set; }
+        public Role Role { get; set; } = Role.user;
 
         public String Picture { get; set; } = "";
 
         public String Bio { get; set; } = "";
 
         [Required]
-        public Activation Activation { get; set; }
+        public Activation Activation { get; set; } = Activation.active;
 
         public DateTime CreatedAt { get; } = DateTime.Now;
 
