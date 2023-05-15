@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using MicroVerse.Models;
 
 namespace MicroVerse.Data
 {
@@ -11,5 +12,7 @@ namespace MicroVerse.Data
         }
 
         public ApplicationDbContext() : base() {}
+
+        public DbSet<MicroVerse.Models.UserModel> UserModel { get; set; }
     }
 }

@@ -18,11 +18,12 @@ namespace MicroVerse.Models
         }
 
         [Required]
+        [Key]
         [EmailAddress]
         public String Email { get; set; } = "";
 
         [Required]
-        public Username Username { get; set; } = new Username();
+        public String Username { get; set; } = "";
 
         [Required]
         public String DisplayedName { get; set; } = "";

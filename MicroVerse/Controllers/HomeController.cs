@@ -68,7 +68,7 @@ namespace MicroVerse.Controllers
             var user = new UserModel()
             {
                 Email = email,
-                Username = new Username() { Name = username },
+                Username = username,
                 DisplayedName = name,
                 Password = password
             };
