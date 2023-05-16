@@ -100,6 +100,21 @@ namespace MicroVerse.Controllers
             return NoContent();
         }
 
+        // PATCH: api/Post/5
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> BlockPost(int id)
+        {
+            var post = await _context.Post.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Activation = Activation.blocked;
+            
+            return await PutPost(id, post);
+        }
+
         private bool PostExists(int id)
         {
             return _context.Post.Any(e => e.Id == id);
