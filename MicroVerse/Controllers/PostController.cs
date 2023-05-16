@@ -115,6 +115,34 @@ namespace MicroVerse.Controllers
             return await PutPost(id, post);
         }
 
+        [HttpPatch("Up/{user}/{id}")]
+        public async Task<IActionResult> UpvotePost(String user, int id)
+        {
+            var post = await _context.Post.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Votes.Add(new Vote { Upvote = 1, UserId = user, PostId = post.Id });
+
+            return await PutPost(id, post);
+        }
+
+        [HttpPatch("Down/{user}/{id}")]
+        public async Task<IActionResult> DownvotePost(String user, int id)
+        {
+            var post = await _context.Post.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Votes.Add(new Vote { Upvote = -1, UserId = user, PostId = post.Id });
+
+            return await PutPost(id, post);
+        }
+
         private bool PostExists(int id)
         {
             return _context.Post.Any(e => e.Id == id);

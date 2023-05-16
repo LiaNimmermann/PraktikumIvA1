@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography.X509Certificates;
 
 namespace MicroVerse.Models
 {
@@ -23,5 +25,6 @@ namespace MicroVerse.Models
         public Post? ReactsTo { get; set; }
         public Activation Activation { get; set; } = Activation.active;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public List<Vote> Votes { get; set; } = new List<Vote>();
     }
 }

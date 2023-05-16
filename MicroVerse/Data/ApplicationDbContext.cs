@@ -16,5 +16,11 @@ namespace MicroVerse.Data
         public DbSet<UserModel> UserModel { get; set; }
 
         public DbSet<Post> Post { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Vote>()
+                .HasKey(v => new { v.PostId, v.UserId });
+        }
     }
 }
