@@ -1,4 +1,6 @@
-﻿namespace MicroVerse.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MicroVerse.Models
 {
     //not finished
     public class Post
@@ -11,16 +13,14 @@
         {
             Body = body;
             Author = author;
-            CreatedAt = DateTime.Now;
 
         }
 
+        [Key]
         public int Id { get; set; }
         public string Body { get; set; }    
         public UserModel Author { get; set; }
-        public Post ReactsTo { get; set; }
-        public DateTime CreatedAt { get; set; }
-
-
+        public Post? ReactsTo { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

@@ -13,8 +13,8 @@ namespace MicroVerse.Data
 
         public ApplicationDbContext() : base() {}
 
-        public DbSet<MicroVerse.Models.UserModel> UserModel { get; set; }
+        public DbSet<UserModel> UserModel { get; set; }
 
-        public DbSet<MicroVerse.Models.Post> Post { get; set; }
+        public DbSet<Post> Post { get; set; }
     }
 }
