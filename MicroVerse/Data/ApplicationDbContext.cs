@@ -19,6 +19,7 @@ namespace MicroVerse.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Vote>()
                 .HasKey(v => new { v.PostId, v.UserId });
         }

@@ -232,6 +232,9 @@ namespace MicroVerse.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("Activation")
+                        .HasColumnType("int");
+
                     b.Property<string>("AuthorEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -289,6 +292,22 @@ namespace MicroVerse.Data.Migrations
                     b.HasKey("Email");
 
                     b.ToTable("UserModel");
+                });
+
+            modelBuilder.Entity("MicroVerse.Models.Vote", b =>
+                {
+                    b.Property<int>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Upvote")
+                        .HasColumnType("int");
+
+                    b.HasKey("PostId", "UserId");
+
+                    b.ToTable("Vote");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -357,6 +376,20 @@ namespace MicroVerse.Data.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("ReactsTo");
+                });
+
+            modelBuilder.Entity("MicroVerse.Models.Vote", b =>
+                {
+                    b.HasOne("MicroVerse.Models.Post", null)
+                        .WithMany("Votes")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MicroVerse.Models.Post", b =>
+                {
+                    b.Navigation("Votes");
                 });
 #pragma warning restore 612, 618
         }
