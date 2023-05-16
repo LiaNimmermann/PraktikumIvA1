@@ -11,7 +11,7 @@ namespace MicroVerse.Models
         //Just for mock data
         public UserModel(String username, string displayedName, string bio)
         {
-            this.Username = new Username(username);
+            Username = username;
             DisplayedName = displayedName;
             Bio = bio;
             CreatedAt = DateTime.Now;
