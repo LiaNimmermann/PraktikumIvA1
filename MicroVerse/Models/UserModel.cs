@@ -13,6 +13,7 @@ namespace MicroVerse.Models
             this.Username = new Username(username);
             DisplayedName = displayedName;
             Bio = bio;
+            CreatedAt = DateTime.Now;
         }
 
         public EMail Id { get; } = new EMail();

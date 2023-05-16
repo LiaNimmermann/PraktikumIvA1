@@ -5,7 +5,7 @@ namespace MicroVerse.ViewModels
 {
     public class HomeViewModel
     {
-
+        //User that is currently logged in
         public UserModel User { get; set; }
         public List<UserModel> Follows { get; set; }
         public List<PostViewModel> Posts { get; set; }

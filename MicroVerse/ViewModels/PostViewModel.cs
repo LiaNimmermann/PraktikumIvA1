@@ -10,14 +10,14 @@ namespace MicroVerse.ViewModels
         public PostViewModel? ReactsTo { get; set; }
         public DateTime CreatedAt { get; set; }
         public string DisplayedName { get; set; }
-        public byte[]? AuthorImage { get; set; }
+        public string? AuthorImage { get; set; } //URL to image
         public string Username { get; set; }
         public int Upvotes { get; set; }
         public int Downvotes { get; set; }
         public int? Status { get; set; }
 
 
-        public PostViewModel(int id, string body, PostViewModel reactsTo, DateTime createdAt, string displayName, byte[] authorImage, string username, int upvotes, int downvotes, int status)
+        public PostViewModel(int id, string body, PostViewModel reactsTo, DateTime createdAt, string displayName, string authorImage, string username, int upvotes, int downvotes, int status)
         {
             Id = id;
             Body = body;
@@ -39,6 +39,7 @@ namespace MicroVerse.ViewModels
             Username = username;
             Upvotes = upvotes;
             Downvotes = downvotes;
+            AuthorImage = "https://picsum.photos/200/200";
         }
 
     }

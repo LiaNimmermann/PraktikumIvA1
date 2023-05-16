@@ -16,6 +16,7 @@ namespace MicroVerse.Controllers
 
         public IActionResult Index()
         {
+            //Creating Mock data
             var followsList = new List<UserModel>();
             var postsList = new List<PostViewModel>();
             Random r = new Random();
@@ -34,6 +35,7 @@ namespace MicroVerse.Controllers
         }
         public IActionResult Profile(string username)
         {
+            //Creating Mock Data
             UserModel user = new UserModel("User1234", "User 12 34", "I'm just a normal User with a normal Bio");
 
             List<UserModel> followsList = new List<UserModel>();
