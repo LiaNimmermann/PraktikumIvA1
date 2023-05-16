@@ -3,6 +3,10 @@
     //not finished
     public class Post
     {
+        public Post()
+        {
+        }
+
         public Post(string body, UserModel author)
         {
             Body = body;
