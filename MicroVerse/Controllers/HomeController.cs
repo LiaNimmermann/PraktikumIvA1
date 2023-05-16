@@ -16,8 +16,38 @@ namespace MicroVerse.Controllers
 
         public IActionResult Index()
         {
-            HomeViewModel vm = new HomeViewModel(null, null, null);
-            return View(vm);
+            var followsList = new List<UserModel>();
+            var postsList = new List<PostViewModel>();
+            Random r = new Random();
+            UserModel f;
+            PostViewModel p;
+            for (int i = 0; i < 5; i++)
+            {
+                f = new UserModel();
+                f.DisplayedName = "Followed User " + i;
+                followsList.Add(f);
+                p = new PostViewModel("This is a Post from User " + i, null, DateTime.Now, "Followed User " + i, "user@email.com", (int)r.Next(0, 100), (int)r.Next(0, 50));
+                postsList.Add(p);
+            }
+            var mockModel = new HomeViewModel(new UserModel(), followsList, postsList);
+            return View(mockModel);
+        }
+        public IActionResult Profile(string username)
+        {
+            UserModel user = new UserModel("User1234", "User 12 34", "I'm just a normal User with a normal Bio");
+
+            List<UserModel> followsList = new List<UserModel>();
+            var postsList = new List<PostViewModel>();
+            Random r = new Random();
+            PostViewModel p;
+            for (int i = 0; i < 5; i++)
+            {
+                p = new PostViewModel("This is a Post " + i + "from User 12 34", null, DateTime.Now, user.DisplayedName, user.Username.ToString(), (int)r.Next(0, 100), (int)r.Next(0, 50));
+                postsList.Add(p);
+            }
+            var mockModel = new ProfileViewModel(user.Username.ToString(), user.DisplayedName, user.Bio, (int)r.Next(0, 50), (int)r.Next(0, 50), postsList);
+
+            return View(mockModel);
         }
 
         public IActionResult Privacy()

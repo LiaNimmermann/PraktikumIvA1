@@ -23,7 +23,7 @@ body {
 }
 
 /* The sidebar menu */
-.sidenav {
+.sidebar {
     /*height: 100%; /* Full-height: remove this if you want "auto" height */
     width: 250px; /* Set the width of the sidebar */
     position: fixed; /* Fixed Sidebar (stay in place on scroll) */
@@ -38,14 +38,14 @@ body {
 }
 
     /* The navigation menu links */
-    .sidenav a {
+    .sidebar a {
         padding: 6px 8px 6px 6px;
         text-decoration: none;
         font-size: 20px;
         color: #000000;
         display: flex;
     }
-        .sidenav a img{
+        .sidebar a img{
             margin: 0 10px 0 0;
         }
 
@@ -57,10 +57,12 @@ body {
 
 /* Style page content */
 .main {
-    margin-left: 250px; /* Same as the width of the sidebar */
     padding: 20px;
 }
+    .main .with-sidebar {
+        margin-left: 250px; /* Same as the width of the sidebar */
 
+    }
 
     .main .post-containter {
         background-color: white;

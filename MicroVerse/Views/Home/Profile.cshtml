@@ -1,29 +1,27 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Profile";
 }
 @using MicroVerse.ViewModels
-@model HomeViewModel
+@model ProfileViewModel
 
 
 
-
-<!-- Side Follow-List-->
-<div class="sidebars">
-    @foreach (var follow in Model.Follows)
-    {
-
-        <a href="#"><img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" /> @follow.DisplayedName</a>
-    }
-</div>
 
 <!-- Page content -->
-<div class="main with-sidebar">
+<div class="main">
+
+    <div class="profile-header">
+        <!--TODO: Display Profile picture (mock pick for now), Username & DisplayedName, Bio, Follow-Counts
+            Use Model.Username...-->
+    </div>
+
+    <div class="posts">
     @foreach (var post in Model.Posts)
     {
         <div class="post-containter">
             <div class="post-header">
 
-                <a class="post-author" asp-controller="Home" asp-action="Profile">
+                <a class="post-author" href="#">
                     <img class="profile-picture" src="https://picsum.photos/200/200" height="25" width="25" />
                     @post.DisplayedName
                 </a>
@@ -39,4 +37,5 @@
             </div>
         </div>
     }
+    </div>
 </div>

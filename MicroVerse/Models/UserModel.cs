@@ -7,6 +7,14 @@ namespace MicroVerse.Models
             CreatedAt = DateTime.Now;
         }
 
+        //Just for mock data
+        public UserModel(String username, string displayedName, string bio)
+        {
+            this.Username = new Username(username);
+            DisplayedName = displayedName;
+            Bio = bio;
+        }
+
         public EMail Id { get; } = new EMail();
 
         public Username Username { get; } = new Username();

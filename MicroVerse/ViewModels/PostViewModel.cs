@@ -7,7 +7,6 @@ namespace MicroVerse.ViewModels
     
         public int Id { get; set; }
         public string Body { get; set; }
-        public UserModel? Author { get; set; }
         public PostViewModel? ReactsTo { get; set; }
         public DateTime CreatedAt { get; set; }
         public string DisplayedName { get; set; }
@@ -18,11 +17,10 @@ namespace MicroVerse.ViewModels
         public int? Status { get; set; }
 
 
-        public PostViewModel(int id, string body, UserModel author, PostViewModel reactsTo, DateTime createdAt, string displayName, byte[] authorImage, string username, int upvotes, int downvotes, int status)
+        public PostViewModel(int id, string body, PostViewModel reactsTo, DateTime createdAt, string displayName, byte[] authorImage, string username, int upvotes, int downvotes, int status)
         {
             Id = id;
             Body = body;
-            Author = author;
             ReactsTo = reactsTo;
             CreatedAt = createdAt;
             DisplayedName = displayName;
@@ -32,10 +30,9 @@ namespace MicroVerse.ViewModels
             Downvotes = downvotes;
             Status = status;
         }
-        public PostViewModel(string body, UserModel author, PostViewModel reactsTo, DateTime createdAt, string displayName, string username, int upvotes, int downvotes)
+        public PostViewModel(string body, PostViewModel reactsTo, DateTime createdAt, string displayName, string username, int upvotes, int downvotes)
         {
             Body = body;
-            Author = author;
             ReactsTo = reactsTo;
             CreatedAt = createdAt;
             DisplayedName = displayName;
