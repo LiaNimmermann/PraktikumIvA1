@@ -4,9 +4,6 @@
 @using MicroVerse.ViewModels
 @model HomeViewModel
 
-
-
-
 <!-- Side Follow-List-->
 <div class="sidebar">
     @foreach (var follow in Model.Follows)
@@ -17,6 +14,25 @@
 </div>
 
 <!-- Page content -->
+
+<!-- Post creation container -->
+<div class="main with-sidebar">
+    <div class="post-creation-container">
+        <form>
+            <textarea name="postText" maxlength="280" placeholder="Type here..."></textarea>
+            <input type="file" name="postFile">
+        </form>
+        <button type="submit"> Post </button>
+    </div>
+
+    @foreach (var post in Model.Posts)
+    {
+        <div class="post-container">
+            <!-- Post content -->
+        </div>
+    }
+</div>
+
 <div class="main with-sidebar">
     @foreach (var post in Model.Posts)
     {

@@ -13,13 +13,14 @@
     <div class="profile-header">
         <img class="profile-picture" src="https://picsum.photos/200/200" height="100" width="100" /> <!-- Mock profile picture -->
         <h1>@Model.Username</h1> 
+        <div class="follow-counts">
+        <p>Followers: @Model.FollowerCount</p>
+        <p>Following: @Model.FollowsCount</p>
+    </div>
+        </div>
         <h2>@Model.DisplayedName</h2> 
         <p>@Model.Bio</p> 
-        <div class="follow-counts">
-            <p>Followers: @Model.FollowerCount</p> 
-            <p>Following: @Model.FollowsCount</p> 
-        </div>
-    </div>
+  
 
     <div class="posts">
     @foreach (var post in Model.Posts)
