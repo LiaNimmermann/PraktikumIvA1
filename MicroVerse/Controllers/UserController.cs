@@ -154,7 +154,7 @@ namespace MicroVerse.Controllers
                 return NotFound();
             }
 
-            follower.Follows = follower.Follows.Append(followed);
+            follower.Follows.Add(followed);
             return await PutUserModel(followerId, follower);
         }
 
