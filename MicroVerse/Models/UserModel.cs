@@ -40,6 +40,8 @@ namespace MicroVerse.Models
 
         public DateTime CreatedAt { get; } = DateTime.Now;
 
+        public IEnumerable<UserModel> Follows { get; set; } = Enumerable.Empty<UserModel>();
+
         [Required]
         [DataType(DataType.Password)]
         public String Password { get; set; } = "";

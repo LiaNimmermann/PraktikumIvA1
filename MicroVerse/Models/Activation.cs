@@ -4,6 +4,7 @@ namespace MicroVerse.Models
     {
         active = 0,
         blocked = 1,
-        deleted = 2
+        deleted = 2,
+        banned = 3
     }
 }

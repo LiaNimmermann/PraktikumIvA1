@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
@@ -12,7 +7,7 @@ namespace MicroVerse.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
 
@@ -112,6 +107,73 @@ namespace MicroVerse.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // PATCH: api/User/5
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> BlockUser(string id)
+        {
+            var user = await _context.UserModel.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Activation = Activation.blocked;
+
+            return await PutUserModel(id, user);
+        }
+
+        // PATCH: api/User/5
+        [HttpPatch("Ban/{id}")]
+        public async Task<IActionResult> BanUser(string id)
+        {
+            var user = await _context.UserModel.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Activation = Activation.banned;
+
+            return await PutUserModel(id, user);
+        }
+
+        // PATCH: api/User/5
+        [HttpPatch("Follow/{followerId}/{followedId}")]
+        public async Task<IActionResult> FollowUser(string followerId, string followedId)
+        {
+            var follower = await _context.UserModel.FindAsync(followerId);
+            if (follower == null)
+            {
+                return NotFound();
+            }
+            var followed = await _context.UserModel.FindAsync(followedId);
+            if (followed == null)
+            {
+                return NotFound();
+            }
+
+            follower.Follows = follower.Follows.Append(followed);
+            return await PutUserModel(followerId, follower);
+        }
+
+        [HttpGet("Follows/{id}")]
+        public async Task<IActionResult> GetFollows(string id)
+        {
+            var user = await _context.UserModel.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Json(user.Follows);
+        }
+
+        [HttpGet("Follower/{id}")]
+        public IActionResult GetFollower(string id)
+        {
+            var follower = _context.UserModel.Where(user => user.Follows.Any(f => f.Email == id));
+            return follower == null ? NotFound() : Json(follower);
         }
 
         private bool UserModelExists(string id)
