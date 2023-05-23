@@ -40,7 +40,7 @@ namespace MicroVerse.Models
 
         public DateTime CreatedAt { get; } = DateTime.Now;
 
-        public List<UserModel> Follows { get; set; } = new List<UserModel>();
+        public List<Follows> Follows { get; set; } = new List<Follows>();
 
         [Required]
         [DataType(DataType.Password)]

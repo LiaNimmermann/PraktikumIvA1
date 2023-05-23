@@ -148,13 +148,11 @@ namespace MicroVerse.Controllers
             {
                 return NotFound();
             }
-            var followed = await _context.UserModel.FindAsync(followedId);
-            if (followed == null)
-            {
-                return NotFound();
-            }
 
-            follower.Follows.Add(followed);
+            follower.Follows.Add(new Follows() { 
+                FollowingUserId = followerId,
+                FollowedUserId = followedId
+            });
             return await PutUserModel(followerId, follower);
         }
 
@@ -172,7 +170,7 @@ namespace MicroVerse.Controllers
         [HttpGet("Follower/{id}")]
         public IActionResult GetFollower(string id)
         {
-            var follower = _context.UserModel.Where(user => user.Follows.Any(f => f.Email == id));
+            var follower = _context.Follows.Where(follows => follows.FollowingUserId == id);
             return follower == null ? NotFound() : Json(follower);
         }
 

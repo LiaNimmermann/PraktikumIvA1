@@ -17,11 +17,15 @@ namespace MicroVerse.Data
 
         public DbSet<Post> Post { get; set; }
 
+        public DbSet<Follows> Follows { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Vote>()
                 .HasKey(v => new { v.PostId, v.UserId });
+            modelBuilder.Entity<Follows>()
+                .HasKey(f => new { f.FollowingUserId, f.FollowedUserId });
         }
     }
 }
