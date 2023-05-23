@@ -110,6 +110,7 @@ namespace MicroVerse.Controllers
             return await PutPost(id, post);
         }
 
+        // PATCH: api/Post/Up/user@id.com/5
         [HttpPatch("Up/{user}/{id}")]
         public async Task<IActionResult> UpvotePost(String user, int id)
         {
@@ -124,6 +125,7 @@ namespace MicroVerse.Controllers
             return await PutPost(id, post);
         }
 
+        // PATCH: api/Post/Down/user@id.com/5
         [HttpPatch("Down/{user}/{id}")]
         public async Task<IActionResult> DownvotePost(String user, int id)
         {

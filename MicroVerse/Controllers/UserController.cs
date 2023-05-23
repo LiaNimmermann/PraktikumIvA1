@@ -124,7 +124,7 @@ namespace MicroVerse.Controllers
             return await PutUserModel(id, user);
         }
 
-        // PATCH: api/User/5
+        // PATCH: api/User/Ban/5
         [HttpPatch("Ban/{id}")]
         public async Task<IActionResult> BanUser(string id)
         {
@@ -139,39 +139,50 @@ namespace MicroVerse.Controllers
             return await PutUserModel(id, user);
         }
 
-        // PATCH: api/User/5
+        // PATCH: api/User/id1@user.de/id2@user.com
         [HttpPatch("Follow/{followerId}/{followedId}")]
         public async Task<IActionResult> FollowUser(string followerId, string followedId)
         {
-            var follower = await _context.UserModel.FindAsync(followerId);
-            if (follower == null)
-            {
-                return NotFound();
-            }
-
-            follower.Follows.Add(new Follows() { 
+            var follows = new Follows() { 
                 FollowingUserId = followerId,
                 FollowedUserId = followedId
-            });
-            return await PutUserModel(followerId, follower);
+            };
+            _context.Follows.Add(follows);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("FollowUser", new { id = followerId }, follows);
         }
 
+        // GET: api/User/Follows/id@user.com
         [HttpGet("Follows/{id}")]
         public async Task<IActionResult> GetFollows(string id)
         {
-            var user = await _context.UserModel.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return Json(user.Follows);
+            var users = _context.Follows
+                .Where(follow => follow.FollowingUserId == id)
+                .Join(
+                    _context.UserModel,
+                    follow => follow.FollowedUserId,
+                    user => user.Email,
+                    (follow, user) => user
+                );
+
+            return Json(users);
         }
 
+        // GET: api/User/Follower/id@user.com
         [HttpGet("Follower/{id}")]
         public IActionResult GetFollower(string id)
         {
-            var follower = _context.Follows.Where(follows => follows.FollowingUserId == id);
-            return follower == null ? NotFound() : Json(follower);
+            var users = _context.Follows
+                .Where(follow => follow.FollowedUserId == id)
+                .Join(
+                    _context.UserModel,
+                    follow => follow.FollowingUserId,
+                    user => user.Email,
+                    (follow, user) => user
+                );
+
+            return Json(users);
         }
 
         private bool UserModelExists(string id)

@@ -38,9 +38,8 @@ namespace MicroVerse.Models
         [Required]
         public Activation Activation { get; set; } = Activation.active;
 
+        [Required]
         public DateTime CreatedAt { get; } = DateTime.Now;
-
-        public List<Follows> Follows { get; set; } = new List<Follows>();
 
         [Required]
         [DataType(DataType.Password)]
