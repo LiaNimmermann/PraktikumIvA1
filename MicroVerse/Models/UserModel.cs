@@ -1,39 +1,51 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MicroVerse.Models
 {
     public class UserModel
     {
         public UserModel()
         {
-            CreatedAt = DateTime.Now;
         }
 
         //Just for mock data
         public UserModel(String username, string displayedName, string bio)
         {
-            this.Username = new Username(username);
+            Username = username;
             DisplayedName = displayedName;
             Bio = bio;
             CreatedAt = DateTime.Now;
         }
 
-        public EMail Id { get; } = new EMail();
+        [Required]
+        [Key]
+        [EmailAddress]
+        public String Email { get; set; } = "";
 
-        public Username Username { get; } = new Username();
+        [Required]
+        public String Username { get; set; } = "";
 
+        [Required]
         public String DisplayedName { get; set; } = "";
 
-        public Role Role { get; set; }
+        [Required]
+        public Role Role { get; set; } = Role.user;
 
         public String Picture { get; set; } = "";
 
         public String Bio { get; set; } = "";
 
-        public Activation Activation { get; set; }
+        [Required]
+        public Activation Activation { get; set; } = Activation.active;
 
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; } = DateTime.Now;
 
+        [Required]
+        [DataType(DataType.Password)]
         public String Password { get; set; } = "";
 
-
+        public void Delete() {
+            throw new NotImplementedException();
+        }
     }
 }

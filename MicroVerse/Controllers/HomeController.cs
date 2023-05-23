@@ -2,12 +2,15 @@
 using MicroVerse.Models;
 using MicroVerse.ViewModels;
 using System.Diagnostics;
+using MicroVerse.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace MicroVerse.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private IEnumerable<UserModel> _users = new List<UserModel>();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -55,6 +58,30 @@ namespace MicroVerse.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        [HttpGet("User/Create/{email}/{username}/{name}/{password}")]
+        public IActionResult CreateUser(String email, String username, String name, String password)
+        {
+            var db = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
+
+            var user = new UserModel()
+            {
+                Email = email,
+                Username = username,
+                DisplayedName = name,
+                Password = password
+            };
+
+            return Json(user);
+        }
+
+        [HttpGet("User/Delete/{email}")]
+        public IActionResult DeleteUser(String email)
+        {
+            var user = _users.FirstOrDefault(x => email == x.Email);
+            user?.Delete();
+            return Json(new { success = true });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
