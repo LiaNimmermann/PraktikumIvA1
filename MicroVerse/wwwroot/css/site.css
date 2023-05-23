@@ -55,7 +55,7 @@ body {
         }
 
         /* When you mouse over the navigation links, change their color */
-        .sidenav a:hover {
+        .sidebar a:hover {
             color: #ffffff;
             background-color: #43802a
         }
@@ -64,7 +64,7 @@ body {
 .main {
     padding: 20px;
 }
-    .main .with-sidebar {
+    .with-sidebar {
         margin-left: 250px; /* Same as the width of the sidebar */
 
     }
@@ -99,28 +99,27 @@ body {
 
     /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
     @media screen and (max-height: 450px) {
-        .sidenav {
+        .sidebar {
         padding-top: 15px;
     }
 
-        .sidenav a {
+        .sidebar a {
             font-size: 18px;
         }
 }
 /* Search container */
-    .topnav .search-container {
+    .search-container {
         float: right;
         margin-top:2px;
-        margin-left: 850px;
     }
 
-.topnav input[type=text] {
+input[type=text] {
     padding: 6px;
     font-size: 16px;
     border: #dddddd;
 }
 
-    .topnav .search-container button {
+    .search-container button {
         float: right;
         padding: 6px 10px;
         margin-right: 16px;
@@ -130,6 +129,6 @@ body {
         cursor: pointer;
     }
 
-   .topnav .search-container button:hover {
+   .search-container button:hover {
             background: #b0ed97;
         }
