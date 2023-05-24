@@ -5,8 +5,16 @@ namespace MicroVerse.Models
 {
     public class Vote
     {
+        public Vote(Guid postId, string userId, int upvote)
+        {
+            PostId = postId;
+            UserId = userId;
+            Upvote = upvote;
+            CreatedAt = DateTime.UtcNow;
+        }
+
         [Required]
-        public int PostId { get; set; }
+        public Guid PostId { get; set; }
         [Required]
         public string UserId { get; set; }
         [Required]

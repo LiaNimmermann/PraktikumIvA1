@@ -4,13 +4,18 @@ namespace MicroVerse.Models
 {
     public class Follows
     {
-        public Follows() { }
+        public Follows(string followingUserId, string followedUserId)
+        {
+            FollowingUserId = followingUserId;
+            FollowedUserId = followedUserId;
+            CreatedAt = DateTime.Now;
+        }
 
         [Required]
-        public String FollowingUserId { get; set; } = "";
+        public string FollowingUserId { get; set; } = "";
 
         [Required]
-        public String FollowedUserId { get; set; } = "";
+        public string FollowedUserId { get; set; } = "";
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;

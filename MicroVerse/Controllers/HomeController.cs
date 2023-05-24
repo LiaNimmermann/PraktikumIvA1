@@ -10,7 +10,7 @@ namespace MicroVerse.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IEnumerable<UserModel> _users = new List<UserModel>();
+        private IEnumerable<User> _users = new List<User>();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -19,38 +19,40 @@ namespace MicroVerse.Controllers
 
         public IActionResult Index()
         {
+            //TODO: Fill a HomeViewModel with real data
             //Creating Mock data
-            var followsList = new List<UserModel>();
+            var followsList = new List<User>();
             var postsList = new List<PostViewModel>();
             Random r = new Random();
-            UserModel f;
+            User f;
             PostViewModel p;
             for (int i = 0; i < 5; i++)
             {
-                f = new UserModel();
+                f = new User("User" + i, "User " + i, "I'm just a normal User with a normal Bio", Role.user);
                 f.DisplayedName = "Followed User " + i;
                 followsList.Add(f);
                 p = new PostViewModel("This is a Post from User " + i, null, DateTime.Now, "Followed User " + i, "user@email.com", (int)r.Next(0, 100), (int)r.Next(0, 50));
                 postsList.Add(p);
             }
-            var mockModel = new HomeViewModel(new UserModel(), followsList, postsList);
+            var mockModel = new HomeViewModel(followsList, postsList);
             return View(mockModel);
         }
         public IActionResult Profile(string username)
         {
+            //ToDo: Create a ProfileViewModel with real Data
             //Creating Mock Data
-            UserModel user = new UserModel("User1234", "User 12 34", "I'm just a normal User with a normal Bio");
+            User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
 
-            List<UserModel> followsList = new List<UserModel>();
+            List<User> followsList = new List<User>();
             var postsList = new List<PostViewModel>();
             Random r = new Random();
             PostViewModel p;
             for (int i = 0; i < 5; i++)
             {
-                p = new PostViewModel("This is a Post " + i + "from User 12 34", null, DateTime.Now, user.DisplayedName, user.Username.ToString(), (int)r.Next(0, 100), (int)r.Next(0, 50));
+                p = new PostViewModel("This is a Post " + i + "from User 12 34", null, DateTime.Now, user.DisplayedName, user.UserName.ToString(), (int)r.Next(0, 100), (int)r.Next(0, 50));
                 postsList.Add(p);
             }
-            var mockModel = new ProfileViewModel(user.Username.ToString(), user.DisplayedName, user.Bio, (int)r.Next(0, 50), (int)r.Next(0, 50), postsList);
+            var mockModel = new ProfileViewModel(user.UserName.ToString(), user.DisplayedName, user.Bio, (int)r.Next(0, 50), (int)r.Next(0, 50), postsList);
 
             return View(mockModel);
         }
@@ -58,30 +60,6 @@ namespace MicroVerse.Controllers
         public IActionResult Privacy()
         {
             return View();
-        }
-
-        [HttpGet("User/Create/{email}/{username}/{name}/{password}")]
-        public IActionResult CreateUser(String email, String username, String name, String password)
-        {
-            var db = new ApplicationDbContext(new DbContextOptions<ApplicationDbContext>());
-
-            var user = new UserModel()
-            {
-                Email = email,
-                Username = username,
-                DisplayedName = name,
-                Password = password
-            };
-
-            return Json(user);
-        }
-
-        [HttpGet("User/Delete/{email}")]
-        public IActionResult DeleteUser(String email)
-        {
-            var user = _users.FirstOrDefault(x => email == x.Email);
-            user?.Delete();
-            return Json(new { success = true });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

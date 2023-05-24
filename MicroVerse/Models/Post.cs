@@ -4,29 +4,25 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace MicroVerse.Models
 {
-    //not finished
     public class Post
     {
-        public Post()
-        {
-        }
 
-        public Post(string body, UserModel author)
+        public Post(string body, string authorId)
         {
+            Id = Guid.NewGuid();
             Body = body;
-            Author = author;
-
+            AuthorId = authorId;
         }
 
         [Key]
         [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string Body { get; set; }    
 
         [Required]
-        public UserModel Author { get; set; }
+        public string AuthorId { get; set; }
 
         public Post? ReactsTo { get; set; }
 

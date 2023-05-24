@@ -40,7 +40,7 @@ namespace MicroVerse.Controllers
         // PUT: api/Post/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPost(int id, Post post)
+        public async Task<IActionResult> PutPost(Guid id, Post post)
         {
             if (id != post.Id)
             {
@@ -97,7 +97,7 @@ namespace MicroVerse.Controllers
 
         // PATCH: api/Post/5
         [HttpPatch("{id}")]
-        public async Task<IActionResult> BlockPost(int id)
+        public async Task<IActionResult> BlockPost(Guid id)
         {
             var post = await _context.Post.FindAsync(id);
             if (post == null)
@@ -112,7 +112,7 @@ namespace MicroVerse.Controllers
 
         // PATCH: api/Post/Up/user@id.com/5
         [HttpPatch("Up/{user}/{id}")]
-        public async Task<IActionResult> UpvotePost(String user, int id)
+        public async Task<IActionResult> UpvotePost(String user, Guid id)
         {
             var post = await _context.Post.FindAsync(id);
             if (post == null)
@@ -120,14 +120,14 @@ namespace MicroVerse.Controllers
                 return NotFound();
             }
 
-            post.Votes.Add(new Vote { Upvote = 1, UserId = user, PostId = post.Id });
+            post.Votes.Add(new Vote(post.Id, user, 1));
 
             return await PutPost(id, post);
         }
 
         // PATCH: api/Post/Down/user@id.com/5
         [HttpPatch("Down/{user}/{id}")]
-        public async Task<IActionResult> DownvotePost(String user, int id)
+        public async Task<IActionResult> DownvotePost(String user, Guid id)
         {
             var post = await _context.Post.FindAsync(id);
             if (post == null)
@@ -135,12 +135,12 @@ namespace MicroVerse.Controllers
                 return NotFound();
             }
 
-            post.Votes.Add(new Vote { Upvote = -1, UserId = user, PostId = post.Id });
+            post.Votes.Add(new Vote(post.Id,user,-1));
 
             return await PutPost(id, post);
         }
 
-        private bool PostExists(int id)
+        private bool PostExists(Guid id)
         {
             return _context.Post.Any(e => e.Id == id);
         }

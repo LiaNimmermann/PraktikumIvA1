@@ -4,7 +4,7 @@ using MicroVerse.Models;
 
 namespace MicroVerse.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -12,8 +12,6 @@ namespace MicroVerse.Data
         }
 
         public ApplicationDbContext() : base() {}
-
-        public DbSet<UserModel> UserModel { get; set; }
 
         public DbSet<Post> Post { get; set; }
 
