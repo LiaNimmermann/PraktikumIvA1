@@ -28,7 +28,7 @@ namespace MicroVerse.Models
 
         public string Bio { get; set; } = "Hi, I'm new here!";
 
-        //[Required]
-       // public Activation Activation { get; set; } = Activation.active;
+        [Required]
+        public Activation Activation { get; set; } = Activation.active;
     }
 }

@@ -37,9 +37,10 @@ namespace MicroVerse.Controllers
             var mockModel = new HomeViewModel(followsList, postsList);
             return View(mockModel);
         }
+
         public IActionResult Profile(string username)
         {
-            //ToDo: Create a ProfileViewModel with real Data
+            //TODO: Create a ProfileViewModel with real Data
             //Creating Mock Data
             User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
 
