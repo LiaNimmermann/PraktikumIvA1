@@ -10,11 +10,13 @@ namespace MicroVerse.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
         private IEnumerable<User> _users = new List<User>();
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -26,6 +28,7 @@ namespace MicroVerse.Controllers
             Random r = new Random();
             User f;
             PostViewModel p;
+            
             for (int i = 0; i < 5; i++)
             {
                 f = new User("User" + i, "User " + i, "I'm just a normal User with a normal Bio", Role.user);
@@ -34,15 +37,19 @@ namespace MicroVerse.Controllers
                 p = new PostViewModel("This is a Post from User " + i, null, DateTime.Now, "Followed User " + i, "user@email.com", (int)r.Next(0, 100), (int)r.Next(0, 50));
                 postsList.Add(p);
             }
+            
             var mockModel = new HomeViewModel(followsList, postsList);
             return View(mockModel);
         }
 
-        public IActionResult Profile(string username)
+        public async Task<IActionResult> Profile(string userId)
         {
+            User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
+            if (userId != null) {
+                user = await _context.Users.FirstOrDefaultAsync(user => userId == user.Email);
+            }
             //TODO: Create a ProfileViewModel with real Data
             //Creating Mock Data
-            User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
 
             List<User> followsList = new List<User>();
             var postsList = new List<PostViewModel>();
@@ -50,7 +57,7 @@ namespace MicroVerse.Controllers
             PostViewModel p;
             for (int i = 0; i < 5; i++)
             {
-                p = new PostViewModel("This is a Post " + i + "from User 12 34", null, DateTime.Now, user.DisplayedName, user.UserName.ToString(), (int)r.Next(0, 100), (int)r.Next(0, 50));
+                p = new PostViewModel("This is a Post " + i + " by " + user.DisplayedName, null, DateTime.Now, user.DisplayedName, user.UserName.ToString(), (int)r.Next(0, 100), (int)r.Next(0, 50));
                 postsList.Add(p);
             }
             var mockModel = new ProfileViewModel(user.UserName.ToString(), user.DisplayedName, user.Bio, (int)r.Next(0, 50), (int)r.Next(0, 50), postsList);

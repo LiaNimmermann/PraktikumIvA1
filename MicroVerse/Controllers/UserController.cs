@@ -27,14 +27,14 @@ namespace MicroVerse.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
-            var userModel = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FirstOrDefaultAsync(user => id == user.Email);
 
-            if (userModel == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return userModel;
+            return user;
         }
 
         // PUT: api/User/5
@@ -180,6 +180,14 @@ namespace MicroVerse.Controllers
                 );
 
             return Json(users);
+        }
+        
+        [HttpGet("Follows")]
+        public async Task<IActionResult> GetAllFollows()
+        {
+            var follows = await _context.Follows.ToListAsync();
+            
+            return Json(follows);
         }
 
         private bool UserExists(string id)
