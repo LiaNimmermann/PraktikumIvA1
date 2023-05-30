@@ -42,11 +42,13 @@ namespace MicroVerse.Controllers
             return View(mockModel);
         }
 
-        public async Task<IActionResult> Profile(string userId)
+        public async Task<IActionResult> Profile(string id)
         {
+            System.Diagnostics.Debug.WriteLine("UserId = ");
+            System.Diagnostics.Debug.WriteLine(id);
             User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
-            if (userId != null) {
-                user = await _context.Users.FirstOrDefaultAsync(user => userId == user.Email);
+            if (id != null) {
+                user = await _context.Users.FirstOrDefaultAsync(user => id == user.UserName);
             }
             //TODO: Create a ProfileViewModel with real Data
             //Creating Mock Data
