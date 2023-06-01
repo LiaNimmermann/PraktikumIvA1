@@ -50,16 +50,11 @@ namespace MicroVerse.Controllers
             }
             //TODO: Create a ProfileViewModel with real Data
             //Creating Mock Data
+            
+            var postsList = InitializePostList(user);
 
             List<User> followsList = new List<User>();
-            var postsList = new List<PostViewModel>();
             Random r = new Random();
-            PostViewModel p;
-            for (int i = 0; i < 5; i++)
-            {
-                p = new PostViewModel("This is a Post " + i + " by " + user.DisplayedName, null, DateTime.Now, user.DisplayedName, user.UserName.ToString(), (int)r.Next(0, 100), (int)r.Next(0, 50));
-                postsList.Add(p);
-            }
             var mockModel = new ProfileViewModel(user.UserName.ToString(), user.DisplayedName, user.Bio, (int)r.Next(0, 50), (int)r.Next(0, 50), postsList);
 
             return View(mockModel);
@@ -74,6 +69,37 @@ namespace MicroVerse.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        
+        private List<PostViewModel> InitializePostList(User user) {
+            if (!(user.UserName == "User1234")) {
+                return _context.Post
+                    .Where(post => post.AuthorId == user.UserName)
+                    .OrderBy(post => post.CreatedAt)                    
+                    .Select(post => new PostViewModel
+                            (
+                                post.Body,
+                                null,
+                                post.CreatedAt,
+                                user.DisplayedName,
+                                user.UserName.ToString(),
+                                post.Votes.Where(x => x.Upvote > 0).Count(),
+                                post.Votes.Where(x => x.Upvote < 0).Count()
+                            )).ToList();
+            }
+            
+            var r = new Random();
+            return Enumerable.Range(0, 5)
+                .Select(i => new PostViewModel
+                        (
+                            "This is a Post " + i + " by " + user.DisplayedName,
+                            null,
+                            DateTime.Now,
+                            user.DisplayedName,
+                            user.UserName.ToString(),
+                            (int)r.Next(0, 100),
+                            (int)r.Next(0, 50)
+                        )).ToList();
         }
     }
 }
