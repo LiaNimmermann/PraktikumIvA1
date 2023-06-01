@@ -16,6 +16,7 @@ namespace MicroVerse.ViewModels
         public int Downvotes { get; set; }
         public int? Status { get; set; }
 
+        public PostViewModel() { } 
 
         public PostViewModel(int id, string body, PostViewModel reactsTo, DateTime createdAt, string displayName, string authorImage, string username, int upvotes, int downvotes, int status)
         {

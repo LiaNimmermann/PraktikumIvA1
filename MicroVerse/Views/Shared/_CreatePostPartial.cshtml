@@ -1,0 +1,8 @@
+﻿<div class="post-creation-container">
+    @*@using (Html.BeginForm("Post", "Post", FormMethod.Post)) {*@
+    <form method="post" asp-controller="Post" asp-action="Post">
+        <input type="text" name="text" maxlength="280" placeholder="Type here...">
+        <!--input type="file" name="postFile"-->
+        <button type="submit"> Post </button>
+    </form>
+</div>

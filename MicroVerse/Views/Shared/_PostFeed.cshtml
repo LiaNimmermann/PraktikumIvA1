@@ -1,0 +1,21 @@
+﻿@model IEnumerable<MicroVerse.ViewModels.PostViewModel>
+
+@foreach (var post in Model) {
+        <div class="post-containter">
+            <div class="post-header">
+                <a class="post-author" asp-controller="Home" asp-action="Profile">
+                    <img class="profile-picture" src="https://picsum.photos/200/200" height="25" width="25" />
+                    @post.DisplayedName
+                </a>
+                <div class="post-actions">
+                    <i class="fa-solid fa-circle-up"></i> @post.Upvotes
+                    <i class="fa-solid fa-circle-down"></i> @post.Downvotes
+                    <a href="#"><i class="fa-solid fa-flag"></i></a>
+                </div>
+            </div>
+            <hr></hr>
+            <div class="post-body">
+                @post.Body
+            </div>
+        </div>
+}

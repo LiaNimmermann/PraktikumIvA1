@@ -68,15 +68,28 @@ namespace MicroVerse.Controllers
             return NoContent();
         }
 
+        //// POST: api/Post
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Post>> PostPost(Post post)
+        //{
+        //    _context.Post.Add(post);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetPost", new { id = post.Id }, post);
+        //}
+
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Post>> PostPost(Post post)
+        public async Task<LocalRedirectResult> Post([FromForm] String text)
         {
+            string userId = HttpContext.User.Identity.Name;
+            Post post = new Post(text, userId);
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPost", new { id = post.Id }, post);
+            return new LocalRedirectResult("/Home/Profile/" + userId);
         }
 
         // DELETE: api/Post/5
