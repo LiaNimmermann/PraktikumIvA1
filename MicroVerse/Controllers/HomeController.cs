@@ -78,7 +78,7 @@ namespace MicroVerse.Controllers
             if (!(user.UserName == "User1234")) {
                 return _context.Post
                     .Where(post => post.AuthorId == user.UserName)
-                    .OrderBy(post => post.CreatedAt)                    
+                    .OrderByDescending(post => post.CreatedAt)                    
                     .Select(post => new PostViewModel
                             (
                                 post.Body,
