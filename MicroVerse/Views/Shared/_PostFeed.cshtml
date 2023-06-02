@@ -3,7 +3,7 @@
 @foreach (var post in Model) {
         <div class="post-containter">
             <div class="post-header">
-                <a class="post-author" asp-controller="Home" asp-action="Profile">
+                <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@post.Username">
                     <img class="profile-picture" src="https://picsum.photos/200/200" height="25" width="25" />
                     @post.DisplayedName
                 </a>

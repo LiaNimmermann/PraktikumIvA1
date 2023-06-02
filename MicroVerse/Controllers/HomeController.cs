@@ -21,23 +21,26 @@ namespace MicroVerse.Controllers
 
         public IActionResult Index()
         {
-            //TODO: Fill a HomeViewModel with real data
-            //Creating Mock data
-            var followsList = new List<User>();
-            var postsList = new List<PostViewModel>();
+            var postsList =  _context.Post
+                .OrderByDescending(post => post.CreatedAt)                    
+                .Select(post => new PostViewModel
+                    (
+                        post.Body,
+                        null,
+                        post.CreatedAt,
+                        post.AuthorId,
+                        post.AuthorId,
+                        post.Votes.Where(x => x.Upvote > 0).Count(),
+                        post.Votes.Where(x => x.Upvote < 0).Count()
+                    )).ToList();
             Random r = new Random();
-            User f;
-            PostViewModel p;
-            
-            for (int i = 0; i < 5; i++)
-            {
-                f = new User("User" + i, "User " + i, "I'm just a normal User with a normal Bio", Role.user);
-                f.DisplayedName = "Followed User " + i;
-                followsList.Add(f);
-                p = new PostViewModel("This is a Post from User " + i, null, DateTime.Now, "Followed User " + i, "user@email.com", (int)r.Next(0, 100), (int)r.Next(0, 50));
-                postsList.Add(p);
-            }
-            
+            var followsList = Enumerable.Range(0,5)
+                .Select(i => 
+                    new User("User" + i, "User " + i, "I'm just a normal User with a normal Bio", Role.user)
+                    {
+                        DisplayedName = "Followed User " + i
+                    }).ToList();
+           
             var mockModel = new HomeViewModel(followsList, postsList);
             return View(mockModel);
         }

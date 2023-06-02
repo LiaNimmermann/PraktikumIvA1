@@ -89,7 +89,7 @@ namespace MicroVerse.Controllers
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            return new LocalRedirectResult("/Home/Profile/" + userId);
+            return new LocalRedirectResult("/Home/Index");
         }
 
         // DELETE: api/Post/5
