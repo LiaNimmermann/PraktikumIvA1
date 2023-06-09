@@ -22,7 +22,7 @@ namespace MicroVerse.Controllers
         public IActionResult Index()
         {
             var postsList =  _context.Post
-                .OrderByDescending(post => post.CreatedAt)                    
+                .OrderByDescending(post => post.CreatedAt)
                 .Select(post => new PostViewModel
                     (
                         post.Body,
@@ -35,12 +35,12 @@ namespace MicroVerse.Controllers
                     )).ToList();
             Random r = new Random();
             var followsList = Enumerable.Range(0,5)
-                .Select(i => 
+                .Select(i =>
                     new User("User" + i, "User " + i, "I'm just a normal User with a normal Bio", Role.user)
                     {
                         DisplayedName = "Followed User " + i
                     }).ToList();
-           
+
             var mockModel = new HomeViewModel(followsList, postsList);
             return View(mockModel);
         }
@@ -53,14 +53,23 @@ namespace MicroVerse.Controllers
             }
             //TODO: Create a ProfileViewModel with real Data
             //Creating Mock Data
-            
+
             var postsList = InitializePostList(user);
 
-            List<User> followsList = new List<User>();
+            var followsList = _context.Follows.Where(f => f.FollowingUserId == id);
+            var followerList = _context.Follows.Where(f => f.FollowedUserId == id);
             Random r = new Random();
-            var mockModel = new ProfileViewModel(user.UserName.ToString(), user.DisplayedName, user.Bio, (int)r.Next(0, 50), (int)r.Next(0, 50), postsList);
+            var model = new ProfileViewModel
+            (
+                user.UserName.ToString(),
+                user.DisplayedName,
+                user.Bio,
+                followerList.Count(),
+                followsList.Count(),
+                postsList
+            );
 
-            return View(mockModel);
+            return View(model);
         }
 
         public IActionResult Privacy()
@@ -73,12 +82,12 @@ namespace MicroVerse.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-        
+
         private List<PostViewModel> InitializePostList(User user) {
             if (!(user.UserName == "User1234")) {
                 return _context.Post
                     .Where(post => post.AuthorId == user.UserName)
-                    .OrderByDescending(post => post.CreatedAt)                    
+                    .OrderByDescending(post => post.CreatedAt)
                     .Select(post => new PostViewModel
                             (
                                 post.Body,
@@ -90,7 +99,7 @@ namespace MicroVerse.Controllers
                                 post.Votes.Where(x => x.Upvote < 0).Count()
                             )).ToList();
             }
-            
+
             var r = new Random();
             return Enumerable.Range(0, 5)
                 .Select(i => new PostViewModel
