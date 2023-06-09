@@ -21,17 +21,24 @@ namespace MicroVerse.Controllers
 
         public IActionResult Index()
         {
-            var postsList =  _context.Post
+            var postsList = _context.Post
                 .OrderByDescending(post => post.CreatedAt)
+                .Join(
+                    _context.Users,
+                    post => post.AuthorId,
+                    user => user.UserName,
+                    (post, user) => new { DisplayName = user.DisplayedName, Post = post }
+                ) 
                 .Select(post => new PostViewModel
                     (
-                        post.Body,
+                        post.Post.Body,
                         null,
-                        post.CreatedAt,
-                        post.AuthorId,
-                        post.AuthorId,
-                        post.Votes.Where(x => x.Upvote > 0).Count(),
-                        post.Votes.Where(x => x.Upvote < 0).Count()
+                        post.Post.CreatedAt,
+                        post.DisplayName,
+                        post.Post.AuthorId,
+                        post.Post.Votes.Where(x => x.Upvote > 0).Count(),
+                        post.Post.Votes.Where(x => x.Upvote < 0).Count()
+                       
                     )).ToList();
             Random r = new Random();
             var followsList = Enumerable.Range(0,5)
