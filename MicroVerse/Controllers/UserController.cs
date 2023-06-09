@@ -181,13 +181,23 @@ namespace MicroVerse.Controllers
 
             return Json(users);
         }
-        
+
         [HttpGet("Follows")]
         public async Task<IActionResult> GetAllFollows()
         {
             var follows = await _context.Follows.ToListAsync();
-            
+
             return Json(follows);
+        }
+
+        [HttpGet("Search/{phrase}")]
+        public async Task<IActionResult> SearchUsers(String phrase)
+        {
+            var users = _context.Users
+                .AsEnumerable()
+                .Where(u => u.FuzzyMatches(phrase));
+
+            return Json(users);
         }
 
         private bool UserExists(string id)

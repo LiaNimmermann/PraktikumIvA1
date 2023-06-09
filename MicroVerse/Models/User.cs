@@ -30,5 +30,11 @@ namespace MicroVerse.Models
 
         [Required]
         public Activation Activation { get; set; } = Activation.active;
+
+        public Boolean FuzzyMatches(String phrase)
+            => DisplayedName.Contains(phrase)
+            || Bio.Contains(phrase)
+            || UserName.Contains(phrase)
+            || Email.Contains(phrase);
     }
 }

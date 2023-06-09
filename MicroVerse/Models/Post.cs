@@ -19,7 +19,7 @@ namespace MicroVerse.Models
         public Guid Id { get; set; }
 
         [Required]
-        public string Body { get; set; }    
+        public string Body { get; set; }
 
         [Required]
         public string AuthorId { get; set; }
@@ -34,5 +34,10 @@ namespace MicroVerse.Models
 
         [Required]
         public List<Vote> Votes { get; set; } = new List<Vote>();
+
+        public Boolean FuzzyMatches(String phrase)
+            => AuthorId.Contains(phrase)
+            || Body.Contains(phrase)
+            || (ReactsTo?.Body.Contains(phrase) ?? false);
     }
 }

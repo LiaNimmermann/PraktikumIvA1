@@ -68,17 +68,6 @@ namespace MicroVerse.Controllers
             return NoContent();
         }
 
-        //// POST: api/Post
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Post>> PostPost(Post post)
-        //{
-        //    _context.Post.Add(post);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("GetPost", new { id = post.Id }, post);
-        //}
-
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -90,6 +79,20 @@ namespace MicroVerse.Controllers
             await _context.SaveChangesAsync();
 
             return new LocalRedirectResult("/Home/Index");
+        }
+
+        [HttpPost("{reactsTo}/{text}")]
+        public async Task<IActionResult> ReactToPost(String reactsTo, String text)
+        {
+            var userId = User.Identity.Name;
+            var post = new Post(text, userId)
+            {
+                ReactsTo = await _context.Post.FindAsync(reactsTo)
+            };
+            _context.Post.Add(post);
+            await _context.SaveChangesAsync();
+
+            return Json(post);
         }
 
         // DELETE: api/Post/5
@@ -151,6 +154,16 @@ namespace MicroVerse.Controllers
             post.Votes.Add(new Vote(post.Id,user,-1));
 
             return await PutPost(id, post);
+        }
+
+        [HttpGet("Search/{phrase}")]
+        public async Task<IActionResult> SearchPosts(String phrase)
+        {
+            var posts = _context.Post
+                .AsEnumerable()
+                .Where(p => p.FuzzyMatches(phrase));
+
+            return Json(posts);
         }
 
         private bool PostExists(Guid id)
