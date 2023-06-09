@@ -28,7 +28,7 @@ namespace MicroVerse.Controllers
                     post => post.AuthorId,
                     user => user.UserName,
                     (post, user) => new { DisplayName = user.DisplayedName, Post = post }
-                ) 
+                )
                 .Select(post => new PostViewModel
                     (
                         post.Post.Body,
@@ -38,18 +38,19 @@ namespace MicroVerse.Controllers
                         post.Post.AuthorId,
                         post.Post.Votes.Where(x => x.Upvote > 0).Count(),
                         post.Post.Votes.Where(x => x.Upvote < 0).Count()
-                       
-                    )).ToList();
-            Random r = new Random();
-            var followsList = Enumerable.Range(0,5)
-                .Select(i =>
-                    new User("User" + i, "User " + i, "I'm just a normal User with a normal Bio", Role.user)
-                    {
-                        DisplayedName = "Followed User " + i
-                    }).ToList();
+                )).ToList();
+            var currentUser = User.Identity.Name;
+            var followsList = _context.Follows
+                .Where(f => f.FollowingUserId == currentUser)
+                .Join(
+                    _context.Users,
+                    follow => follow.FollowedUserId,
+                    user => user.UserName,
+                    (follow, user) => user
+                ).ToList();
 
-            var mockModel = new HomeViewModel(followsList, postsList);
-            return View(mockModel);
+            var model = new HomeViewModel(followsList, postsList);
+            return View(model);
         }
 
         public async Task<IActionResult> Profile(string id)
@@ -58,14 +59,10 @@ namespace MicroVerse.Controllers
             if (id != null) {
                 user = await _context.Users.FirstOrDefaultAsync(user => id == user.UserName);
             }
-            //TODO: Create a ProfileViewModel with real Data
-            //Creating Mock Data
-
             var postsList = InitializePostList(user);
 
             var followsList = _context.Follows.Where(f => f.FollowingUserId == id);
             var followerList = _context.Follows.Where(f => f.FollowedUserId == id);
-            Random r = new Random();
             var model = new ProfileViewModel
             (
                 user.UserName.ToString(),
@@ -91,33 +88,18 @@ namespace MicroVerse.Controllers
         }
 
         private List<PostViewModel> InitializePostList(User user) {
-            if (!(user.UserName == "User1234")) {
-                return _context.Post
-                    .Where(post => post.AuthorId == user.UserName)
-                    .OrderByDescending(post => post.CreatedAt)
-                    .Select(post => new PostViewModel
-                            (
-                                post.Body,
-                                null,
-                                post.CreatedAt,
-                                user.DisplayedName,
-                                user.UserName.ToString(),
-                                post.Votes.Where(x => x.Upvote > 0).Count(),
-                                post.Votes.Where(x => x.Upvote < 0).Count()
-                            )).ToList();
-            }
-
-            var r = new Random();
-            return Enumerable.Range(0, 5)
-                .Select(i => new PostViewModel
+            return _context.Post
+                .Where(post => post.AuthorId == user.UserName)
+                .OrderByDescending(post => post.CreatedAt)
+                .Select(post => new PostViewModel
                         (
-                            "This is a Post " + i + " by " + user.DisplayedName,
+                            post.Body,
                             null,
-                            DateTime.Now,
+                            post.CreatedAt,
                             user.DisplayedName,
                             user.UserName.ToString(),
-                            (int)r.Next(0, 100),
-                            (int)r.Next(0, 50)
+                            post.Votes.Where(x => x.Upvote > 0).Count(),
+                            post.Votes.Where(x => x.Upvote < 0).Count()
                         )).ToList();
         }
     }
