@@ -203,3 +203,33 @@ body {
         margin-left: 10px;
     }
 
+/* Searched profile style */
+.searched-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.searched-style {
+    display: flex;
+    align-items: center;
+}
+
+.searched-profile img {
+    margin-right: 10px;
+}
+
+.follow-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+    .follow-button form {
+        display: flex;
+        align-items: center;
+    }

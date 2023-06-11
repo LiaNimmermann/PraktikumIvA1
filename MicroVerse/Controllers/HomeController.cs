@@ -102,5 +102,15 @@ namespace MicroVerse.Controllers
                             post.Votes.Where(x => x.Upvote < 0).Count()
                         )).ToList();
         }
+        [HttpPost] //Search functionality (using Displayed Name)
+        public IActionResult Search(string searchTerm)
+        {
+            var searchResults = _context.Users
+                .Where(user => user.DisplayedName.Contains(searchTerm))
+                .ToList();
+
+            return View("SearchResult", searchResults);
+        }
+
     }
 }

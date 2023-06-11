@@ -30,8 +30,8 @@
                         <ul class="navbar-nav flex-grow-1">
                         <!-- Search container -->
                         <li class="search-container">
-                            <form action="#">
-                                <input type="text" placeholder="Search.." name="search">
+                            <form method="post" asp-controller="Home" asp-action="Search">
+                                <input type="text" placeholder="Search.." name="searchTerm">
                                 <button type="submit"><i class="fa fa-search"></i></button>
                             </form>
                         </li>
