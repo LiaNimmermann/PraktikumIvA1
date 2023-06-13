@@ -10,12 +10,16 @@
     foreach (var user in Model)
     {
         <div class="searched-profile">
+            <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@user.UserName">
             <div class="searched-style">
                 <img src="https://picsum.photos/200/200" alt="Profile Picture" height="100 " width="100" />
             </div>
+            </a>
             <div class="user-details">
+                 <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@user.UserName">
                 <h2>@user.DisplayedName</h2>
-                <form method="post" action="/Home/Follow">
+                </a>
+                <form method="post">
                     <input type="hidden" name="userId" value="@user.Id" />
                     <button type="submit" class="follow-button">Follow</button>
                 </form>

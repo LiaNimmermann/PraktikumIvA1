@@ -16,11 +16,19 @@
         <div class="follow-counts">
         <p>Followers: @Model.FollowerCount</p>
         <p>Following: @Model.FollowsCount</p>
-    </div>
         </div>
+    </div>
+            @if (Model.Username != @User.Identity?.Name)
+            {
+
+                <form method="post">
+                    <input type="hidden" name="userId" value="@Model.Username" />
+                <button type="submit" class="follow-button">Follow</button>
+            </form>
+            }
         <h2>@Model.DisplayedName</h2> 
         <p>@Model.Bio</p> 
-  
+ 
 
     <div class="posts">
         <partial name="_PostFeed" for="@Model.Posts">
