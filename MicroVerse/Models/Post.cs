@@ -13,6 +13,13 @@ namespace MicroVerse.Models
             Body = body;
             AuthorId = authorId;
         }
+        public Post(string body, string authorId, Post reactsTo)
+        {
+            Id = Guid.NewGuid();
+            Body = body;
+            AuthorId = authorId;
+            ReactsTo = reactsTo;
+        }
 
         [Key]
         [Required]
