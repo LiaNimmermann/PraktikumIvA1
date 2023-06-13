@@ -14,21 +14,13 @@
 
     <div class="profile-header">
         <img class="profile-picture" src="https://picsum.photos/200/200" height="100" width="100" /> <!-- Mock profile picture -->
-        <h1>@Model.Username</h1>
+        <h1>@Model.UserName</h1>
         <div class="follow-counts">
             <p>Followers: @Model.FollowerCount</p>
             <p>Following: @Model.FollowsCount</p>
         </div>
     </div>
-    @if (SignInManager.IsSignedIn(User) && Model.Username != @User.Identity?.Name)
-    {
-
-        <form method="post" asp-action="FollowUser" asp-controller="User">
-            <input type="hidden" name="followedId" value="@Model.Username" />
-            <input type="hidden" name="followerId" value="@User.Identity?.Name" />
-            <button type="submit" class="follow-button">Follow</button>
-        </form>
-    }
+    <partial name="_FollowBtn" for="@Model.UserName">
     <h2>@Model.DisplayedName</h2>
     <p>@Model.Bio</p>
 

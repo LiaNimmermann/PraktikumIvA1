@@ -1,0 +1,13 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model string
+
+@if (SignInManager.IsSignedIn(User) && Model != @User.Identity?.Name)
+{
+
+    <form method="post" asp-action="FollowUser" asp-controller="User">
+        <input type="hidden" name="followedId" value="@Model" />
+        <input type="hidden" name="followerId" value="@User.Identity?.Name" />
+        <button type="submit" class="follow-button">Follow</button>
+    </form>
+}

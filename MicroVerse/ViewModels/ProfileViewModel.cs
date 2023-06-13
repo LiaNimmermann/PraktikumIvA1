@@ -6,7 +6,7 @@ namespace MicroVerse.ViewModels
     {
         public ProfileViewModel(string username, string displayedName, string bio, int followerCount, int followsCount, List<PostViewModel> posts)
         {
-            Username = username;
+            UserName = username;
             DisplayedName = displayedName;
             Bio = bio;
             FollowerCount = followerCount;
@@ -16,7 +16,7 @@ namespace MicroVerse.ViewModels
 
 
 
-        public string Username { get; set; }
+        public string UserName { get; set; }
         public string DisplayedName { get; set; }
         public string Bio { get; set; }
         public int FollowerCount { get; set; }
