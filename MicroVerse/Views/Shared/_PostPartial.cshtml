@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model MicroVerse.ViewModels.PostViewModel
+
+
+<div class="post-containter">
+    <div class="post-header">
+        <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@Model.Username">
+            <img class="profile-picture" src="https://picsum.photos/200/200" height="25" width="25" />
+            @Model.DisplayedName
+        </a>
+        <div class="post-actions">
+            <a href="#"><i class="fa-solid fa-circle-up"></i></a> @Model.Upvotes
+            <a href="#"><i class="fa-solid fa-circle-down"></i></a> @Model.Downvotes
+            @*<a href="#"><i class="fa-solid fa-retweet"></i></a>*@
+            <a href="#"><i class="fa-solid fa-flag"></i></a>
+        </div>
+    </div>
+    <hr>
+    <div class="post-body">
+        @Model.Body
+    </div>
+    @if (SignInManager.IsSignedIn(User))
+    {
+
+        <hr>
+        <div class="post-react">
+            <form method="post" asp-controller="Post" asp-action="React">
+                <input type="text" name="text" maxlength="280" placeholder="Type here...">
+                <input type="hidden" name="reactsTo" value="@Model.Id" />
+                <button type="submit"> React </button>
+            </form>
+        </div>
+    }
+    @if(Model.ReactsTo!=null)
+    {
+        <partial name="_PostPartial" for="@Model.ReactsTo" />
+    }
+</div>

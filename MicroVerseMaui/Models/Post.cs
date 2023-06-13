@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Cryptography.X509Certificates;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace MicroVerse.Models
+namespace MicroVerseMaui.Models
 {
     public class Post
     {
@@ -12,13 +15,6 @@ namespace MicroVerse.Models
             Id = Guid.NewGuid();
             Body = body;
             AuthorId = authorId;
-        }
-        public Post(string body, string authorId, Post reactsTo)
-        {
-            Id = Guid.NewGuid();
-            Body = body;
-            AuthorId = authorId;
-            ReactsTo = reactsTo;
         }
 
         [Key]
@@ -41,10 +37,5 @@ namespace MicroVerse.Models
 
         [Required]
         public List<Vote> Votes { get; set; } = new List<Vote>();
-
-        public Boolean FuzzyMatches(String phrase)
-            => AuthorId.Contains(phrase)
-            || Body.Contains(phrase)
-            || (ReactsTo?.Body.Contains(phrase) ?? false);
     }
 }

@@ -17,15 +17,7 @@
 
 <div class="main with-sidebar">
     <!-- Post creation container -->
-
     <partial name="_CreatePostPartial">
-    @*<div class="post-creation-container">
-        <form method="post" asp-controller="Post" asp-action="PostPost">
-            <input type="text" id="text" name="text" maxlength="280" placeholder="Type here..."></input>
-            <!--input type="file" name="postFile"-->
-            <button type="submit"> Post </button>
-        </form>
-    </div>*@
 
     <!--PostFeed-->
     <partial name="_PostFeed" for="@Model.Posts">
