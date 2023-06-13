@@ -32,7 +32,7 @@ namespace MicroVerse.Controllers
                 .Select(post => new PostViewModel
                     (
                         post.Post.Body,
-                        null,
+                        null, //TODO
                         post.Post.CreatedAt,
                         post.DisplayName,
                         post.Post.AuthorId,

@@ -81,11 +81,25 @@ namespace MicroVerse.Controllers
 
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("Post")]
         public async Task<LocalRedirectResult> Post([FromForm] String text)
         {
             string userId = HttpContext.User.Identity.Name;
             Post post = new Post(text, userId);
+            _context.Post.Add(post);
+            await _context.SaveChangesAsync();
+
+            return new LocalRedirectResult("/Home/Index");
+        }
+
+        // POST: api/React
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost("React")]
+        public async Task<LocalRedirectResult> React([FromForm] String text, [FromForm] Guid postId)
+        {
+            string userId = HttpContext.User.Identity.Name;
+            Post reactsTo = await _context.Post.FindAsync(postId);
+            Post post = new Post(text, userId, reactsTo);
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
