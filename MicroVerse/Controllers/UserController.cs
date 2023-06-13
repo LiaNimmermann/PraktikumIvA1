@@ -139,15 +139,25 @@ namespace MicroVerse.Controllers
             return await PutUser(id, user);
         }
 
-        // PATCH: api/User/id1@user.de/id2@user.com
-        [HttpPatch("Follow/{followerId}/{followedId}")]
-        public async Task<IActionResult> FollowUser(string followerId, string followedId)
+        //// PATCH: api/User/id1@user.de/id2@user.com
+        //[HttpPost("Follow/{followerId}/{followedId}")]
+        //public async Task<IActionResult> FollowUser(string followerId, string followedId)
+        //{
+        //    var follows = new Follows(followerId, followedId);
+        //    _context.Follows.Add(follows);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("FollowUser", new { id = followerId }, follows);
+        //}
+
+        [HttpPost("FollowUser")]
+        public async Task<LocalRedirectResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
         {
             var follows = new Follows(followerId, followedId);
             _context.Follows.Add(follows);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("FollowUser", new { id = followerId }, follows);
+            return new LocalRedirectResult("/Home/Profile/"+followedId);
         }
 
         // GET: api/User/Follows/id@user.com
