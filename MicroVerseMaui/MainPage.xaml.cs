@@ -1,4 +1,5 @@
 using MicroVerseMaui.Models;
+using MicroVerseMaui.Views;
 
 namespace MicroVerseMaui;
 
@@ -20,16 +21,19 @@ public partial class MainPage : ContentPage
             string responseBody = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
             // Above three lines can be replaced with new helper method below
             // string responseBody = await client.GetStringAsync(uri);
-            var posts = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Post>>(responseBody);
+            var posts = Newtonsoft.Json.JsonConvert.DeserializeObject<IEnumerable<Post>>(responseBody);
 
-            posts.ForEach(
-                post =>
-                {
-                    var label = new Label() { Text = post.Body };
-                    VLayout.Add(label);
-                    (VLayout as IView).InvalidateArrange();
-                }
-            );
+            posts
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList()
+                .ForEach(
+                    post =>
+                    {
+                        var label = new PostView(post);
+                        VLayout.Add(label);
+                        (VLayout as IView).InvalidateArrange();
+                    }
+                );
         }
         catch (HttpRequestException ex)
         {
