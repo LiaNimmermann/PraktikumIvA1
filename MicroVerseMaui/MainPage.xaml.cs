@@ -1,10 +1,9 @@
-﻿using MicroVerseMaui.Models;
+using MicroVerseMaui.Models;
 
 namespace MicroVerseMaui;
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
     static readonly HttpClient client = new HttpClient();
 
     public MainPage()
@@ -14,15 +13,6 @@ public partial class MainPage : ContentPage
 
 	private void OnCounterClicked(object sender, EventArgs e)
 	{
-		count++;
-
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
-
-		SemanticScreenReader.Announce(CounterBtn.Text);
-
         try
         {
             using var response = Task.Run(async () => await client.GetAsync("https://localhost:7028/api/Post")).Result;
