@@ -8,8 +8,10 @@
 <div class="sidebar">
     @foreach (var follow in Model.Follows)
     {
-
-        <a href="#"><img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" /> @follow.DisplayedName</a>
+        <a href="/Home/Profile/@follow.UserName">
+            <img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" />
+            @follow.DisplayedName
+        </a>
     }
 </div>
 
