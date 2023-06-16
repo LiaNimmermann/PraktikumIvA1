@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using MicroVerse.Models;
 using MicroVerse.ViewModels;
 using System.Diagnostics;
@@ -106,7 +106,8 @@ namespace MicroVerse.Controllers
         public IActionResult Search(string searchTerm)
         {
             var searchResults = _context.Users
-                .Where(user => user.DisplayedName.Contains(searchTerm))
+                .AsEnumerable()
+                .Where(u => u.FuzzyMatches(searchTerm))
                 .ToList();
 
             return View("SearchResult", searchResults);

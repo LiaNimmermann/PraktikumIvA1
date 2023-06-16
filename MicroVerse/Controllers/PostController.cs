@@ -71,18 +71,18 @@ namespace MicroVerse.Controllers
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("Post")]
-        public async Task<LocalRedirectResult> Post([FromForm] String text)
+        public async Task<IActionResult> Post([FromForm] String text)
         {
             string userId = HttpContext.User.Identity.Name;
             Post post = new Post(text, userId);
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            return new LocalRedirectResult("/Home/Index");
+            return NoContent();
         }
 
         [HttpPost("{reactsTo}/{text}")]
-        public async Task<IActionResult> ReactToPost(String reactsTo, String text)
+        public async Task<IActionResult> ReactToPost(Guid reactsTo, String text)
         {
             var userId = User.Identity.Name;
             var post = new Post(text, userId)
@@ -92,13 +92,13 @@ namespace MicroVerse.Controllers
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            return Json(post);
+            return NoContent();
         }
         
         // POST: api/React
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("React")]
-        public async Task<LocalRedirectResult> React([FromForm] String text, [FromForm] Guid postId)
+        public async Task<IActionResult> React([FromForm] String text, [FromForm] Guid postId)
         {
             string userId = HttpContext.User.Identity.Name;
             Post reactsTo = await _context.Post.FindAsync(postId);
@@ -106,7 +106,7 @@ namespace MicroVerse.Controllers
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            return new LocalRedirectResult("/Home/Index");
+            return NoContent();
         }
 
         // DELETE: api/Post/5

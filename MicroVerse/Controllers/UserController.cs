@@ -151,13 +151,23 @@ namespace MicroVerse.Controllers
         //}
 
         [HttpPost("FollowUser")]
-        public async Task<LocalRedirectResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
+        public async Task<IActionResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
         {
             var follows = new Follows(followerId, followedId);
             _context.Follows.Add(follows);
             await _context.SaveChangesAsync();
 
-            return new LocalRedirectResult("/Home/Profile/"+followedId);
+            return NoContent();
+        }
+
+        [HttpPost("UnfollowUser")]
+        public async Task<IActionResult> UnfollowUser([FromForm] string followerId, [FromForm] string followedId)
+        {
+            var toDelete = _context.Follows.First(f => f.FollowingUserId == followerId && f.FollowedUserId == followedId);
+            _context.Follows.Remove(toDelete);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         // GET: api/User/Follows/id@user.com
