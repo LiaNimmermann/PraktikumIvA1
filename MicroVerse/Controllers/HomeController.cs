@@ -112,6 +112,9 @@ namespace MicroVerse.Controllers
 
             return View("SearchResult", searchResults);
         }
-
+        public IActionResult Moderation()
+        {
+            return View();
+        }
     }
 }
