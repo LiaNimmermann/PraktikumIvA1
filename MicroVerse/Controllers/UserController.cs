@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
@@ -10,11 +11,18 @@ namespace MicroVerse.Controllers
     public class UserController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
         }
+
 
         // GET: api/User
         [HttpGet]
@@ -139,17 +147,6 @@ namespace MicroVerse.Controllers
             return await PutUser(id, user);
         }
 
-        //// PATCH: api/User/id1@user.de/id2@user.com
-        //[HttpPost("Follow/{followerId}/{followedId}")]
-        //public async Task<IActionResult> FollowUser(string followerId, string followedId)
-        //{
-        //    var follows = new Follows(followerId, followedId);
-        //    _context.Follows.Add(follows);
-        //    await _context.SaveChangesAsync();
-
-        //    return CreatedAtAction("FollowUser", new { id = followerId }, follows);
-        //}
-
         [HttpPost("FollowUser")]
         public async Task<IActionResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
         {
@@ -223,6 +220,22 @@ namespace MicroVerse.Controllers
         private bool UserExists(string id)
         {
             return _context.Users.Any(e => e.Email == id);
+        }
+
+        [HttpPost("SetUserRole")]
+        public async Task<IActionResult> SetUserRole(string userId, string role)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(user => userId == user.UserName);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                return BadRequest();
+            }
+            await _userManager.AddToRoleAsync(user, role);
+            return NoContent();
         }
     }
 }

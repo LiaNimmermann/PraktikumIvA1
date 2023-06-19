@@ -4,6 +4,7 @@ using MicroVerse.ViewModels;
 using System.Diagnostics;
 using MicroVerse.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MicroVerse.Controllers
 {
@@ -53,6 +54,7 @@ namespace MicroVerse.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Profile(string id)
         {
             User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
@@ -102,6 +104,8 @@ namespace MicroVerse.Controllers
                             post.Votes.Where(x => x.Upvote < 0).Count()
                         )).ToList();
         }
+
+        [Authorize]
         [HttpPost] //Search functionality (using Displayed Name)
         public IActionResult Search(string searchTerm)
         {
@@ -112,6 +116,8 @@ namespace MicroVerse.Controllers
 
             return View("SearchResult", searchResults);
         }
+
+        [Authorize(Roles = "Moderator, Admin")]
         public IActionResult Moderation()
         {
             return View();
