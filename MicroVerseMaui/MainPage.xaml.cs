@@ -8,12 +8,8 @@ public partial class MainPage : ContentPage
     static readonly HttpClient client = new HttpClient();
 
     public MainPage()
-	{
-		InitializeComponent();
-    }
-
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
+    {
+        InitializeComponent();
         try
         {
             using var response = Task.Run(async () => await client.GetAsync("https://localhost:7028/api/Post")).Result;

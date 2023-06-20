@@ -3,11 +3,14 @@
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-
-    <Color x:Key="Primary">#512BD4</Color>
-    <Color x:Key="Secondary">#DFD8F7</Color>
-    <Color x:Key="Tertiary">#2B0B98</Color>
+    
+    // GRÜN #b0ed97
+    <Color x:Key="Primary">White</Color> // Balken oben
+    <Color x:Key="Secondary">#DFD8F7</Color> //
+    <Color x:Key="Tertiary">#b0ed97</Color> //
     <Color x:Key="White">White</Color>
+    <Color x:Key="Green">#b0ed97</Color>
+    <Color x:Key="DarkGreen">#4CAF50</Color>
     <Color x:Key="Black">Black</Color>
     <Color x:Key="Gray100">#E1E1E1</Color>
     <Color x:Key="Gray200">#C8C8C8</Color>
