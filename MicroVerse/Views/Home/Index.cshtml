@@ -3,23 +3,27 @@
 }
 @using MicroVerse.ViewModels
 @model HomeViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
 
+     @if (SignInManager.IsSignedIn(User))
+{
+    <!-- Side Follow-List-->
+    <div class="sidebar">
+        @if (Model.Follows.Count == 0)
+        {
+            <p>You are not following anyone yet.</p>
+        }
 
-<!-- Side Follow-List-->
-<div class="sidebar">
-    @if (Model.Follows.Count == 0){
-        <p>You are not following anyone yet.</p>
-    }
-
-    @foreach (var follow in Model.Follows)
-    {
-        <a href="/Home/Profile/@follow.UserName">
-            <img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" />
-            @follow.DisplayedName
-        </a>
-    }
-</div>
-
+        @foreach (var follow in Model.Follows)
+        {
+            <a href="/Home/Profile/@follow.UserName">
+                <img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" />
+                @follow.DisplayedName
+            </a>
+        }
+    </div>
+}
 <!-- Page content -->
 
 <div class="main with-sidebar">
