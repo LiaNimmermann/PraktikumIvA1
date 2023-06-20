@@ -32,6 +32,7 @@ namespace MicroVerse.Controllers
                 )
                 .Select(post => new PostViewModel
                     (
+                    	post.Post.Id,
                         post.Post.Body,
                         null, //TODO
                         post.Post.CreatedAt,
@@ -98,6 +99,7 @@ namespace MicroVerse.Controllers
                 .OrderByDescending(post => post.CreatedAt)
                 .Select(post => new PostViewModel
                         (
+                        	post.Id,
                             post.Body,
                             null,
                             post.CreatedAt,
