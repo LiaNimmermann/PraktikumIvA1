@@ -65,6 +65,7 @@ namespace MicroVerse.Controllers
 
             var followsList = _context.Follows.Where(f => f.FollowingUserId == id);
             var followerList = _context.Follows.Where(f => f.FollowedUserId == id);
+            var follows = _context.Follows.Where(f => f.FollowedUserId == id && f.FollowingUserId == User.Identity.Name);
             var model = new ProfileViewModel
             (
                 user.UserName.ToString(),
@@ -72,7 +73,9 @@ namespace MicroVerse.Controllers
                 user.Bio,
                 followerList.Count(),
                 followsList.Count(),
-                postsList
+                postsList,
+                (follows.Count() == 1)
+
             );
 
             return View(model);

@@ -7,8 +7,6 @@
 @model ProfileViewModel
 
 
-
-
 <!-- Page content -->
 <div class="main">
 
@@ -20,7 +18,7 @@
             <p>Following: @Model.FollowsCount</p>
         </div>
     </div>
-    <partial name="_FollowBtn" for="@Model.UserName">
+    <partial name="_FollowBtn" for="@Model.Follows">
     <h2>@Model.DisplayedName</h2>
     <p>@Model.Bio</p>
 

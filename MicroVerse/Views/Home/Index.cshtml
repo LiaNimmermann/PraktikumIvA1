@@ -4,8 +4,13 @@
 @using MicroVerse.ViewModels
 @model HomeViewModel
 
+
 <!-- Side Follow-List-->
 <div class="sidebar">
+    @if (Model.Follows.Count == 0){
+        <p>You are not following anyone yet.</p>
+    }
+
     @foreach (var follow in Model.Follows)
     {
         <a href="/Home/Profile/@follow.UserName">

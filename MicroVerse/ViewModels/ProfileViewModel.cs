@@ -4,7 +4,7 @@ namespace MicroVerse.ViewModels
 {
     public class ProfileViewModel
     {
-        public ProfileViewModel(string username, string displayedName, string bio, int followerCount, int followsCount, List<PostViewModel> posts)
+        public ProfileViewModel(string username, string displayedName, string bio, int followerCount, int followsCount, List<PostViewModel> posts, bool follows)
         {
             UserName = username;
             DisplayedName = displayedName;
@@ -12,6 +12,7 @@ namespace MicroVerse.ViewModels
             FollowerCount = followerCount;
             FollowsCount = followsCount;
             Posts = posts;
+            Follows= new FollowButtonModel(username, follows);
         }
 
 
@@ -21,7 +22,8 @@ namespace MicroVerse.ViewModels
         public string Bio { get; set; }
         public int FollowerCount { get; set; }
         public int FollowsCount { get; set; }
-        public List<PostViewModel> Posts { get; set; }
+        public List<PostViewModel> Posts { get; set; } 
+        public FollowButtonModel Follows { get; set; }
         
     }
 }

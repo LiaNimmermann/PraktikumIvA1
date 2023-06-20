@@ -163,7 +163,7 @@ namespace MicroVerse.Controllers
             var toDelete = _context.Follows.First(f => f.FollowingUserId == followerId && f.FollowedUserId == followedId);
             _context.Follows.Remove(toDelete);
             await _context.SaveChangesAsync();
-
+            Response.Redirect(Request.HttpContext.Request.Path);
             return NoContent();
         }
 
