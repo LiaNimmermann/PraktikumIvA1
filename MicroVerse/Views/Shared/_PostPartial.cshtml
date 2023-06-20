@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 @model MicroVerse.ViewModels.PostViewModel
 
@@ -27,7 +27,7 @@
         <div class="post-react">
             <form method="post" asp-controller="Post" asp-action="React">
                 <input type="text" name="text" maxlength="280" placeholder="Type here...">
-                <input type="hidden" name="reactsTo" value="@Model.Id" />
+                <input type="hidden" name="postId" value="@Model.Id" />
                 <button type="submit"> React </button>
             </form>
         </div>
