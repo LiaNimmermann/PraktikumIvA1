@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MicroVerse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230525105847_ActivationMigration")]
+    [Migration("20230620110902_ActivationMigration")]
     partial class ActivationMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

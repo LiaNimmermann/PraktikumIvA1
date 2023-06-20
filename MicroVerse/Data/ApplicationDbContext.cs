@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MicroVerse.Models;
 using MicroVerse.ViewModels;
@@ -26,7 +26,5 @@ namespace MicroVerse.Data
             modelBuilder.Entity<Follows>()
                 .HasKey(f => new { f.FollowingUserId, f.FollowedUserId });
         }
-
-        public DbSet<MicroVerse.ViewModels.PostViewModel>? PostViewModel { get; set; }
     }
 }

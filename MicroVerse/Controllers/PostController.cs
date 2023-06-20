@@ -78,7 +78,7 @@ namespace MicroVerse.Controllers
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return new LocalRedirectResult("/Home/Index");
         }
 
         [HttpPost("{reactsTo}/{text}")]
@@ -106,7 +106,7 @@ namespace MicroVerse.Controllers
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return new LocalRedirectResult("/Home/Index");
         }
 
         // DELETE: api/Post/5

@@ -154,7 +154,7 @@ namespace MicroVerse.Controllers
             _context.Follows.Add(follows);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return new LocalRedirectResult("/Home/Profile/"+followedId);
         }
 
         [HttpPost("UnfollowUser")]
@@ -164,7 +164,8 @@ namespace MicroVerse.Controllers
             _context.Follows.Remove(toDelete);
             await _context.SaveChangesAsync();
             Response.Redirect(Request.HttpContext.Request.Path);
-            return NoContent();
+            
+            return new LocalRedirectResult("/Home/Profile/"+followedId);
         }
 
         // GET: api/User/Follows/id@user.com
