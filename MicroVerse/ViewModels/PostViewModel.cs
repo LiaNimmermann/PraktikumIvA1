@@ -6,12 +6,12 @@ namespace MicroVerse.ViewModels
     {
     
         public Guid Id { get; set; }
-        public string Body { get; set; }
+        public string Body { get; set; } = String.Empty;
         public PostViewModel? ReactsTo { get; set; }
         public DateTime CreatedAt { get; set; }
-        public string DisplayedName { get; set; }
+        public string DisplayedName { get; set; } = String.Empty;
         public string? AuthorImage { get; set; } //URL to image
-        public string Username { get; set; }
+        public string Username { get; set; } = String.Empty;
         public int Upvotes { get; set; }
         public int Downvotes { get; set; }
         public int? Status { get; set; }
@@ -31,7 +31,7 @@ namespace MicroVerse.ViewModels
             Downvotes = downvotes;
             Status = status;
         }
-        public PostViewModel(Guid id, string body, PostViewModel reactsTo, DateTime createdAt, string displayName, string username, int upvotes, int downvotes)
+        public PostViewModel(Guid id, string body, PostViewModel? reactsTo, DateTime createdAt, string displayName, string username, int upvotes, int downvotes)
         {
         	Id = id;
             Body = body;

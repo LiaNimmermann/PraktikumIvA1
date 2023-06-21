@@ -3,6 +3,7 @@ using MicroVerse.Models;
 using MicroVerse.ViewModels;
 using System.Diagnostics;
 using MicroVerse.Data;
+using MicroVerse.Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
@@ -12,7 +13,6 @@ namespace MicroVerse.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-        private IEnumerable<User> _users = new List<User>();
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
@@ -60,7 +60,7 @@ namespace MicroVerse.Controllers
         {
             User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
             if (id != null) {
-                user = await _context.Users.FirstOrDefaultAsync(user => id == user.UserName);
+                user = await _context.Users.FindAsync(id) ?? user;
             }
             var postsList = InitializePostList(user);
 
@@ -114,9 +114,8 @@ namespace MicroVerse.Controllers
         [HttpPost] //Search functionality (using Displayed Name)
         public IActionResult Search(string searchTerm)
         {
-            var searchResults = _context.Users
-                .AsEnumerable()
-                .Where(u => u.FuzzyMatches(searchTerm))
+            var searchResults = (new SearchHelper(_context))
+            	.Users(searchTerm)
                 .ToList();
 
             return View("SearchResult", searchResults);

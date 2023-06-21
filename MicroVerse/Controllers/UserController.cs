@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
 using MicroVerse.Models;
+using MicroVerse.Helper;
 
 namespace MicroVerse.Controllers
 {
@@ -209,11 +210,9 @@ namespace MicroVerse.Controllers
         }
 
         [HttpGet("Search/{phrase}")]
-        public async Task<IActionResult> SearchUsers(String phrase)
+        public IActionResult SearchUsers(String phrase)
         {
-            var users = _context.Users
-                .AsEnumerable()
-                .Where(u => u.FuzzyMatches(phrase));
+            var users = (new SearchHelper(_context)).Users(phrase);
 
             return Json(users);
         }

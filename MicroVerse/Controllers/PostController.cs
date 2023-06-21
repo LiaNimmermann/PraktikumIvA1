@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
 using MicroVerse.Models;
+using MicroVerse.Helper;
 
 namespace MicroVerse.Controllers
 {
@@ -25,7 +26,7 @@ namespace MicroVerse.Controllers
 
         // GET: api/Post/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(int id)
+        public async Task<ActionResult<Post>> GetPost(Guid id)
         {
             var post = await _context.Post.FindAsync(id);
 
@@ -73,7 +74,7 @@ namespace MicroVerse.Controllers
         [HttpPost("Post")]
         public async Task<IActionResult> Post([FromForm] String text)
         {
-            string userId = HttpContext.User.Identity.Name;
+            var userId = HttpContext.User.Identity.Name;
             Post post = new Post(text, userId);
             _context.Post.Add(post);
             await _context.SaveChangesAsync();
@@ -94,13 +95,13 @@ namespace MicroVerse.Controllers
 
             return NoContent();
         }
-        
+
         // POST: api/React
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("React")]
         public async Task<IActionResult> React([FromForm] String text, [FromForm] Guid postId)
         {
-            string userId = HttpContext.User.Identity.Name;
+            var userId = HttpContext.User.Identity.Name;
             Post reactsTo = await _context.Post.FindAsync(postId);
             Post post = new Post(text, userId, reactsTo);
             _context.Post.Add(post);
@@ -171,14 +172,13 @@ namespace MicroVerse.Controllers
         }
 
         [HttpGet("Search/{phrase}")]
-        public async Task<IActionResult> SearchPosts(String phrase)
+        public IActionResult SearchPosts(String phrase)
         {
-            var posts = _context.Post
-                .AsEnumerable()
-                .Where(p => p.FuzzyMatches(phrase));
+            var posts = (new SearchHelper(_context)).Posts(phrase);
 
             return Json(posts);
         }
+        
 
         private bool PostExists(Guid id)
         {
