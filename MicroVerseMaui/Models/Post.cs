@@ -37,5 +37,8 @@ namespace MicroVerseMaui.Models
 
         [Required]
         public List<Vote> Votes { get; set; } = new List<Vote>();
+        
+        public string AuthorImage  { get; set; } = "https://picsum.photos/200/200";
+
     }
 }

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:MicroVerseMaui.Models"
+             xmlns:viewmodel="clr-namespace:MicroVerseMaui.ViewModels"   
+             x:DataType="viewmodel:PostViewModel"
+             Title = "{Binding Title}"
+             x:Class="MicroVerseMaui.Views.MainPage">
+
+    <Grid ColumnDefinitions="*,*"
+        ColumnSpacing="5"
+        RowDefinitions="*,Auto"
+        RowSpacing="0">
+
+        <CollectionView BackgroundColor="LightGreen"
+                        Grid.ColumnSpan="2"
+                        ItemsSource="{Binding Posts}"
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+
+                <DataTemplate x:DataType="model:Post">
+                    <Grid Padding="10">
+                        <Frame HeightRequest="125"
+                               Padding="0"
+                               Style="{StaticResource CardView}">
+   
+                            <Grid Padding="0"
+                                  ColumnDefinitions="125, *">
+                                <Image Aspect="AspectFill"
+                                   Source="{Binding AuthorImage}"
+                                   WidthRequest="125"
+                                   HeightRequest="125"/>
+                                <VerticalStackLayout
+                                 
+                                   Grid.Column="1"
+                                   Padding="10"
+                                   VerticalOptions="Center">
+                                    <Label Text="{Binding AuthorId}"
+                                           Style="{StaticResource LargeLabel}"/>
+                                    <Label Text="{Binding Body}"
+                                           Style="{StaticResource MediumLabel}"/>
+
+
+
+
+                                </VerticalStackLayout>
+
+
+                            </Grid>
+
+
+
+                        </Frame>
+                        
+                        
+                    </Grid>
+                    
+                    
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+
+        </CollectionView>
+        <Button Text="Home / Get Posts"
+                Style="{StaticResource ButtonOutline}"
+                Command="{Binding GePostsCommand}"
+                IsEnabled="{Binding IsNotBusy}"
+                TextColor="DarkGreen"
+
+                Grid.Row="1"
+                Margin="8"/>
+
+        <ActivityIndicator IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand"
+                           Grid.RowSpan="2"
+                           Grid.ColumnSpan="2"/>
+
+    </Grid>
+
+
+
+</ContentPage>
