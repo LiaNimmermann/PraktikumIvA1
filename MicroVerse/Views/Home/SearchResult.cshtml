@@ -1,4 +1,5 @@
-﻿@model List<User>
+@using MicroVerse.ViewModels
+@model List<UserBadgeViewModel>
 
 @{
     ViewData["Title"] = "Search Results";
@@ -19,7 +20,7 @@
                  <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@user.UserName">
                 <h2>@user.DisplayedName</h2>
                 </a>
-                <partial name="_FollowBtn" for="@user.UserName">
+               <!-- <partial name="_FollowBtn" for="@user.Follows"> -->
             </div>
         </div>
     }

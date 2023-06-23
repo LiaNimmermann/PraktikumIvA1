@@ -32,9 +32,12 @@ namespace MicroVerse.Models
         public Activation Activation { get; set; } = Activation.active;
 
         public Boolean FuzzyMatches(String phrase)
-            => DisplayedName.Contains(phrase)
-            || Bio.Contains(phrase)
-            || UserName.Contains(phrase)
-            || Email.Contains(phrase);
+        {
+        	var lcPhrase = phrase.ToLower();
+        	return DisplayedName.ToLower().Contains(lcPhrase)
+            || Bio.ToLower().Contains(lcPhrase)
+            || UserName.ToLower().Contains(lcPhrase)
+            || Email.ToLower().Contains(lcPhrase);
+        }
     }
 }

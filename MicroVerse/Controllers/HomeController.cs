@@ -41,6 +41,7 @@ namespace MicroVerse.Controllers
                         post.Post.Votes.Where(x => x.Upvote > 0).Count(),
                         post.Post.Votes.Where(x => x.Upvote < 0).Count()
                 )).ToList();
+                
             var currentUser = User.Identity.Name;
             var followsList = _context.Follows
                 .Where(f => f.FollowingUserId == currentUser)
@@ -60,7 +61,7 @@ namespace MicroVerse.Controllers
         {
             User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
             if (id != null) {
-                user = await _context.Users.FindAsync(id) ?? user;
+                user = await _context.Users.FirstOrDefaultAsync(user => id == user.UserName) ?? user;
             }
             var postsList = InitializePostList(user);
 
@@ -115,10 +116,16 @@ namespace MicroVerse.Controllers
         public IActionResult Search(string searchTerm)
         {
             var searchResults = (new SearchHelper(_context))
-            	.Users(searchTerm)
-                .ToList();
-
-            return View("SearchResult", searchResults);
+            	.Users(searchTerm);
+            var asViews = searchResults
+            	.Select(u => new UserBadgeViewModel
+            	(
+            		u.UserName,
+            		u.DisplayedName,
+            		false
+            	))
+            	.ToList();
+            return View("SearchResult", asViews);
         }
 
         [Authorize(Roles = "Moderator, Admin")]

@@ -36,7 +36,7 @@ namespace MicroVerse.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(user => id == user.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(user => id == user.UserName);
 
             if (user == null)
             {
