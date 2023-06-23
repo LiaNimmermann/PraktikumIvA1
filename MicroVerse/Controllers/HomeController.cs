@@ -115,6 +115,11 @@ namespace MicroVerse.Controllers
         [HttpPost] //Search functionality (using Displayed Name)
         public IActionResult Search(string searchTerm)
         {
+            var currentUser = User.Identity.Name;
+            var followsList = _context.Follows
+            	.Where(f => f.FollowingUserId == currentUser)
+            	.ToList();
+        
             var searchResults = (new SearchHelper(_context))
             	.Users(searchTerm);
             var asViews = searchResults
@@ -122,7 +127,7 @@ namespace MicroVerse.Controllers
             	(
             		u.UserName,
             		u.DisplayedName,
-            		false
+            		followsList.Any(f =>f.FollowedUserId == u.UserName)
             	))
             	.ToList();
             return View("SearchResult", asViews);

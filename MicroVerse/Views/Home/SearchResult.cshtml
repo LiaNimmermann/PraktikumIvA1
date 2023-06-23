@@ -20,7 +20,8 @@
                  <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@user.UserName">
                 <h2>@user.DisplayedName</h2>
                 </a>
-               <!-- <partial name="_FollowBtn" for="@user.Follows"> -->
+                <br />
+               <partial name="_FollowBtn" for="@user.Follows">
             </div>
         </div>
     }
