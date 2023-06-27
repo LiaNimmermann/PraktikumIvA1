@@ -15,14 +15,14 @@ namespace MicroVerse.Models
             Email = email;
             UserName = userName;
             DisplayedName = displayedName;
-            Role = role;
+            //Role = role;
         }
 
         [Required]
         public string DisplayedName { get; set; } = "";
 
-        [Required]
-        public Role Role { get; set; } = Role.user;
+        //[Required]
+        //public Role Role { get; set; } = Role.user;
 
         public byte[]? Picture { get; set; }
 

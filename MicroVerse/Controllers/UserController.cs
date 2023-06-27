@@ -230,12 +230,39 @@ namespace MicroVerse.Controllers
             {
                 return NotFound();
             }
-            if (!await _roleManager.RoleExistsAsync(role))
+            switch (role)
             {
-                return BadRequest();
+                case "Admin":
+                    await _userManager.AddToRoleAsync(user, "Admin");
+                    await _userManager.AddToRoleAsync(user, "Moderator");
+                    break;
+                case "Moderator":
+                    await _userManager.RemoveFromRoleAsync(user, "Admin");
+                    await _userManager.AddToRoleAsync(user, "Moderator");
+                    break;
+                case "User":
+                    await _userManager.RemoveFromRolesAsync(user, new List<string> {"Admin", "Moderator"});
+                    break;
+                default:
+                    return BadRequest();
             }
-            await _userManager.AddToRoleAsync(user, role);
             return NoContent();
+        }
+
+        [HttpGet("GetUserRole")]
+        public async Task<string> GetUserRole(string id)
+        {
+            User user = GetUser(id).Result.Value;
+            if(await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                return "Admin";
+            } else if(await _userManager.IsInRoleAsync(user, "Moderator"))
+            {
+                return "Moderator";
+            } else
+            {
+                return "User";
+            }
         }
     }
 }

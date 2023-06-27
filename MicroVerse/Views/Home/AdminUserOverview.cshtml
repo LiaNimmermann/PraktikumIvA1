@@ -1,0 +1,31 @@
+﻿@using MicroVerse.ViewModels
+
+@model List<UserWithRole>
+
+
+<div class="body">
+    <table>
+        <tr>
+            <th>Username</th>
+            <th>Displayed Name</th>
+            <th>Bio</th>
+            <th>Activation</th>
+            <th>Roles</th>
+            <th>Actions</th>
+        </tr>
+        @foreach(var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.DisplayedName</td>
+                <td>@user.Bio</td>
+                <td>@user.Activation</td>
+                <td>@user.Role</td>
+                <td>
+                    <a ></a>
+                </td>
+            </tr>
+        }
+    </table>
+
+</div>

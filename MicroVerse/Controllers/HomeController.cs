@@ -138,5 +138,13 @@ namespace MicroVerse.Controllers
         {
             return View();
         }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminUserOverview()
+        {
+            List<UserWithRole> users = new List<UserWithRole>();
+
+            return View(users);
+        }
     }
 }
