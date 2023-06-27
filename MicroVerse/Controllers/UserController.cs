@@ -4,6 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
 using MicroVerse.Models;
 using MicroVerse.Helper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MicroVerse.ViewModels;
+using Microsoft.IdentityModel.JsonWebTokens;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MicroVerse.Controllers
 {
@@ -15,13 +23,16 @@ namespace MicroVerse.Controllers
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IConfiguration _configuration;
 
-        public UserController(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager)
+
+        public UserController(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
+            _configuration = configuration;
         }
 
 
@@ -165,8 +176,8 @@ namespace MicroVerse.Controllers
             _context.Follows.Remove(toDelete);
             await _context.SaveChangesAsync();
             Response.Redirect(Request.HttpContext.Request.Path);
-            
-            return new LocalRedirectResult("/Home/Profile/"+followedId);
+
+            return new LocalRedirectResult("/Home/Profile/" + followedId);
         }
 
         // GET: api/User/Follows/id@user.com
@@ -264,5 +275,45 @@ namespace MicroVerse.Controllers
                 return "User";
             }
         }
+
+        // Log in over api, users receive a JWT for future validation
+        [HttpPost]
+        [Route("login")]
+        //api/User/Login
+        public async Task<ActionResult> LogIn([FromBody] LogInViewModel model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                var userRoles = await _userManager.GetRolesAsync(user);
+
+                var authclaims = new[]
+                {
+                new Claim("Email", model.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.Id),
+            };
+
+                var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["Jwt:Issuer"],
+                    audience: _configuration["Jwt:Audience"],
+                    expires: DateTime.Now.AddDays(21),
+                    claims: authclaims,
+                    signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+                    );
+
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    tokenExpiration = token.ValidTo
+                });
+            }
+            return Unauthorized();
+        }
+
+
     }
+
+
 }

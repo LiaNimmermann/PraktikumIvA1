@@ -1,7 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using MicroVerse.Data;
 using MicroVerse.Models;
+using System.Security.Claims;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +19,35 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthentication()
+
+
+    .AddCookie(options =>
+    {
+        // Allow ASP Identity beside JWT
+        options.LoginPath = $"/Identity/Account/Login";
+        options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+        
+        // JWT
+    }).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+            {
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey
+                (Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                ValidateIssuer = true,
+                RequireExpirationTime = true,
+                ValidateAudience = true,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true
+            };
+
+        });
 
 var app = builder.Build();
 
@@ -33,10 +66,16 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseRouting();
 
+// ** Don't change order **
 app.UseAuthentication();
+app.UseRouting();
 app.UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+// ** Don't change order **
 
 app.MapControllerRoute(
     name: "default",
