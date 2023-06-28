@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
 using MicroVerse.Models;
 using MicroVerse.Helper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using MicroVerse.ViewModels;
+using System.Security.Claims;
 
 namespace MicroVerse.Controllers
 {
@@ -215,6 +219,29 @@ namespace MicroVerse.Controllers
         private bool PostExists(Guid id)
         {
             return _context.Post.Any(e => e.Id == id);
+        }
+
+
+        // Create a post using token for user authentication
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpPost]
+        [Route("AuthPost")]
+        //api/Post/AuthPost
+        public async Task<IActionResult> AuthPost([FromBody] AuthPostViewModel model)
+        {
+            User user = new();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            Post post = new Post(model.Body, user.UserName);
+            _context.Post.Add(post);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("AuthPost", new { id = post.Id }, post);
+
         }
     }
 }
