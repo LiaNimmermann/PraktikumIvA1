@@ -3,8 +3,9 @@ namespace MicroVerse.Models
     public enum Activation
     {
         active = 0,
-        blocked = 1,
-        deleted = 2,
-        banned = 3
+        flagged = 1,
+        blocked = 2,
+        deleted = 3,
+        banned = 4
     }
 }
