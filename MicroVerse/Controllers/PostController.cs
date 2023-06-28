@@ -11,31 +11,33 @@ namespace MicroVerse.Controllers
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly PostHelper _postHelper;
 
         public PostController(ApplicationDbContext context)
         {
             _context = context;
+            _postHelper = new PostHelper(_context);
         }
 
         // GET: api/Post
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Post>>> GetPost()
+        public ActionResult<IEnumerable<Post>> GetPost()
         {
-            return await _context.Post.ToListAsync();
+            return Json(_postHelper.GetPosts());
         }
 
         // GET: api/Post/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> GetPost(Guid id)
+        public ActionResult<Post> GetPost(Guid id)
         {
-            var post = await _context.Post.FindAsync(id);
+            var post = _postHelper.GetPost(id);
 
             if (post == null)
             {
                 return NotFound();
             }
 
-            return post;
+            return Json(post);
         }
 
         // PUT: api/Post/5
