@@ -13,34 +13,43 @@ namespace MicroVerse.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly PostHelper _postHelper;
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
             _context = context;
+            _postHelper = new PostHelper(_context);
         }
 
         public IActionResult Index()
         {
-            var postsList = _context.Post
-                .OrderByDescending(post => post.CreatedAt)
-                .Join(
-                    _context.Users,
-                    post => post.AuthorId,
-                    user => user.UserName,
-                    (post, user) => new { DisplayName = user.DisplayedName, Post = post }
-                )
-                .Select(post => new PostViewModel
-                    (
-                    	post.Post.Id,
-                        post.Post.Body,
-                        null, //TODO
-                        post.Post.CreatedAt,
-                        post.DisplayName,
-                        post.Post.AuthorId,
-                        post.Post.Votes.Where(x => x.Upvote > 0).Count(),
-                        post.Post.Votes.Where(x => x.Upvote < 0).Count()
-                )).ToList();
+        	var users = _context.Users
+        		.ToList();
+            var postsList = _postHelper.GetPosts()
+            	.Select(post 
+            		=> new PostViewModel(post, users))
+            	.ToList();
+            
+//            _context.Post
+//                .OrderByDescending(post => post.CreatedAt)
+//                .Join(
+//                    _context.Users,
+//                    post => post.AuthorId,
+//                    user => user.UserName,
+//                    (post, user) => new { DisplayName = user.DisplayedName, Post = post }
+//                )
+//                .Select(post => new PostViewModel
+//                    (
+//                    	post.Post.Id,
+//                        post.Post.Body,
+//                        null, //TODO
+//                        post.Post.CreatedAt,
+//                        post.DisplayName,
+//                        post.Post.AuthorId,
+//                        post.Post.Votes.Where(x => x.Upvote > 0).Count(),
+//                        post.Post.Votes.Where(x => x.Upvote < 0).Count()
+//                )).ToList();
                 
             var currentUser = User.Identity.Name;
             var followsList = _context.Follows

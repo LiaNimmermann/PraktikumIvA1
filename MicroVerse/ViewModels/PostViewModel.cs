@@ -31,6 +31,7 @@ namespace MicroVerse.ViewModels
             Downvotes = downvotes;
             Status = status;
         }
+        
         public PostViewModel(Guid id, string body, PostViewModel? reactsTo, DateTime createdAt, string displayName, string username, int upvotes, int downvotes)
         {
         	Id = id;
@@ -41,6 +42,28 @@ namespace MicroVerse.ViewModels
             Username = username;
             Upvotes = upvotes;
             Downvotes = downvotes;
+            AuthorImage = "https://picsum.photos/200/200";
+        }
+
+        public PostViewModel(Post post, IEnumerable<User> users)
+        {
+        	Id = post.Id;
+            Body = post.Body;
+            ReactsTo = post.ReactsTo != null
+            	? new PostViewModel(post.ReactsTo, users)
+            	: null;
+            CreatedAt = post.CreatedAt;
+            DisplayedName = users
+            	.FirstOrDefault(u 
+            		=> u.UserName == post.AuthorId)
+            	.DisplayedName;
+            Username = post.AuthorId;
+            Upvotes = post.Votes
+            	.Where(x => x.Upvote > 0)
+            	.Count();
+            Downvotes = post.Votes
+            	.Where(x => x.Upvote < 0)
+            	.Count();
             AuthorImage = "https://picsum.photos/200/200";
         }
 

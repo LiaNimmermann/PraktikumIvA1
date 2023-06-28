@@ -14,13 +14,14 @@ namespace MicroVerse.Helper
         
         public IEnumerable<Post> GetPosts()
         {
-        	return _context.Post.ToList();
+        	return _context.Post
+        		.OrderByDescending(post => post.CreatedAt)
+        		.ToList();
         }
         
         public Post GetPost(Guid id)
         {
-        	return _context.Post
-        		.ToList()
+        	return GetPosts()
         		.FirstOrDefault(p => p.Id == id);
         }
     }
