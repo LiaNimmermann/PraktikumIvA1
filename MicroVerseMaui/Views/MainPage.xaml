@@ -63,7 +63,7 @@
         </CollectionView>
         <Button Text="Home / Get Posts"
                 Style="{StaticResource ButtonOutline}"
-                Command="{Binding GePostsCommand}"
+                Command="{Binding GetPostsCommand}"
                 IsEnabled="{Binding IsNotBusy}"
                 TextColor="DarkGreen"
 
