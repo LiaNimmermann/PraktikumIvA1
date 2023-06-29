@@ -17,15 +17,14 @@ namespace MicroVerseMaui.ViewModels
     public partial class  PostViewModel : BaseViewModel
     {
         ApiService getPosts;
-                public ObservableCollection<Post> Posts { get; } = new();
+        public ObservableCollection<Post> Posts { get; } = new();
         public PostViewModel(ApiService getPosts) {
-            Title = "MicroVerse";
+            Title = "Microverse";
             this.getPosts = getPosts;
-
         }
 
         [RelayCommand]
-         async Task GetPostsAsync()
+        async Task GePostsAsync()
         {
             if (IsBusy) 
                 return;
@@ -48,6 +47,6 @@ namespace MicroVerseMaui.ViewModels
             {
                 IsBusy = false;
             }
-                    }
+        }
     }
-    }
+}

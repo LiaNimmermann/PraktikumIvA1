@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:MicroVerseMaui.Models"
              xmlns:viewmodel="clr-namespace:MicroVerseMaui.ViewModels"   
-             x:DataType="viewmodel:PostViewModel"           
+             x:DataType="viewmodel:PostViewModel"
              Title = "{Binding Title}"
              x:Class="MicroVerseMaui.Views.MainPage">
 
@@ -63,7 +63,7 @@
         </CollectionView>
         <Button Text="Home / Get Posts"
                 Style="{StaticResource ButtonOutline}"
-                Command="{Binding GetPostsCommand}"
+                Command="{Binding GePostsCommand}"
                 IsEnabled="{Binding IsNotBusy}"
                 TextColor="DarkGreen"
 
