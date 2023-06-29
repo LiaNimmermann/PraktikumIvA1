@@ -147,6 +147,36 @@ namespace MicroVerse.Controllers
             return await PutPost(id, post);
         }
 
+        // PATCH: api/Post/Flag/5
+        [HttpPatch("Flag/{id}")]
+        public async Task<IActionResult> FlagPost(Guid id)
+        {
+            var post = await _context.Post.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Activation = Activation.flagged;
+
+            return await PutPost(id, post);
+        }
+
+        // PATCH: api/Post/Flag/5
+        [HttpPatch("Unflag/{id}")]
+        public async Task<IActionResult> UnflagPost(Guid id)
+        {
+            var post = await _context.Post.FindAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.Activation = Activation.active;
+
+            return await PutPost(id, post);
+        }
+
         // PATCH: api/Post/Up/user@id.com/5
         [HttpPatch("Up/{user}/{id}")]
         public async Task<IActionResult> UpvotePost(String user, Guid id)
