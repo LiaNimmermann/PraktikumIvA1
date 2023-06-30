@@ -34,6 +34,9 @@
     }
     @if(Model.ReactsTo!=null)
     {
+
+        <hr>
+        <p>This is a reaction to: </p>
         <partial name="_PostPartial" for="@Model.ReactsTo" />
     }
 </div>
