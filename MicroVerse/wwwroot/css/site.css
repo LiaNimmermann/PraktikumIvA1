@@ -264,6 +264,18 @@ h2 {
         align-items: center;
     }
 
+.delete-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
 /* Moderation page */
 .user {
     display: flex;

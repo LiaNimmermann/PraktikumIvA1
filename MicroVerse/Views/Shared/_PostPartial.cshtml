@@ -20,6 +20,10 @@
     <div class="post-body">
         @Model.Body
     </div>
+    @if (User.Identity.IsAuthenticated)
+    {
+       
+    }
     @if (SignInManager.IsSignedIn(User))
     {
 
@@ -31,6 +35,17 @@
                 <button type="submit"> React </button>
             </form>
         </div>
+        @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
+        {
+
+            <form method="post" asp-controller="Post" asp-action="DeletePost" asp-route-id="@Model.Id" style="position: relative; top: 10px; right: 10px;">
+                <button type="submit" class="delete-button">Delete</button>
+            </form>
+        }
+
+
+
+        
     }
     @if(Model.ReactsTo!=null)
     {
