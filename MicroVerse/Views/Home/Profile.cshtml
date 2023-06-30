@@ -6,6 +6,9 @@
 @inject SignInManager<User> SignInManager
 @model ProfileViewModel
 
+@{
+    string roleSelectionModel = Model.UserName + "," + @Model.Role;
+}
 
 <!-- Page content -->
 <div class="main">
@@ -19,6 +22,7 @@
         </div>
     </div>
     <partial name="_FollowBtn" for="@Model.Follows">
+    <partial name="_RoleSelection" for="@roleSelectionModel">
     <h2>@Model.DisplayedName</h2>
     <p>@Model.Bio</p>
 
