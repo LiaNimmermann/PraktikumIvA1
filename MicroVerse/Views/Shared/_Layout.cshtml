@@ -28,7 +28,7 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            if (User.IsInRole("Moderator"))
+                            if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Moderation">Moderation</a>
