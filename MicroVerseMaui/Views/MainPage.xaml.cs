@@ -9,8 +9,12 @@ public partial class MainPage : ContentPage
     {
         InitializeComponent();
         BindingContext = viewModel;
+        Loaded += (s, e) =>
+        {
+            viewModel.GetPostsCommand.Execute(null);
+        };
+
 
     }
-
 }
 

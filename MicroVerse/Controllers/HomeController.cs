@@ -6,6 +6,7 @@ using MicroVerse.Data;
 using MicroVerse.Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace MicroVerse.Controllers
 {
@@ -14,6 +15,8 @@ namespace MicroVerse.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly PostHelper _postHelper;
+        private readonly UserManager<User> _userManager;
+        private UserController _userController;
 
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
@@ -65,8 +68,8 @@ namespace MicroVerse.Controllers
                 followerList.Count(),
                 followsList.Count(),
                 postsList,
-                (follows.Count() == 1)
-
+                (follows.Count() == 1),
+                _userController.GetUserRole(user.UserName).Result                
             );
 
             return View(model);

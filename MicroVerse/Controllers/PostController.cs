@@ -132,9 +132,9 @@ namespace MicroVerse.Controllers
             return new LocalRedirectResult("/Home/Index");
         }
 
-        // DELETE: api/Post/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(int id)
+        // POST: api/Post/DeletePost/5
+        [HttpPost("DeletePost/{id}")]
+        public async Task<IActionResult> DeletePost(Guid id)
         {
             var post = await _context.Post.FindAsync(id);
             if (post == null)
@@ -145,8 +145,10 @@ namespace MicroVerse.Controllers
             _context.Post.Remove(post);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return new LocalRedirectResult("/Home/Index");
         }
+
+
 
         // PATCH: api/Post/5
         [HttpPatch("{id}")]

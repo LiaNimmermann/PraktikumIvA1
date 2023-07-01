@@ -14,27 +14,29 @@ using CommunityToolkit.Mvvm.Input;
 namespace MicroVerseMaui.ViewModels
 {
     //Call Get Posts from the Api Service, store in an ObservableCollection
-    public partial class  PostViewModel : BaseViewModel
+    public partial class PostViewModel : BaseViewModel
     {
         ApiService getPosts;
         public ObservableCollection<Post> Posts { get; } = new();
-        public PostViewModel(ApiService getPosts) {
-            Title = "Microverse";
+        public PostViewModel(ApiService getPosts)
+        {
+            Title = "MicroVerse";
             this.getPosts = getPosts;
+
         }
 
         [RelayCommand]
-        async Task GePostsAsync()
+        async Task GetPostsAsync()
         {
-            if (IsBusy) 
+            if (IsBusy)
                 return;
             try
             {
                 IsBusy = true;
                 var posts = await getPosts.GetPosts();
-                if(Posts.Count != 0)
+                if (Posts.Count != 0)
                     Posts.Clear();
-                foreach(var post in posts)
+                foreach (var post in posts)
                     Posts.Add(post);
             }
             catch (Exception ex)
