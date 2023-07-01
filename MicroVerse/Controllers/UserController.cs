@@ -4,10 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
 using MicroVerse.Models;
 using MicroVerse.Helper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MicroVerse.ViewModels;
-using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -24,140 +21,71 @@ namespace MicroVerse.Controllers
         private readonly SignInManager<User> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly UserHelper _userHelper;
 
 
-        public UserController(ApplicationDbContext context, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        public UserController
+        (
+            ApplicationDbContext context,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            RoleManager<IdentityRole> roleManager,
+            IConfiguration configuration
+        )
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _userHelper = new UserHelper(_context, _userManager);
         }
 
 
         // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
-        {
-            return await _context.Users.ToListAsync();
-        }
+            => Json(await _userHelper.GetUsers());
 
         // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(user => id == user.UserName);
+            var user = await _userHelper.GetUser(id);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return user;
+            return user == null
+                ? NotFound()
+                : user;
         }
 
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(string id, User userModel)
-        {
-            if (id != userModel.Email)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(userModel).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+            => StatusToActionResult(await _userHelper.PutUser(id, userModel));
 
         // POST: api/User
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User userModel)
-        {
-            _context.Users.Add(userModel);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (UserExists(userModel.Email))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetUser", new { id = userModel.Email }, userModel);
-        }
+            => await _userHelper.PostUser(userModel) is null
+            ? Conflict()
+            : CreatedAtAction("GetUser", new { id = userModel.UserName }, userModel);
 
         // DELETE: api/User/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
-        {
-            var userModel = await _context.Users.FindAsync(id);
-            if (userModel == null)
-            {
-                return NotFound();
-            }
-
-            _context.Users.Remove(userModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+            => StatusToActionResult(await _userHelper.DeleteUser(id));
 
         // PATCH: api/User/5
         [HttpPatch("{id}")]
         public async Task<IActionResult> BlockUser(string id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            user.Activation = Activation.blocked;
-
-            return await PutUser(id, user);
-        }
+            => StatusToActionResult(await _userHelper.BlockUser(id));
 
         // PATCH: api/User/Ban/5
         [HttpPatch("Ban/{id}")]
         public async Task<IActionResult> BanUser(string id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            user.Activation = Activation.banned;
-
-            return await PutUser(id, user);
-        }
+            => StatusToActionResult(await _userHelper.BanUser(id));
 
         [HttpPost("FollowUser")]
         public async Task<IActionResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
@@ -228,11 +156,6 @@ namespace MicroVerse.Controllers
             return Json(users);
         }
 
-        private bool UserExists(string id)
-        {
-            return _context.Users.Any(e => e.Email == id);
-        }
-
         [HttpPost("SetUserRole")]
         public async Task<IActionResult> SetUserRole(string userId, string role)
         {
@@ -262,19 +185,7 @@ namespace MicroVerse.Controllers
 
         [HttpGet("GetUserRole")]
         public async Task<string> GetUserRole(string id)
-        {
-            User user = GetUser(id).Result.Value;
-            if(await _userManager.IsInRoleAsync(user, "Admin"))
-            {
-                return "Admin";
-            } else if(await _userManager.IsInRoleAsync(user, "Moderator"))
-            {
-                return "Moderator";
-            } else
-            {
-                return "User";
-            }
-        }
+            => await _userHelper.GetUserRole(id);
 
         // Log in over api, users receive a JWT for future validation
         [HttpPost]
@@ -289,9 +200,9 @@ namespace MicroVerse.Controllers
 
                 var authclaims = new[]
                 {
-                new Claim("Email", model.Email),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-            };
+                    new Claim("Email", model.Email),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id),
+                };
 
                 var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
@@ -301,7 +212,7 @@ namespace MicroVerse.Controllers
                     expires: DateTime.Now.AddDays(21),
                     claims: authclaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                    );
+                );
 
                 return Ok(new
                 {
@@ -312,8 +223,12 @@ namespace MicroVerse.Controllers
             return Unauthorized();
         }
 
-
+        private IActionResult StatusToActionResult(Status status)
+            => status switch
+            {
+                Status.NoContent => NoContent(),
+                Status.NotFound => NotFound(),
+                _ => BadRequest()
+            };
     }
-
-
 }

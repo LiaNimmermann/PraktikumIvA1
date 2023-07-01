@@ -16,7 +16,7 @@ namespace MicroVerse.ViewModels
         public int Downvotes { get; set; }
         public int? Status { get; set; }
 
-        public PostViewModel() { } 
+        public PostViewModel() { }
 
         public PostViewModel(Guid id, string body, PostViewModel reactsTo, DateTime createdAt, string displayName, string authorImage, string username, int upvotes, int downvotes, int status)
         {
@@ -31,10 +31,10 @@ namespace MicroVerse.ViewModels
             Downvotes = downvotes;
             Status = status;
         }
-        
+
         public PostViewModel(Guid id, string body, PostViewModel? reactsTo, DateTime createdAt, string displayName, string username, int upvotes, int downvotes)
         {
-        	Id = id;
+            Id = id;
             Body = body;
             ReactsTo = reactsTo;
             CreatedAt = createdAt;
@@ -47,23 +47,22 @@ namespace MicroVerse.ViewModels
 
         public PostViewModel(Post post, IEnumerable<User> users)
         {
-        	Id = post.Id;
+            Id = post.Id;
             Body = post.Body;
             ReactsTo = post.ReactsTo != null
-            	? new PostViewModel(post.ReactsTo, users)
-            	: null;
+                ? new PostViewModel(post.ReactsTo, users)
+                : null;
             CreatedAt = post.CreatedAt;
             DisplayedName = users
-            	.FirstOrDefault(u 
-            		=> u.UserName == post.AuthorId)
-            	.DisplayedName;
+                .FirstOrDefault(u => u.UserName == post.AuthorId)
+                .DisplayedName;
             Username = post.AuthorId;
             Upvotes = post.Votes
-            	.Where(x => x.Upvote > 0)
-            	.Count();
+                .Where(x => x.Upvote > 0)
+                .Count();
             Downvotes = post.Votes
-            	.Where(x => x.Upvote < 0)
-            	.Count();
+                .Where(x => x.Upvote < 0)
+                .Count();
             AuthorImage = "https://picsum.photos/200/200";
         }
 

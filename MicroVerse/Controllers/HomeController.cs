@@ -14,27 +14,35 @@ namespace MicroVerse.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-        private readonly PostHelper _postHelper;
         private readonly UserManager<User> _userManager;
-        private UserController _userController;
+        private readonly PostHelper _postHelper;
+        private readonly UserHelper _userHelper;
+        private readonly SearchHelper _searchHelper;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController
+        (
+            ILogger<HomeController> logger,
+            ApplicationDbContext context,
+            UserManager<User> userManager,
+            IConfiguration configuration
+        )
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
+            _userHelper = new UserHelper(_context, _userManager);
             _postHelper = new PostHelper(_context);
+            _searchHelper = new SearchHelper(_context);
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-        	var users = _context.Users
-        		.ToList();
+            var users = await _userHelper.GetUsers();
             var postsList = _postHelper.GetPosts()
-            	.Select(post 
-            		=> new PostViewModel(post, users))
-            	.ToList();
-                
-            var currentUser = User.Identity.Name;
+                .Select(post => new PostViewModel(post, users))
+                .ToList();
+
+            var currentUser = User?.Identity?.Name;
             var followsList = _context.Follows
                 .Where(f => f.FollowingUserId == currentUser)
                 .Join(
@@ -51,26 +59,33 @@ namespace MicroVerse.Controllers
         [Authorize]
         public async Task<IActionResult> Profile(string id)
         {
-            User user = new User("User1234", "User 12 34", "I'm just a normal User with a normal Bio", Role.user);
-            if (id != null) {
-                user = await _context.Users.FirstOrDefaultAsync(user => id == user.UserName) ?? user;
-            }
-            var postsList = InitializePostList(user);
+            var user = await _userHelper.GetUser(id);
 
-            var followsList = _context.Follows.Where(f => f.FollowingUserId == id);
-            var followerList = _context.Follows.Where(f => f.FollowedUserId == id);
-            var follows = _context.Follows.Where(f => f.FollowedUserId == id && f.FollowingUserId == User.Identity.Name);
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            var postsList = await InitializePostList(user);
+
+            var currentUser = User?.Identity?.Name;
+            var followsList = _context.Follows
+                .Where(f => f.FollowingUserId == id);
+            var followerList = _context.Follows
+                .Where(f => f.FollowedUserId == id);
+            var follows = followerList
+                .Any(f => f.FollowingUserId == currentUser);
             var model = new ProfileViewModel
-            (
-                user.UserName.ToString(),
-                user.DisplayedName,
-                user.Bio,
-                followerList.Count(),
-                followsList.Count(),
-                postsList,
-                (follows.Count() == 1),
-                _userController.GetUserRole(user.UserName).Result                
-            );
+                (
+                    user.UserName,
+                    user.DisplayedName,
+                    user.Bio,
+                    followerList.Count(),
+                    followsList.Count(),
+                    postsList,
+                    follows,
+                    await _userHelper.GetUserRole(user.UserName)
+                );
 
             return View(model);
         }
@@ -82,14 +97,12 @@ namespace MicroVerse.Controllers
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+            => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
-        private List<PostViewModel> InitializePostList(User user) 
+        private async Task<List<PostViewModel>> InitializePostList(User user)
         {
-        	var users = _context.Users.ToList();
-        	
+            var users = await _userHelper.GetUsers();
+
             return _postHelper.GetPostsByUserAndFollows(user.UserName)
                 .Select(post => new PostViewModel(post, users))
                 .ToList();
@@ -97,24 +110,25 @@ namespace MicroVerse.Controllers
 
         [Authorize]
         [HttpPost] //Search functionality (using Displayed Name)
-        public IActionResult Search(string searchTerm)
+        public async Task<IActionResult> Search(string searchTerm)
         {
-            var currentUser = User.Identity.Name;
-            var followsList = _context.Follows
-            	.Where(f => f.FollowingUserId == currentUser)
-            	.ToList();
-        
-            var searchResults = (new SearchHelper(_context))
-            	.Users(searchTerm);
-            var asViews = searchResults
-            	.Select(u => new UserBadgeViewModel
-            	(
-            		u.UserName,
-            		u.DisplayedName,
-            		followsList.Any(f =>f.FollowedUserId == u.UserName)
-            	))
-            	.ToList();
-            return View("SearchResult", asViews);
+            var currentUser = User?.Identity?.Name;
+            var follows = await _context.Follows
+                .Where(f => f.FollowingUserId == currentUser)
+                .Select(f => f.FollowedUserId)
+                .ToListAsync();
+
+            var searchResults = _searchHelper
+                .Users(searchTerm)
+                .Select(u => new UserBadgeViewModel
+                        (
+                            u.UserName,
+                            u.DisplayedName,
+                            follows.Any(f => f == u.UserName)
+                        ))
+                .ToList();
+
+            return View("SearchResult", searchResults);
         }
 
         [Authorize(Roles = "Moderator, Admin")]
@@ -126,7 +140,7 @@ namespace MicroVerse.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AdminUserOverview()
         {
-            List<UserWithRole> users = new List<UserWithRole>();
+            var users = new List<UserWithRole>();
 
             return View(users);
         }

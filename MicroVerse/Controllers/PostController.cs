@@ -34,7 +34,7 @@ namespace MicroVerse.Controllers
         [HttpGet("by/{authorId}")]
         public ActionResult<IEnumerable<Post>> GetPost(String authorId)
         {
-        	var posts = _postHelper.GetPostsByUser(authorId);
+            var posts = _postHelper.GetPostsByUser(authorId);
             return Json(posts);
         }
 
@@ -42,7 +42,7 @@ namespace MicroVerse.Controllers
         [HttpGet("by/follows/{authorId}")]
         public ActionResult<IEnumerable<Post>> GetPosts(String authorId)
         {
-        	var posts = _postHelper.GetPostsByUserAndFollows(authorId);
+            var posts = _postHelper.GetPostsByUserAndFollows(authorId);
             return Json(posts);
         }
 
@@ -64,70 +64,20 @@ namespace MicroVerse.Controllers
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(Guid id, Post post)
-        {
-            if (id != post.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(post).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PostExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
+            => StatusToActionResult(await _postHelper.PutPost(id, post));
 
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("Post")]
         public async Task<IActionResult> Post([FromForm] String text)
-        {
-            var userId = HttpContext.User.Identity.Name;
-            Post post = new Post(text, userId);
-            _context.Post.Add(post);
-            await _context.SaveChangesAsync();
-
-            return new LocalRedirectResult("/Home/Index");
-        }
-
-        [HttpPost("{reactsTo}/{text}")]
-        public async Task<IActionResult> ReactToPost(Guid reactsTo, String text)
-        {
-            var userId = User.Identity.Name;
-            var post = new Post(text, userId)
-            {
-                ReactsTo = await _context.Post.FindAsync(reactsTo)
-            };
-            _context.Post.Add(post);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+            => await React(text, null);
 
         // POST: api/React
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost("React")]
-        public async Task<IActionResult> React([FromForm] String text, [FromForm] Guid postId)
+        public async Task<IActionResult> React([FromForm] String text, [FromForm] Guid? postId)
         {
-            var userId = HttpContext.User.Identity.Name;
-            Post reactsTo = await _context.Post.FindAsync(postId);
-            Post post = new Post(text, userId, reactsTo);
-            _context.Post.Add(post);
-            await _context.SaveChangesAsync();
+            _ = await _postHelper.Post(text, User?.Identity?.Name ?? "", postId);
 
             return new LocalRedirectResult("/Home/Index");
         }
@@ -135,95 +85,37 @@ namespace MicroVerse.Controllers
         // POST: api/Post/DeletePost/5
         [HttpPost("DeletePost/{id}")]
         public async Task<IActionResult> DeletePost(Guid id)
-        {
-            var post = await _context.Post.FindAsync(id);
-            if (post == null)
+            => await _postHelper.DeletePost(id) switch
             {
-                return NotFound();
-            }
-
-            _context.Post.Remove(post);
-            await _context.SaveChangesAsync();
-
-            return new LocalRedirectResult("/Home/Index");
-        }
-
-
+                Status.NotFound => NotFound(),
+                Status.Redirect => new LocalRedirectResult("/Home/Index"),
+                _ => BadRequest()
+            };
 
         // PATCH: api/Post/5
         [HttpPatch("{id}")]
         public async Task<IActionResult> BlockPost(Guid id)
-        {
-            var post = await _context.Post.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            post.Activation = Activation.blocked;
-
-            return await PutPost(id, post);
-        }
+            => StatusToActionResult(await _postHelper.BlockPost(id));
 
         // PATCH: api/Post/Flag/5
         [HttpPatch("Flag/{id}")]
         public async Task<IActionResult> FlagPost(Guid id)
-        {
-            var post = await _context.Post.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            post.Activation = Activation.flagged;
-
-            return await PutPost(id, post);
-        }
+            => StatusToActionResult(await _postHelper.FlagPost(id));
 
         // PATCH: api/Post/Flag/5
         [HttpPatch("Unflag/{id}")]
         public async Task<IActionResult> UnflagPost(Guid id)
-        {
-            var post = await _context.Post.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            post.Activation = Activation.active;
-
-            return await PutPost(id, post);
-        }
+            => StatusToActionResult(await _postHelper.ActivatePost(id));
 
         // PATCH: api/Post/Up/user@id.com/5
         [HttpPatch("Up/{user}/{id}")]
         public async Task<IActionResult> UpvotePost(String user, Guid id)
-        {
-            var post = await _context.Post.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            post.Votes.Add(new Vote(post.Id, user, 1));
-
-            return await PutPost(id, post);
-        }
+            => StatusToActionResult(await _postHelper.VotePost(id, user, true));
 
         // PATCH: api/Post/Down/user@id.com/5
         [HttpPatch("Down/{user}/{id}")]
         public async Task<IActionResult> DownvotePost(String user, Guid id)
-        {
-            var post = await _context.Post.FindAsync(id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-
-            post.Votes.Add(new Vote(post.Id,user,-1));
-
-            return await PutPost(id, post);
-        }
+            => StatusToActionResult(await _postHelper.VotePost(id, user, false));
 
         [HttpGet("Search/{phrase}")]
         public IActionResult SearchPosts(String phrase)
@@ -232,13 +124,6 @@ namespace MicroVerse.Controllers
 
             return Json(posts);
         }
-        
-
-        private bool PostExists(Guid id)
-        {
-            return _context.Post.Any(e => e.Id == id);
-        }
-
 
         // Create a post using token for user authentication
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -254,12 +139,18 @@ namespace MicroVerse.Controllers
             {
                 return NotFound();
             }
-            Post post = new Post(model.Body, user.UserName);
-            _context.Post.Add(post);
-            await _context.SaveChangesAsync();
+
+            var post = await _postHelper.Post(model.Body, user.UserName, null);
 
             return CreatedAtAction("AuthPost", new { id = post.Id }, post);
-
         }
+
+        private IActionResult StatusToActionResult(Status status)
+            => status switch
+            {
+                Status.NoContent => NoContent(),
+                Status.NotFound => NotFound(),
+                _ => BadRequest()
+            };
     }
 }

@@ -11,8 +11,8 @@ namespace MicroVerse.ViewModels
 
         public HomeViewModel(List<User> follows, List<PostViewModel> posts)
         {
-            this.Follows = follows;
-            this.Posts = posts;
+            Follows = follows;
+            Posts = posts;
         }
 
     }
