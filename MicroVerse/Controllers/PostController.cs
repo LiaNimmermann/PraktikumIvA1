@@ -30,6 +30,22 @@ namespace MicroVerse.Controllers
             return Json(_postHelper.GetPosts());
         }
 
+        // GET: api/Post
+        [HttpGet("by/{authorId}")]
+        public ActionResult<IEnumerable<Post>> GetPost(String authorId)
+        {
+        	var posts = _postHelper.GetPostsByUser(authorId);
+            return Json(posts);
+        }
+
+        // GET: api/Post
+        [HttpGet("by/follows/{authorId}")]
+        public ActionResult<IEnumerable<Post>> GetPosts(String authorId)
+        {
+        	var posts = _postHelper.GetPostsByUserAndFollows(authorId);
+            return Json(posts);
+        }
+
         // GET: api/Post/5
         [HttpGet("{id}")]
         public ActionResult<Post> GetPost(Guid id)

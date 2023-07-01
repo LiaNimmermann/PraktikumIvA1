@@ -19,6 +19,26 @@ namespace MicroVerse.Helper
         		.ToList();
         }
         
+        public IEnumerable<Post> GetPostsByUser(String userName)
+        {
+        	return GetPosts()
+        		.Where(p => p.AuthorId == userName);
+        }
+        
+        public IEnumerable<Post> GetPostsByUserAndFollows(String userName)
+        {
+        	
+            var followsList = _context.Follows
+            	.Where(f => f.FollowingUserId == userName)
+            	.Select(f => f.FollowedUserId)
+            	.ToList();
+            followsList.Add(userName);
+            var posts = followsList
+            	.SelectMany(f => GetPostsByUser(f))
+        		.OrderByDescending(post => post.CreatedAt);
+            return posts;
+        }
+        
         public Post GetPost(Guid id)
         {
         	return GetPosts()

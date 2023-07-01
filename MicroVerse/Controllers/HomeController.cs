@@ -30,26 +30,6 @@ namespace MicroVerse.Controllers
             	.Select(post 
             		=> new PostViewModel(post, users))
             	.ToList();
-            
-//            _context.Post
-//                .OrderByDescending(post => post.CreatedAt)
-//                .Join(
-//                    _context.Users,
-//                    post => post.AuthorId,
-//                    user => user.UserName,
-//                    (post, user) => new { DisplayName = user.DisplayedName, Post = post }
-//                )
-//                .Select(post => new PostViewModel
-//                    (
-//                    	post.Post.Id,
-//                        post.Post.Body,
-//                        null, //TODO
-//                        post.Post.CreatedAt,
-//                        post.DisplayName,
-//                        post.Post.AuthorId,
-//                        post.Post.Votes.Where(x => x.Upvote > 0).Count(),
-//                        post.Post.Votes.Where(x => x.Upvote < 0).Count()
-//                )).ToList();
                 
             var currentUser = User.Identity.Name;
             var followsList = _context.Follows
@@ -103,21 +83,13 @@ namespace MicroVerse.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        private List<PostViewModel> InitializePostList(User user) {
-            return _context.Post
-                .Where(post => post.AuthorId == user.UserName)
-                .OrderByDescending(post => post.CreatedAt)
-                .Select(post => new PostViewModel
-                        (
-                        	post.Id,
-                            post.Body,
-                            null,
-                            post.CreatedAt,
-                            user.DisplayedName,
-                            user.UserName.ToString(),
-                            post.Votes.Where(x => x.Upvote > 0).Count(),
-                            post.Votes.Where(x => x.Upvote < 0).Count()
-                        )).ToList();
+        private List<PostViewModel> InitializePostList(User user) 
+        {
+        	var users = _context.Users.ToList();
+        	
+            return _postHelper.GetPostsByUserAndFollows(user.UserName)
+                .Select(post => new PostViewModel(post, users))
+                .ToList();
         }
 
         [Authorize]
