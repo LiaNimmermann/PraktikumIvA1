@@ -22,6 +22,7 @@ namespace MicroVerse.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly UserHelper _userHelper;
+        private readonly FollowsHelper _followsHelper;
 
 
         public UserController
@@ -39,6 +40,7 @@ namespace MicroVerse.Controllers
             _roleManager = roleManager;
             _configuration = configuration;
             _userHelper = new UserHelper(_context, _userManager);
+            _followsHelper = new FollowsHelper(_context);
         }
 
 
@@ -53,7 +55,7 @@ namespace MicroVerse.Controllers
         {
             var user = await _userHelper.GetUser(id);
 
-            return user == null
+            return user is null
                 ? NotFound()
                 : user;
         }
@@ -111,42 +113,16 @@ namespace MicroVerse.Controllers
         // GET: api/User/Follows/id@user.com
         [HttpGet("Follows/{id}")]
         public IActionResult GetFollows(string id)
-        {
-            var users = _context.Follows
-                .Where(follow => follow.FollowingUserId == id)
-                .Join(
-                    _context.Users,
-                    follow => follow.FollowedUserId,
-                    user => user.Email,
-                    (follow, user) => user
-                );
-
-            return Json(users);
-        }
+            => Json(_followsHelper.GetFollowings(id));
 
         // GET: api/User/Follower/id@user.com
         [HttpGet("Follower/{id}")]
         public IActionResult GetFollower(string id)
-        {
-            var users = _context.Follows
-                .Where(follow => follow.FollowedUserId == id)
-                .Join(
-                    _context.Users,
-                    follow => follow.FollowingUserId,
-                    user => user.Email,
-                    (follow, user) => user
-                );
-
-            return Json(users);
-        }
+            => Json(_followsHelper.GetFollowers(id));
 
         [HttpGet("Follows")]
         public async Task<IActionResult> GetAllFollows()
-        {
-            var follows = await _context.Follows.ToListAsync();
-
-            return Json(follows);
-        }
+            => Json(_followsHelper.GetFollows());
 
         [HttpGet("Search/{phrase}")]
         public IActionResult SearchUsers(String phrase)
@@ -160,7 +136,7 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> SetUserRole(string userId, string role)
         {
             var user = await _context.Users.FirstOrDefaultAsync(user => userId == user.UserName);
-            if (user == null)
+            if (user is null)
             {
                 return NotFound();
             }

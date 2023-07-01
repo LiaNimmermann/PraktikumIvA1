@@ -1,11 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace MicroVerse.Models
 {
     public class Vote
     {
-        public Vote(Guid postId, string userId, int upvote)
+        public enum Votes
+        {
+            Up = 1,
+            Down = -1
+        }
+
+        public Vote(Guid postId, string userId, Votes upvote)
         {
             PostId = postId;
             UserId = userId;
@@ -18,7 +23,7 @@ namespace MicroVerse.Models
         [Required]
         public string UserId { get; set; }
         [Required]
-        public int Upvote { get; set; }
+        public Votes Upvote { get; set; }
         [Required]
         public DateTime CreatedAt { get; } = DateTime.Now;
     }

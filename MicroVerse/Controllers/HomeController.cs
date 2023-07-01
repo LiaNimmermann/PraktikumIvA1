@@ -18,6 +18,7 @@ namespace MicroVerse.Controllers
         private readonly PostHelper _postHelper;
         private readonly UserHelper _userHelper;
         private readonly SearchHelper _searchHelper;
+        private readonly FollowsHelper _followsHelper;
 
         public HomeController
         (
@@ -33,6 +34,7 @@ namespace MicroVerse.Controllers
             _userHelper = new UserHelper(_context, _userManager);
             _postHelper = new PostHelper(_context);
             _searchHelper = new SearchHelper(_context);
+            _followsHelper = new FollowsHelper(_context);
         }
 
         public async Task<IActionResult> Index()
@@ -42,15 +44,9 @@ namespace MicroVerse.Controllers
                 .Select(post => new PostViewModel(post, users))
                 .ToList();
 
-            var currentUser = User?.Identity?.Name;
-            var followsList = _context.Follows
-                .Where(f => f.FollowingUserId == currentUser)
-                .Join(
-                    _context.Users,
-                    follow => follow.FollowedUserId,
-                    user => user.UserName,
-                    (follow, user) => user
-                ).ToList();
+            var currentUser = User?.Identity?.Name ?? "";
+            var followsList = (await _followsHelper.GetFollowings(currentUser))
+                .ToList();
 
             var model = new HomeViewModel(followsList, postsList);
             return View(model);
@@ -68,20 +64,19 @@ namespace MicroVerse.Controllers
 
             var postsList = await InitializePostList(user);
 
-            var currentUser = User?.Identity?.Name;
-            var followsList = _context.Follows
-                .Where(f => f.FollowingUserId == id);
-            var followerList = _context.Follows
-                .Where(f => f.FollowedUserId == id);
-            var follows = followerList
-                .Any(f => f.FollowingUserId == currentUser);
+            var currentUser = User?.Identity?.Name ?? "";
+
+            var followsList = await _followsHelper.GetFollowings(id);
+            var followerList = await _followsHelper.GetFollowers(id);
+            var follows = await _followsHelper.Follows(currentUser, id);
+
             var model = new ProfileViewModel
                 (
                     user.UserName,
                     user.DisplayedName,
                     user.Bio,
-                    followerList.Count(),
-                    followsList.Count(),
+                    followerList,
+                    followsList,
                     postsList,
                     follows,
                     await _userHelper.GetUserRole(user.UserName)

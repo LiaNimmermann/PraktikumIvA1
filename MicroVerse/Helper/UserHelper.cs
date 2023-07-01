@@ -8,7 +8,12 @@ namespace MicroVerse.Helper
     public class UserHelper
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<User>? _userManager;
+
+        public UserHelper(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public UserHelper
         (
@@ -99,8 +104,14 @@ namespace MicroVerse.Helper
 
         public async Task<string> GetUserRole(string id)
         {
+            if (_userManager is null)
+            {
+                throw new NullReferenceException($"No UserManager available.");
+
+            }
+
             var user = await GetUser(id)
-                ?? throw new NullReferenceException($"User {id} does not exist");
+                ?? throw new NullReferenceException($"User {id} does not exist.");
 
             if(await _userManager.IsInRoleAsync(user, "Admin"))
             {
@@ -123,7 +134,7 @@ namespace MicroVerse.Helper
         )
         {
             var user = await GetUser(id);
-            if (user == null)
+            if (user is null)
             {
                 return Status.NotFound;
             }

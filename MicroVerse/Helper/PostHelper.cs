@@ -127,10 +127,10 @@ namespace MicroVerse.Helper
             return await PutPost(id, post);
         });
 
-        public async Task<Status> VotePost(Guid id, String user, Boolean upvote)
+        public async Task<Status> VotePost(Guid id, String user, Vote.Votes upvote)
             => await ModifyPost(id, async post =>
             {
-                post.Votes.Add(new Vote(post.Id, user, upvote ? 1 : -1));
+                post.Votes.Add(new Vote(post.Id, user, upvote));
 
                 return await PutPost(id, post);
             });
@@ -144,7 +144,7 @@ namespace MicroVerse.Helper
             try
             {
                 var post = await _context.Post.FindAsync(id);
-                if (post == null)
+                if (post is null)
                 {
                     return Status.NotFound;
                 }

@@ -1,12 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
 using MicroVerse.Models;
 using MicroVerse.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using MicroVerse.ViewModels;
-using System.Security.Claims;
 
 namespace MicroVerse.Controllers
 {
@@ -14,37 +12,31 @@ namespace MicroVerse.Controllers
     [ApiController]
     public class PostController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly PostHelper _postHelper;
+        private readonly SearchHelper _searchHelper;
+        private readonly UserHelper _userHelper;
 
         public PostController(ApplicationDbContext context)
         {
-            _context = context;
-            _postHelper = new PostHelper(_context);
+            _searchHelper = new SearchHelper(context);
+            _postHelper = new PostHelper(context);
+            _userHelper = new UserHelper(context);
         }
 
         // GET: api/Post
         [HttpGet]
         public ActionResult<IEnumerable<Post>> GetPost()
-        {
-            return Json(_postHelper.GetPosts());
-        }
+            => Json(_postHelper.GetPosts());
 
         // GET: api/Post
         [HttpGet("by/{authorId}")]
         public ActionResult<IEnumerable<Post>> GetPost(String authorId)
-        {
-            var posts = _postHelper.GetPostsByUser(authorId);
-            return Json(posts);
-        }
+            => Json(_postHelper.GetPostsByUser(authorId));
 
         // GET: api/Post
         [HttpGet("by/follows/{authorId}")]
         public ActionResult<IEnumerable<Post>> GetPosts(String authorId)
-        {
-            var posts = _postHelper.GetPostsByUserAndFollows(authorId);
-            return Json(posts);
-        }
+            => Json(_postHelper.GetPostsByUserAndFollows(authorId));
 
         // GET: api/Post/5
         [HttpGet("{id}")]
@@ -52,7 +44,7 @@ namespace MicroVerse.Controllers
         {
             var post = _postHelper.GetPost(id);
 
-            if (post == null)
+            if (post is null)
             {
                 return NotFound();
             }
@@ -110,20 +102,16 @@ namespace MicroVerse.Controllers
         // PATCH: api/Post/Up/user@id.com/5
         [HttpPatch("Up/{user}/{id}")]
         public async Task<IActionResult> UpvotePost(String user, Guid id)
-            => StatusToActionResult(await _postHelper.VotePost(id, user, true));
+            => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Up));
 
         // PATCH: api/Post/Down/user@id.com/5
         [HttpPatch("Down/{user}/{id}")]
         public async Task<IActionResult> DownvotePost(String user, Guid id)
-            => StatusToActionResult(await _postHelper.VotePost(id, user, false));
+            => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Down));
 
         [HttpGet("Search/{phrase}")]
         public IActionResult SearchPosts(String phrase)
-        {
-            var posts = (new SearchHelper(_context)).Posts(phrase);
-
-            return Json(posts);
-        }
+            => Json(_searchHelper.Posts(phrase));
 
         // Create a post using token for user authentication
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -132,10 +120,9 @@ namespace MicroVerse.Controllers
         //api/Post/AuthPost
         public async Task<IActionResult> AuthPost([FromBody] AuthPostViewModel model)
         {
-            User user = new();
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            user = await _context.Users.FindAsync(userId);
-            if (user == null)
+            var userId = User?.Identity?.Name;
+            var user = await _userHelper.GetUser(userId ?? "");
+            if (user is null)
             {
                 return NotFound();
             }

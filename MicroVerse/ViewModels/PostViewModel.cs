@@ -4,7 +4,6 @@ namespace MicroVerse.ViewModels
 {
     public class PostViewModel
     {
-    
         public Guid Id { get; set; }
         public string Body { get; set; } = String.Empty;
         public PostViewModel? ReactsTo { get; set; }
@@ -58,10 +57,10 @@ namespace MicroVerse.ViewModels
                 .DisplayedName;
             Username = post.AuthorId;
             Upvotes = post.Votes
-                .Where(x => x.Upvote > 0)
+                .Where(x => x.Upvote == Vote.Votes.Up)
                 .Count();
             Downvotes = post.Votes
-                .Where(x => x.Upvote < 0)
+                .Where(x => x.Upvote == Vote.Votes.Down)
                 .Count();
             AuthorImage = "https://picsum.photos/200/200";
         }
