@@ -44,5 +44,19 @@ namespace MicroVerse.Helper
         public async Task<Boolean> Follows(String following, String followed)
             => (await GetFollowers(followed))
             .Any(u => u.UserName == following);
+
+        public async Task FollowUser(String follower, String followed)
+        {
+            var follows = new Follows(follower, followed);
+            _context.Follows.Add(follows);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UnfollowUser(string followerId, string followedId)
+        {
+            var toDelete = _context.Follows.First(f => f.FollowingUserId == followerId && f.FollowedUserId == followedId);
+            _context.Follows.Remove(toDelete);
+            await _context.SaveChangesAsync();
+        }
     }
 }

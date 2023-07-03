@@ -49,6 +49,11 @@ namespace MicroVerse.Controllers
         public async Task<ActionResult<IEnumerable<User>>> GetUser()
             => Json(await _userHelper.GetUsers());
 
+        // GET: api/User/WithRole
+        [HttpGet("WithRole")]
+        public async Task<ActionResult<IEnumerable<UserWithRole>>> GetUserWithRole()
+            => Json(await _userHelper.GetUserWithRole());
+
         // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(string id)
@@ -92,9 +97,7 @@ namespace MicroVerse.Controllers
         [HttpPost("FollowUser")]
         public async Task<IActionResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
         {
-            var follows = new Follows(followerId, followedId);
-            _context.Follows.Add(follows);
-            await _context.SaveChangesAsync();
+            await _followsHelper.FollowUser(followerId, followedId);
 
             return new LocalRedirectResult("/Home/Profile/"+followedId);
         }
@@ -102,9 +105,8 @@ namespace MicroVerse.Controllers
         [HttpPost("UnfollowUser")]
         public async Task<IActionResult> UnfollowUser([FromForm] string followerId, [FromForm] string followedId)
         {
-            var toDelete = _context.Follows.First(f => f.FollowingUserId == followerId && f.FollowedUserId == followedId);
-            _context.Follows.Remove(toDelete);
-            await _context.SaveChangesAsync();
+            await _followsHelper.UnfollowUser(followerId, followedId);
+
             Response.Redirect(Request.HttpContext.Request.Path);
 
             return new LocalRedirectResult("/Home/Profile/" + followedId);
@@ -112,17 +114,17 @@ namespace MicroVerse.Controllers
 
         // GET: api/User/Follows/id@user.com
         [HttpGet("Follows/{id}")]
-        public IActionResult GetFollows(string id)
-            => Json(_followsHelper.GetFollowings(id));
+        public async Task<IActionResult> GetFollows(string id)
+            => Json(await _followsHelper.GetFollowings(id));
 
         // GET: api/User/Follower/id@user.com
         [HttpGet("Follower/{id}")]
-        public IActionResult GetFollower(string id)
-            => Json(_followsHelper.GetFollowers(id));
+        public async Task<IActionResult> GetFollower(string id)
+            => Json(await _followsHelper.GetFollowers(id));
 
         [HttpGet("Follows")]
         public async Task<IActionResult> GetAllFollows()
-            => Json(_followsHelper.GetFollows());
+            => Json(await _followsHelper.GetFollows());
 
         [HttpGet("Search/{phrase}")]
         public IActionResult SearchUsers(String phrase)

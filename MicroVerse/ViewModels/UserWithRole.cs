@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Hosting;
 using MicroVerse.Models;
 
 namespace MicroVerse.ViewModels
@@ -23,11 +22,10 @@ namespace MicroVerse.ViewModels
             UserName = user.UserName;
             DisplayedName = user.DisplayedName;
             Email = user.Email;
-            this.Role = role;
             Picture = user.Picture;
             Bio = user.Bio;
             Activation = user.Activation;
-            this.Role = role;
+            Role = role;
         }
     }
 }

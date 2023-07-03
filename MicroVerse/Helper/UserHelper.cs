@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MicroVerse.Data;
 using MicroVerse.Models;
+using MicroVerse.ViewModels;
 
 namespace MicroVerse.Helper
 {
@@ -80,6 +81,21 @@ namespace MicroVerse.Helper
             return userModel;
         }
 
+        public async Task<IEnumerable<UserWithRole>> GetUserWithRole()
+        {
+            var users = await GetUsers();
+
+            return users.Select(u => new UserWithRole
+                                (
+                                    u,
+                                    new IdentityRole
+                                    (
+                                        GetRoleOfUser(u).Result
+                                    )
+                                )
+            );
+        }
+
         public async Task<Status> DeleteUser(String userName)
             => await ChangeUser(userName, async user =>
             {
@@ -102,16 +118,20 @@ namespace MicroVerse.Helper
                 return await PutUser(id, user);
             });
 
-        public async Task<string> GetUserRole(string id)
+        public async Task<String> GetUserRole(string id)
+        {
+            var user = await GetUser(id)
+                ?? throw new NullReferenceException($"User {id} does not exist.");
+
+            return await GetRoleOfUser(user);
+        }
+
+        private async Task<String> GetRoleOfUser(User user)
         {
             if (_userManager is null)
             {
                 throw new NullReferenceException($"No UserManager available.");
-
             }
-
-            var user = await GetUser(id)
-                ?? throw new NullReferenceException($"User {id} does not exist.");
 
             if(await _userManager.IsInRoleAsync(user, "Admin"))
             {

@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using MicroVerse.Models;
-using MicroVerse.ViewModels;
 
 namespace MicroVerse.Data
 {
