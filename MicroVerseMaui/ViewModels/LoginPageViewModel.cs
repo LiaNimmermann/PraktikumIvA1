@@ -26,12 +26,32 @@ namespace MicroVerseMaui.ViewModels
         [RelayCommand]
 
         void Login()
+                            
         {
-            Shell.Current.GoToAsync($"//{nameof(StartPage)}");
+            if (!string.IsNullOrWhiteSpace(Email) && !String.IsNullOrWhiteSpace(Password))
+            {
+                var currentUser = new UserInfo()
+ 
+                {
+                    UserName = "",
+                    Email = Email
+                };
+                if (Preferences.ContainsKey(nameof(App.CurrentUser)))
+                {
+                    Preferences.Remove(nameof(App.CurrentUser));
+                }
+                string currentUserStr = JsonConvert.SerializeObject(currentUser);
+                Preferences.Set(nameof(App.CurrentUser), currentUserStr);
+                App.CurrentUser = currentUser;
+                AppShell.Current.FlyoutHeader = new FlyoutViewModel();
+
+                Shell.Current.GoToAsync($"//{nameof(StartPage)}");
+
+            }
 
         }
 
     }
-        }
+}
     
 

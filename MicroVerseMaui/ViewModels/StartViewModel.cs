@@ -13,6 +13,11 @@ namespace MicroVerseMaui.ViewModels
         [RelayCommand]
         async void LogOut()
         {
+            // Remove user date from APP
+            if (Preferences.ContainsKey(nameof(App.CurrentUser)))
+            {
+                Preferences.Remove(nameof(App.CurrentUser));
+            }
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
 

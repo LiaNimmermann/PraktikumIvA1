@@ -8,5 +8,11 @@ public partial class LoadingPage : ContentPage
 	{
 		InitializeComponent();
 		this.BindingContext = viewmodel;
-	}
+        InitializeComponent();
+        // Auto run command
+        Loaded += (s, e) =>
+        {
+            viewmodel.ReturningUserCheckCommand.Execute(null);
+        };
+    }
 }

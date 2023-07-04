@@ -4,7 +4,9 @@ namespace MicroVerseMaui;
 
 public partial class App : Application
 {
-	public App()
+    public static UserInfo CurrentUser;
+
+    public App()
 	{
 		InitializeComponent();
 

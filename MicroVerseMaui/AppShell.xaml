@@ -7,13 +7,18 @@
     TitleColor="{DynamicResource DarkGreen}"
     Shell.FlyoutBehavior="Flyout"
     Shell.ForegroundColor="DarkGreen">
+
+
+    <ShellContent
+        Title="MicroVerse - Loading" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
+        ContentTemplate="{DataTemplate view:LoadingPage}"
+        Route="LoadingPage" />
     
     
     <ShellContent
-        Title="MicroVerse - Login" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
+        Title="MicroVerse - LogIn" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
         ContentTemplate="{DataTemplate view:LoginPage}"
         Route="LoginPage" />
-
 
     <FlyoutItem Route="StartPage" FlyoutDisplayOptions="AsMultipleItems">
 

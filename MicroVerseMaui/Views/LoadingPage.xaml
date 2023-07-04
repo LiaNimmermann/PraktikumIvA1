@@ -4,9 +4,7 @@
              x:Class="MicroVerseMaui.Views.LoadingPage"
              Title="LoadingPage">
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <ActivityIndicator IsRunning="True"/>
+
     </VerticalStackLayout>
 </ContentPage>
