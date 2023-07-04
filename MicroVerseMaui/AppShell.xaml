@@ -5,13 +5,27 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:view="clr-namespace:MicroVerseMaui.Views"
     TitleColor="{DynamicResource DarkGreen}"
-    Shell.FlyoutBehavior="Disabled">
-
+    Shell.FlyoutBehavior="Flyout"
+    Shell.ForegroundColor="DarkGreen">
+    
+    
     <ShellContent
-        Title="MicroVerse"
+        Title="MicroVerse - Login" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
+        ContentTemplate="{DataTemplate view:LoginPage}"
+        Route="LoginPage" />
+
+
+    <FlyoutItem Route="StartPage" FlyoutDisplayOptions="AsMultipleItems">
+
+        <ShellContent
+        Title="MicroVerse / Home"
         ContentTemplate="{DataTemplate view:MainPage}"
         Route="MainPage" />
-    
-    
 
+    </FlyoutItem>
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="18">
+            <Button Text="Log Out" TextColor="DarkGreen" Command="{Binding LogOutCommand}"/>
+        </StackLayout>
+    </Shell.FlyoutFooter>
 </Shell>
