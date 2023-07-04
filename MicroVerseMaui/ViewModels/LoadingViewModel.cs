@@ -4,7 +4,6 @@ using MicroVerseMaui.Views;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,8 +21,6 @@ namespace MicroVerseMaui.ViewModels
          async Task ReturningUserCheck()
         {
             string userDetailsStr = Preferences.Get(nameof(App.CurrentUser), "");
-            Debug.WriteLine(userDetailsStr);
-
             // No data for current visitor, navigate to Login Page
 
             if (string.IsNullOrWhiteSpace(userDetailsStr))

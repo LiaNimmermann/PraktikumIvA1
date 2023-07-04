@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MicroVerseMaui.ViewModels.FlyoutViewModel">
 
-    <Label Text="Logged in as:" TextDecorations="Underline"/>
-    <Label x:Name="fEmail" FontSize="16"/>
+    <Label Text="Logged in as:" FontSize="12" TextDecorations="Underline"/>
+    <Label x:Name="fEmail" FontSize="16" FontAttributes="Bold"/>
 
 
 </StackLayout>
