@@ -34,30 +34,32 @@ namespace MicroVerseMaui.ViewModels
 
         [RelayCommand]
         async void Login()
-                            
+
         {
             if (!string.IsNullOrWhiteSpace(EmailInput) && !String.IsNullOrWhiteSpace(PasswordInput))
             {
                 var currentUser = new UserInfo();
-               var response = await _apiLogin.Authenticate(new LoginInfo
+                var response = await _apiLogin.Authenticate(new LoginInfo
                 {
                     Email = EmailInput,
                     Password = PasswordInput
-               });
+                });
 
-               if (response != null)
+                if (response != null)
                 {
                     if (Preferences.ContainsKey(nameof(App.CurrentUser)))
                     {
                         Preferences.Remove(nameof(App.CurrentUser));
                     }
+                    // Save user token
+                    await SecureStorage.SetAsync(nameof(App.Token), response.token);
                     currentUser.Email = EmailInput;
                     string currentUserStr = JsonConvert.SerializeObject(currentUser);
                     Preferences.Set(nameof(App.CurrentUser), currentUserStr);
                     App.CurrentUser = currentUser;
                     AppShell.Current.FlyoutHeader = new FlyoutViewModel();
 
-                   await Shell.Current.GoToAsync($"//{nameof(StartPage)}");
+                    await Shell.Current.GoToAsync($"//{nameof(StartPage)}");
 
 
                 }
@@ -76,5 +78,5 @@ namespace MicroVerseMaui.ViewModels
 
     }
 }
-    
+
 
