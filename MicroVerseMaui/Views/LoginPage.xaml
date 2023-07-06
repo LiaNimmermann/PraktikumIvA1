@@ -9,11 +9,11 @@
 
     <VerticalStackLayout VerticalOptions="CenterAndExpand">
 
-        <Entry Placeholder="Email" Text="{Binding Email}">
+        <Entry Placeholder="Email" Text="{Binding EmailInput}">
 
 
         </Entry>
-        <Entry Placeholder="Password" Text="{Binding Password}">
+        <Entry Placeholder="Password" Text="{Binding PasswordInput}">
 
         </Entry>
         <Button Text="Log In" TextColor="DarkGreen"  Command="{Binding LoginCommand}" />

@@ -17,7 +17,7 @@ namespace MicroVerseMaui.ViewModels
         }
 
         [RelayCommand]
-        // Returning user or new visitor
+        // Check if a returning user or a new visitor
          async Task ReturningUserCheck()
         {
             string userDetailsStr = Preferences.Get(nameof(App.CurrentUser), "");
@@ -32,7 +32,7 @@ namespace MicroVerseMaui.ViewModels
                 var UserInfo = JsonConvert.DeserializeObject<UserInfo>(userDetailsStr);
                 App.CurrentUser = UserInfo;
                 AppShell.Current.FlyoutHeader = new FlyoutViewModel();
-                // app already has  data for current user, navigate to Startpage
+                // App already has  data for current user, navigate to Startpage
                 await Shell.Current.GoToAsync($"//{nameof(StartPage)}");
 
 

@@ -23,7 +23,7 @@
                         <Frame HeightRequest="125"
                                Padding="0"
                                Style="{StaticResource CardView}">
-   
+
                             <Grid Padding="0"
                                   ColumnDefinitions="125, *">
                                 <Image Aspect="AspectFill"
@@ -51,11 +51,11 @@
 
 
                         </Frame>
-                        
-                        
+
+
                     </Grid>
-                    
-                    
+
+
                 </DataTemplate>
             </CollectionView.ItemTemplate>
 
