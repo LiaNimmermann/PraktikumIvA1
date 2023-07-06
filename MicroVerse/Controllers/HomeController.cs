@@ -132,6 +132,12 @@ namespace MicroVerse.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Moderator, Admin")]
+        public IActionResult Statistics()
+        {
+            return View();
+        }
+
         [Authorize(Roles = "Admin")]
         public IActionResult AdminUserOverview()
         {
