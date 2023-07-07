@@ -36,6 +36,10 @@ namespace MicroVerse.Helper
             return posts;
         }
 
+        public IEnumerable<Post> GetFlaggedPosts()
+            => GetPosts()
+            .Where(p => p.Activation == Activation.flagged);
+
         public Post? GetPost(Guid id)
             => GetPosts()
             .FirstOrDefault(p => p.Id == id);
