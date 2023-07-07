@@ -7,14 +7,10 @@
              Title = "{Binding Title}"
              x:Class="MicroVerseMaui.Views.MainPage">
 
-
-
-
     <Grid ColumnDefinitions="*,*"
         ColumnSpacing="5"
         RowDefinitions="*,Auto"
         RowSpacing="0">
-
 
         <CollectionView BackgroundColor="LightGreen"
                         Grid.ColumnSpan="2"
@@ -39,12 +35,12 @@
                                    Grid.Column="1"
                                    Padding="10"
                                    VerticalOptions="Center">
+                                    <Label Text="{Binding CreatedAt}"
+                                           Style="{StaticResource SmallLabel}" TextColor="Grey" Margin="2"/>
                                     <Label Text="{Binding AuthorId}"
-                                           Style="{StaticResource LargeLabel}"/>
+                                           Style="{StaticResource MediumLabel}" FontAttributes="Bold" TextColor="DarkGreen" Margin="1" />
                                     <Label Text="{Binding Body}"
-                                           Style="{StaticResource MediumLabel}"/>
-
-
+                                           Style="{StaticResource LargeLabel}" Margin="2"/>
 
 
                                 </VerticalStackLayout>
@@ -77,6 +73,18 @@
                 Grid.Row="1"
                 Margin="8"/>
         
+        <Button Text="Create a new post"
+                Style="{StaticResource ButtonOutline}"
+                Command="{Binding CreatePageCommand}"
+                BorderColor="LightGreen"
+                FontSize="16"
+                IsEnabled="{Binding IsNotBusy}" Background="LightGreen"
+                TextColor="DarkGreen"  CornerRadius="15"
+                Grid.Row="1"
+                Grid.Column="2"
+                Margin="8"/>
+
+
         <ActivityIndicator IsVisible="{Binding IsBusy}"
                            IsRunning="{Binding IsBusy}"
 
