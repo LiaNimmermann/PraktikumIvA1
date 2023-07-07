@@ -42,6 +42,10 @@ namespace MicroVerse.Models
         [Required]
         public List<Vote> Votes { get; set; } = new List<Vote>();
 
+        public Vote.Votes VotingByUser(String userName)
+            => Votes.FirstOrDefault(v => v.UserId == userName)?.Upvote
+            ?? Vote.Votes.Undefined;
+
         public Boolean FuzzyMatches(String phrase)
             => AuthorId.Contains(phrase)
             || Body.Contains(phrase)

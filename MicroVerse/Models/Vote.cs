@@ -7,7 +7,8 @@ namespace MicroVerse.Models
         public enum Votes
         {
             Up = 1,
-            Down = -1
+            Down = -1,
+            Undefined = 0
         }
 
         public Vote(Guid postId, string userId, Votes upvote)

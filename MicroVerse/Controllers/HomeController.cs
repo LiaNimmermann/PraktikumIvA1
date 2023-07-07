@@ -39,12 +39,15 @@ namespace MicroVerse.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var currentUser = User?.Identity?.Name ?? "";
             var users = await _userHelper.GetUsers();
             var postsList = _postHelper.GetPosts()
-                .Select(post => new PostViewModel(post, users))
+                .Select(post => new PostViewModel(post, users)
+                {
+                    VoteByUser = post.VotingByUser(currentUser)
+                })
                 .ToList();
 
-            var currentUser = User?.Identity?.Name ?? "";
             var followsList = (await _followsHelper.GetFollowings(currentUser))
                 .ToList();
 
@@ -97,9 +100,13 @@ namespace MicroVerse.Controllers
         private async Task<List<PostViewModel>> InitializePostList(User user)
         {
             var users = await _userHelper.GetUsers();
+            var currentUser = User?.Identity?.Name ?? "";
 
             return _postHelper.GetPostsByUserAndFollows(user.UserName)
-                .Select(post => new PostViewModel(post, users))
+                .Select(post => new PostViewModel(post, users)
+                {
+                    VoteByUser = post.VotingByUser(currentUser)
+                })
                 .ToList();
         }
 
