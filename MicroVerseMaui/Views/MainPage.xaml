@@ -7,10 +7,14 @@
              Title = "{Binding Title}"
              x:Class="MicroVerseMaui.Views.MainPage">
 
+
+
+
     <Grid ColumnDefinitions="*,*"
         ColumnSpacing="5"
         RowDefinitions="*,Auto"
         RowSpacing="0">
+
 
         <CollectionView BackgroundColor="LightGreen"
                         Grid.ColumnSpan="2"
@@ -61,15 +65,18 @@
 
 
         </CollectionView>
-        <Button Text="Home / Get Posts"
+        
+        <Button Text="Home / Refresh Posts"
                 Style="{StaticResource ButtonOutline}"
                 Command="{Binding GetPostsCommand}"
+                FontSize="16"
                 IsEnabled="{Binding IsNotBusy}"
-                TextColor="DarkGreen"
-
+                TextColor="DarkGreen" CornerRadius="15"
+                BorderColor="LightGreen"
+                 Background="LightGreen"
                 Grid.Row="1"
                 Margin="8"/>
-
+        
         <ActivityIndicator IsVisible="{Binding IsBusy}"
                            IsRunning="{Binding IsBusy}"
 
