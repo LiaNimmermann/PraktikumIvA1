@@ -5,6 +5,8 @@ using MicroVerse.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using MicroVerse.ViewModels;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace MicroVerse.Controllers
 {
@@ -120,8 +122,9 @@ namespace MicroVerse.Controllers
         //api/Post/AuthPost
         public async Task<IActionResult> AuthPost([FromBody] AuthPostViewModel model)
         {
-            var userId = User?.Identity?.Name;
-            var user = await _userHelper.GetUser(userId ?? "");
+            User user = new();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            user = await _userHelper.GetUserId(userId);
             if (user is null)
             {
                 return NotFound();

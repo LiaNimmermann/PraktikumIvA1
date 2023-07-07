@@ -33,6 +33,11 @@ namespace MicroVerse.Helper
             => await _context.Users
             .FirstOrDefaultAsync(user => userName == user.UserName);
 
+
+        public async Task<User?> GetUserId(String userId)
+            => await _context.Users
+            .FirstOrDefaultAsync(user => userId == user.Id);
+
         public async Task<Status> PutUser(String userName, User userModel)
         {
             if (userName != userModel.UserName)
