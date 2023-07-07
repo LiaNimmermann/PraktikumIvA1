@@ -5,6 +5,7 @@ using MicroVerse.Helper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using MicroVerse.ViewModels;
+using System.Security.Claims;
 
 namespace MicroVerse.Controllers
 {
@@ -30,13 +31,13 @@ namespace MicroVerse.Controllers
 
         // GET: api/Post
         [HttpGet("by/{authorId}")]
-        public ActionResult<IEnumerable<Post>> GetPost(String authorId)
-            => Json(_postHelper.GetPostsByUser(authorId));
+        public ActionResult<IEnumerable<Post>> GetPost(String userName)
+            => Json(_postHelper.GetPostsByUser(userName));
 
         // GET: api/Post
         [HttpGet("by/follows/{authorId}")]
-        public ActionResult<IEnumerable<Post>> GetPosts(String authorId)
-            => Json(_postHelper.GetPostsByUserAndFollows(authorId));
+        public ActionResult<IEnumerable<Post>> GetPosts(String userName)
+            => Json(_postHelper.GetPostsByUserAndFollows(userName));
 
         // GET: api/Post/5
         [HttpGet("{id}")]
@@ -94,10 +95,15 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> FlagPost(Guid id)
             => StatusToActionResult(await _postHelper.FlagPost(id));
 
-        // PATCH: api/Post/Flag/5
+        // PATCH: api/Post/Unflag/5
         [HttpPatch("Unflag/{id}")]
         public async Task<IActionResult> UnflagPost(Guid id)
             => StatusToActionResult(await _postHelper.ActivatePost(id));
+
+        // GET: api/Post/Flagged
+        [HttpGet("Flagged")]
+        public IActionResult GetFlaggedPosts()
+            => Json(_postHelper.GetFlaggedPosts());
 
         // POST: api/Post/Up/user@id.com/5
         [HttpPost("Up/{user}/{id}")]
@@ -120,8 +126,9 @@ namespace MicroVerse.Controllers
         //api/Post/AuthPost
         public async Task<IActionResult> AuthPost([FromBody] AuthPostViewModel model)
         {
-            var userId = User?.Identity?.Name;
-            var user = await _userHelper.GetUser(userId ?? "");
+            User user = new();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            user = await _userHelper.GetUserId(userId);
             if (user is null)
             {
                 return NotFound();

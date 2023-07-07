@@ -4,6 +4,7 @@ using MicroVerseMaui.Views;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +18,8 @@ namespace MicroVerseMaui.ViewModels
         }
 
         [RelayCommand]
-        // Returning user or new visitor
-         async Task ReturningUserCheck()
+        // Check if a returning user or a new visitor
+        async Task ReturningUserCheck()
         {
             string userDetailsStr = Preferences.Get(nameof(App.CurrentUser), "");
             // No data for current visitor, navigate to Login Page
@@ -29,11 +30,27 @@ namespace MicroVerseMaui.ViewModels
             }
             else
             {
-                var UserInfo = JsonConvert.DeserializeObject<UserInfo>(userDetailsStr);
-                App.CurrentUser = UserInfo;
-                AppShell.Current.FlyoutHeader = new FlyoutViewModel();
-                // app already has  data for current user, navigate to Startpage
-                await Shell.Current.GoToAsync($"//{nameof(StartPage)}");
+                // App already has  data for current user, navigate to Startpage
+
+                var UserToken = await SecureStorage.GetAsync(nameof(App.Token));
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(UserToken) as JwtSecurityToken;
+
+                // Ensure authentication token is still valid
+                if (jsonToken.ValidTo < DateTime.UtcNow) {
+                    await Shell.Current.DisplayAlert("The user session has expired", "Please login again", "OK");
+                    await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+                }
+                else
+                {
+                    var UserInfo = JsonConvert.DeserializeObject<UserInfo>(userDetailsStr);
+                    App.CurrentUser = UserInfo;
+                    App.Token = UserToken;
+                    AppShell.Current.FlyoutHeader = new FlyoutViewModel();
+                    await Shell.Current.GoToAsync($"//{nameof(StartPage)}");
+                }
+
+
 
 
             }

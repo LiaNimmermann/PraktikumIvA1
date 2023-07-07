@@ -17,35 +17,60 @@ namespace MicroVerseMaui.ViewModels
 
 
         [ObservableProperty]
-        private string _email; // Accessed as Email
+        private string _emailInput; // Accessed as EmailInput
 
         [ObservableProperty]
-        private string _password;
+        private string _passwordInput;
+
+        private readonly IApiLogin _apiLogin;
+
+        public LoginPageViewModel(IApiLogin apiLogin)
+        {
+
+
+            _apiLogin = apiLogin;
+        }
 
 
         [RelayCommand]
+        async void Login()
 
-        void Login()
-                            
         {
-            if (!string.IsNullOrWhiteSpace(Email) && !String.IsNullOrWhiteSpace(Password))
+            if (!string.IsNullOrWhiteSpace(EmailInput) && !String.IsNullOrWhiteSpace(PasswordInput))
             {
-                var currentUser = new UserInfo()
- 
+                var currentUser = new UserInfo();
+                var response = await _apiLogin.Authenticate(new LoginInfo
                 {
-                    UserName = "",
-                    Email = Email
-                };
-                if (Preferences.ContainsKey(nameof(App.CurrentUser)))
-                {
-                    Preferences.Remove(nameof(App.CurrentUser));
-                }
-                string currentUserStr = JsonConvert.SerializeObject(currentUser);
-                Preferences.Set(nameof(App.CurrentUser), currentUserStr);
-                App.CurrentUser = currentUser;
-                AppShell.Current.FlyoutHeader = new FlyoutViewModel();
+                    Email = EmailInput,
+                    Password = PasswordInput
+                });
 
-                Shell.Current.GoToAsync($"//{nameof(StartPage)}");
+                if (response != null)
+                {
+                    if (Preferences.ContainsKey(nameof(App.CurrentUser)))
+                    {
+                        Preferences.Remove(nameof(App.CurrentUser));
+                    }
+                    // Save user token
+                    await SecureStorage.SetAsync(nameof(App.Token), response.token);
+                    currentUser.Email = EmailInput;
+                    string currentUserStr = JsonConvert.SerializeObject(currentUser);
+                    Preferences.Set(nameof(App.CurrentUser), currentUserStr);
+                    App.CurrentUser = currentUser;
+                    AppShell.Current.FlyoutHeader = new FlyoutViewModel();
+
+                    await Shell.Current.GoToAsync($"//{nameof(StartPage)}");
+
+
+                }
+                else
+                {
+                    await AppShell.Current.DisplayAlert("Error", "User does not exit. Make sure Email and Password are correct", "Ok");
+
+                }
+
+
+
 
             }
 
@@ -53,5 +78,5 @@ namespace MicroVerseMaui.ViewModels
 
     }
 }
-    
+
 

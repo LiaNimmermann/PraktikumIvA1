@@ -168,7 +168,7 @@ namespace MicroVerse.Controllers
         // Log in over api, users receive a JWT for future validation
         [HttpPost]
         [Route("login")]
-        //api/User/Login
+        //POST: api/User/Login
         public async Task<ActionResult> LogIn([FromBody] LogInViewModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
@@ -187,7 +187,7 @@ namespace MicroVerse.Controllers
                 var token = new JwtSecurityToken(
                     issuer: _configuration["Jwt:Issuer"],
                     audience: _configuration["Jwt:Audience"],
-                    expires: DateTime.Now.AddDays(21),
+                    expires: DateTime.Now.AddDays(3),
                     claims: authclaims,
                     signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
                 );

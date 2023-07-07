@@ -13,8 +13,8 @@
         Title="MicroVerse - Loading" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
         ContentTemplate="{DataTemplate view:LoadingPage}"
         Route="LoadingPage" />
-    
-    
+
+
     <ShellContent
         Title="MicroVerse - LogIn" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
         ContentTemplate="{DataTemplate view:LoginPage}"
@@ -30,7 +30,7 @@
     </FlyoutItem>
     <Shell.FlyoutFooter>
         <StackLayout Padding="18">
-            <Button Text="Log Out" TextColor="DarkGreen" Command="{Binding LogOutCommand}"/>
+            <Button Text="Log Out" TextColor="DarkGreen" Command="{Binding LogOutCommand}" Margin="10" CornerRadius="20"  Background="LightGreen" FontSize="16" />
         </StackLayout>
     </Shell.FlyoutFooter>
 </Shell>

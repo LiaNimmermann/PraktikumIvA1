@@ -5,18 +5,20 @@
              x:DataType="viewmodel:LoginPageViewModel"
              x:Class="MicroVerseMaui.Views.LoginPage">
 
-
-
-    <VerticalStackLayout VerticalOptions="CenterAndExpand">
-
-        <Entry Placeholder="Email" Text="{Binding Email}">
+    
+    <VerticalStackLayout VerticalOptions="CenterAndExpand" >
+        <Label Text="Log into your MicroVerse account!" Margin="22" FontSize="16" TextColor="DarkGreen" HorizontalTextAlignment="Center" />
+        
+        
+        <Entry Placeholder="Email" Text="{Binding EmailInput}" Margin="20,0,0,0" >
 
 
         </Entry>
-        <Entry Placeholder="Password" Text="{Binding Password}">
+        <Entry Placeholder="Password" IsPassword="True" Margin="20,0,0,0" Text="{Binding PasswordInput}" >
 
         </Entry>
-        <Button Text="Log In" TextColor="DarkGreen"  Command="{Binding LoginCommand}" />
+        <Button Text="Log In" Background="Green" FontSize="14"
+                TextColor="White"   Command="{Binding LoginCommand}" Margin="10" CornerRadius="20"  />
 
 
 
