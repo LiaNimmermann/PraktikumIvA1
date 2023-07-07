@@ -14,6 +14,7 @@ namespace MicroVerse.ViewModels
         public int Upvotes { get; set; }
         public int Downvotes { get; set; }
         public int? Status { get; set; }
+        public int VoteByUser { get; set; } = 0; //-1 for downvote, 1 for upvote by currently logged in user
 
         public PostViewModel() { }
 

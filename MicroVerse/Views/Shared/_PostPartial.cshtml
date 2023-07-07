@@ -10,9 +10,29 @@
             @Model.DisplayedName
         </a>
         <div class="post-actions">
-            <a href="#"><i class="fa-solid fa-circle-up"></i></a> @Model.Upvotes
-            <a href="#"><i class="fa-solid fa-circle-down"></i></a> @Model.Downvotes
-            @*<a href="#"><i class="fa-solid fa-retweet"></i></a>*@
+            @if (Model.VoteByUser == 0)
+            {
+                <form method="post" asp-action="UpvotePost" asp-controller="api\Post">
+                    <input type="hidden" name="user" value="@User.Identity?.Name" />
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
+                </form>
+                <form method="post" asp-action="DownvotePost" asp-controller="api\Post">
+                    <input type="hidden" name="user" value="@User.Identity?.Name" />
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
+                </form>
+            } else if(Model.VoteByUser == -1)
+            {
+                <button disabled type="submit" onclick="refreshPage();" class="unactive"><i class="fa-solid fa-circle-up unactive"></i> @Model.Upvotes </button>
+                    <button disabled type="submit" onclick="refreshPage();" class="btn-downvoted"><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
+            }
+            else if (Model.VoteByUser == 1)
+            {
+                <button disabled type="submit" onclick="refreshPage();" class="btn-upvoted"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
+                <button disabled type="submit" onclick="refreshPage();" class="unactive"><i class="fa-solid fa-circle-down unactive"></i> @Model.Downvotes</button>
+            }
+
             <a href="#"><i class="fa-solid fa-flag"></i></a>
         </div>
     </div>
@@ -32,7 +52,7 @@
             <form method="post" asp-controller="Post" asp-action="React">
                 <input type="text" name="text" maxlength="280" placeholder="Type here...">
                 <input type="hidden" name="postId" value="@Model.Id" />
-                <button type="submit"> React </button>
+                <button type="submit">><i class="fa-solid fa-retweet"></i> React </button>
             </form>
         </div>
         @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))

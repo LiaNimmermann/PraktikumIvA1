@@ -99,13 +99,13 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> UnflagPost(Guid id)
             => StatusToActionResult(await _postHelper.ActivatePost(id));
 
-        // PATCH: api/Post/Up/user@id.com/5
-        [HttpPatch("Up/{user}/{id}")]
+        // POST: api/Post/Up/user@id.com/5
+        [HttpPost("Up/{user}/{id}")]
         public async Task<IActionResult> UpvotePost(String user, Guid id)
             => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Up));
 
-        // PATCH: api/Post/Down/user@id.com/5
-        [HttpPatch("Down/{user}/{id}")]
+        // POST: api/Post/Down/user@id.com/5
+        [HttpPost("Down/{user}/{id}")]
         public async Task<IActionResult> DownvotePost(String user, Guid id)
             => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Down));
 

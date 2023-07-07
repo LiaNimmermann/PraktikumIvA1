@@ -79,11 +79,21 @@ body {
     box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.4);
 }
 
-.main .post-author {
-    color: #43802a;
-    text-decoration: none;
-    font-weight: 600;
-}
+    .main .post-containter .post-actions{
+        display:flex ;
+    }
+
+    .main .post-containter .post-actions button{
+        border: none;
+        border-radius: 4px;
+        margin:2px;
+    }
+
+    .main .post-author {
+        color: #43802a;
+        text-decoration: none;
+        font-weight: 600;
+    }
 
 .main .post-react {
 }
@@ -116,11 +126,24 @@ body {
     color: green;
     padding: 2px;
 }
+.main i.fa-circle-up.unactive{
+    color: gray;
+}
+
+.main button.btn-upvoted {
+    background-color: lightgreen
+}
 
 .main i.fa-circle-down {
     color: red;
     padding: 2px;
 }
+
+.main button.btn-downvoted {
+    background-color: lightcoral
+}
+
+
 
 .main .fa-flag {
     padding: 8px;
