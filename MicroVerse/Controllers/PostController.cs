@@ -55,18 +55,21 @@ namespace MicroVerse.Controllers
 
         // PUT: api/Post/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPost(Guid id, Post post)
             => StatusToActionResult(await _postHelper.PutPost(id, post));
 
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost("Post")]
         public async Task<IActionResult> Post([FromForm] String text)
             => await React(text, null);
 
         // POST: api/React
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost("React")]
         public async Task<IActionResult> React([FromForm] String text, [FromForm] Guid? postId)
         {
@@ -76,6 +79,7 @@ namespace MicroVerse.Controllers
         }
 
         // POST: api/Post/DeletePost/5
+        [Authorize]
         [HttpPost("DeletePost/{id}")]
         public async Task<IActionResult> DeletePost(Guid id)
             => await _postHelper.DeletePost(id) switch
@@ -86,31 +90,37 @@ namespace MicroVerse.Controllers
             };
 
         // PATCH: api/Post/5
+        [Authorize]
         [HttpPatch("{id}")]
         public async Task<IActionResult> BlockPost(Guid id)
             => StatusToActionResult(await _postHelper.BlockPost(id));
 
         // PATCH: api/Post/Flag/5
+        [Authorize]
         [HttpPatch("Flag/{id}")]
         public async Task<IActionResult> FlagPost(Guid id)
             => StatusToActionResult(await _postHelper.FlagPost(id));
 
         // PATCH: api/Post/Unflag/5
+        [Authorize]
         [HttpPatch("Unflag/{id}")]
         public async Task<IActionResult> UnflagPost(Guid id)
             => StatusToActionResult(await _postHelper.ActivatePost(id));
 
         // GET: api/Post/Flagged
+        [Authorize]
         [HttpGet("Flagged")]
         public IActionResult GetFlaggedPosts()
             => Json(_postHelper.GetFlaggedPosts());
 
         // POST: api/Post/Up/user@id.com/5
+        [Authorize]
         [HttpPost("Up/{user}/{id}")]
         public async Task<IActionResult> UpvotePost(String user, Guid id)
             => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Up));
 
         // POST: api/Post/Down/user@id.com/5
+        [Authorize]
         [HttpPost("Down/{user}/{id}")]
         public async Task<IActionResult> DownvotePost(String user, Guid id)
             => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Down));

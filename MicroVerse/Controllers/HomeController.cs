@@ -146,9 +146,9 @@ namespace MicroVerse.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult AdminUserOverview()
+        public async Task<IActionResult> AdminUserOverview()
         {
-            var users = new List<UserWithRole>();
+            var users = await _userHelper.GetUserWithRole();
 
             return View(users);
         }

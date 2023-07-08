@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MicroVerse.Controllers
 {
@@ -67,12 +68,14 @@ namespace MicroVerse.Controllers
 
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(string id, User userModel)
             => StatusToActionResult(await _userHelper.PutUser(id, userModel));
 
         // POST: api/User
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User userModel)
             => await _userHelper.PostUser(userModel) is null
@@ -80,20 +83,24 @@ namespace MicroVerse.Controllers
             : CreatedAtAction("GetUser", new { id = userModel.UserName }, userModel);
 
         // DELETE: api/User/5
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
             => StatusToActionResult(await _userHelper.DeleteUser(id));
 
         // PATCH: api/User/5
+        [Authorize(Roles = "Moderator, Admin")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> BlockUser(string id)
             => StatusToActionResult(await _userHelper.BlockUser(id));
 
         // PATCH: api/User/Ban/5
+        [Authorize(Roles = "Admin")]
         [HttpPatch("Ban/{id}")]
         public async Task<IActionResult> BanUser(string id)
             => StatusToActionResult(await _userHelper.BanUser(id));
 
+        [Authorize]
         [HttpPost("FollowUser")]
         public async Task<IActionResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
         {
@@ -102,6 +109,7 @@ namespace MicroVerse.Controllers
             return new LocalRedirectResult("/Home/Profile/"+followedId);
         }
 
+        [Authorize]
         [HttpPost("UnfollowUser")]
         public async Task<IActionResult> UnfollowUser([FromForm] string followerId, [FromForm] string followedId)
         {
@@ -134,6 +142,7 @@ namespace MicroVerse.Controllers
             return Json(users);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("SetUserRole")]
         public async Task<IActionResult> SetUserRole(string userId, string role)
         {
