@@ -9,6 +9,8 @@
     Shell.ForegroundColor="DarkGreen">
 
 
+    
+    
     <ShellContent
         Title="MicroVerse - Loading" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
         ContentTemplate="{DataTemplate view:LoadingPage}"
@@ -19,6 +21,11 @@
         Title="MicroVerse - LogIn" FlyoutItemIsVisible="False" Shell.FlyoutBehavior="Disabled"
         ContentTemplate="{DataTemplate view:LoginPage}"
         Route="LoginPage" />
+
+    <ShellContent
+        Title="MicroVerse - CreatePostPage" FlyoutItemIsVisible="False" 
+        ContentTemplate="{DataTemplate view:CreatePostPage}"
+        Route="CreatePostPage" />
 
     <FlyoutItem Route="StartPage" FlyoutDisplayOptions="AsMultipleItems">
 

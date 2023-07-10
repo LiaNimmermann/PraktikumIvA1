@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using MicroVerseMaui.Services;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
+using Newtonsoft.Json;
+using MicroVerseMaui.Views;
 
 namespace MicroVerseMaui.ViewModels
 {
@@ -17,6 +19,7 @@ namespace MicroVerseMaui.ViewModels
     public partial class PostViewModel : BaseViewModel
     {
         ApiService getPosts;
+
         public ObservableCollection<Post> Posts { get; } = new();
         public PostViewModel(ApiService getPosts)
         {
@@ -26,7 +29,18 @@ namespace MicroVerseMaui.ViewModels
         }
 
         [RelayCommand]
-        async Task GetPostsAsync()
+        async Task CreatePage()
+
+        {
+            await Shell.Current.GoToAsync($"//{nameof(CreatePostPage)}");
+
+
+        }
+
+
+
+        [RelayCommand]
+         async Task GetPostsAsync()
         {
             if (IsBusy)
                 return;

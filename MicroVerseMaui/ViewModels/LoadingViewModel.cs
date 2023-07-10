@@ -19,7 +19,7 @@ namespace MicroVerseMaui.ViewModels
 
         [RelayCommand]
         // Check if a returning user or a new visitor
-        async Task ReturningUserCheck()
+         async Task ReturningUserCheck()
         {
             string userDetailsStr = Preferences.Get(nameof(App.CurrentUser), "");
             // No data for current visitor, navigate to Login Page
