@@ -156,5 +156,13 @@ namespace MicroVerse.Controllers
                 Status.NotFound => NotFound(),
                 _ => BadRequest()
             };
+
+        // Get user posts
+        // GET: api/Post/fromuser?userName=xxxxx
+        [HttpGet]
+        [Route("fromuser")]
+
+        public ActionResult<IEnumerable<Post>> GetUserPost(String userName)
+        => Json(_postHelper.GetPostsByUser(userName));
     }
 }
