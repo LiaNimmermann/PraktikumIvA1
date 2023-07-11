@@ -20,9 +20,12 @@
 
                 <DataTemplate x:DataType="model:Post">
                     <Grid Padding="10">
-                        <Frame HeightRequest="125"
-                               Padding="0"
-                               Style="{StaticResource CardView}">
+                        <Frame HeightRequest="120" Style="{StaticResource CardView}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PostViewModel}}, Path=OpenProfileCommand}"
+                                            CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
 
                             <Grid Padding="0"
                                   ColumnDefinitions="125, *">
@@ -61,7 +64,7 @@
 
 
         </CollectionView>
-        
+
         <Button Text="Home / Refresh Posts"
                 Style="{StaticResource ButtonOutline}"
                 Command="{Binding GetPostsCommand}"
@@ -72,7 +75,7 @@
                  Background="LightGreen"
                 Grid.Row="1"
                 Margin="8"/>
-        
+
         <Button Text="Create a new post"
                 Style="{StaticResource ButtonOutline}"
                 Command="{Binding CreatePageCommand}"

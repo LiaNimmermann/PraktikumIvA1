@@ -13,14 +13,14 @@
 >
             
             <BoxView
-                BackgroundColor="LightGreen"
+                BackgroundColor="GhostWhite"
                 Color="LightGreen"
 
                 Grid.RowSpan="2"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"/>
 
-            <Border StrokeShape="RoundRectangle 50"
+            <Border StrokeShape="RoundRectangle 90"
                     StrokeThickness="1"
                     Stroke="DarkGreen"
 
@@ -65,9 +65,9 @@
 
                         <DataTemplate x:DataType="model:Post">
                             <Grid Padding="10">
+    
 
-
-                                <Grid BackgroundColor="LightGreen" Padding="0"
+                                <Grid BackgroundColor="WhiteSmoke" Padding="0"
                                   ColumnDefinitions="125, *">
                                     <Image Aspect="AspectFill"
                                    Source="{Binding AuthorImage}"
@@ -84,7 +84,7 @@
                                            Style="{StaticResource MediumLabel}" FontAttributes="Bold" TextColor="DarkGreen" Margin="1" />
                                         <Label Text="{Binding Body}"
                                            Style="{StaticResource LargeLabel}" Margin="2"/>
-
+                                                                 
 
                                     </VerticalStackLayout>
 
