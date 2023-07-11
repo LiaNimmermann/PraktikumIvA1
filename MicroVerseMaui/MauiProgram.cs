@@ -34,10 +34,10 @@ public static class MauiProgram
         builder.Services.AddSingleton<LoadingViewModel>();
         builder.Services.AddSingleton<FlyoutViewModel>();
         builder.Services.AddSingleton<CreatePostViewModel>();
+        builder.Services.AddTransient<ProfileViewModel>();
 
 
-
-
+        builder.Services.AddTransient<Views.Profile>();
         builder.Services.AddSingleton<Views.CreatePostPage>();
         builder.Services.AddSingleton<Views.MainPage>();
         builder.Services.AddSingleton<Views.LoginPage>();
