@@ -73,7 +73,7 @@
                 Grid.Row="1"
                 Margin="8"/>
         
-        <!--<Button Text="Create a new post"
+        <Button Text="Create a new post"
                 Style="{StaticResource ButtonOutline}"
                 Command="{Binding CreatePageCommand}"
                 BorderColor="LightGreen"
@@ -82,7 +82,7 @@
                 TextColor="DarkGreen"  CornerRadius="15"
                 Grid.Row="1"
                 Grid.Column="2"
-                Margin="8"/>-->
+                Margin="8"/>
 
 
         <ActivityIndicator IsVisible="{Binding IsBusy}"

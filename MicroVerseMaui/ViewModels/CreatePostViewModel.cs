@@ -15,7 +15,7 @@ namespace MicroVerseMaui.ViewModels
     public partial class CreatePostViewModel : BaseViewModel
     {
         [ObservableProperty]
-        private string _newPostInput; // Accessed as NewPost
+        private string _newPostInput; // Accessed as NewPostInput
 
 
         [RelayCommand]
@@ -23,7 +23,6 @@ namespace MicroVerseMaui.ViewModels
 
         {
             var newPost = new NewPost(NewPostInput);
-
 
             HttpResponseMessage response;
             string postStr = JsonConvert.SerializeObject(newPost);
