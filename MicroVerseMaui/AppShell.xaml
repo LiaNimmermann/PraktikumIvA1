@@ -28,8 +28,8 @@
 
     <ShellContent
         Title="MicroVerse - CreatePostPage" FlyoutItemIsVisible="False" 
-        ContentTemplate="{DataTemplate view:Profile}"
-        Route="Profile" />
+        ContentTemplate="{DataTemplate view:ProfilePage}"
+        Route="ProfilePage" />
 
     <FlyoutItem Route="StartPage" FlyoutDisplayOptions="AsMultipleItems">
 
