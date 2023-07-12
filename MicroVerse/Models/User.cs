@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Transactions;
 
 namespace MicroVerse.Models
@@ -30,6 +31,12 @@ namespace MicroVerse.Models
 
         [Required]
         public Activation Activation { get; set; } = Activation.active;
+
+        [NotMapped]
+        public IEnumerable<String> Followers { get; set; } = new List<String>();
+
+        [NotMapped]
+        public IEnumerable<String> Following { get; set; } = new List<String>();
 
         public Boolean FuzzyMatches(String phrase)
         {

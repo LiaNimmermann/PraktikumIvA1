@@ -27,7 +27,18 @@ namespace MicroVerse.Helper
         }
 
         public async Task<IEnumerable<User>> GetUsers()
-            => await _context.Users.ToListAsync();
+        {
+            var fH = new FollowsHelper(_context);
+            var users = _context.Users.ToList();
+            foreach (var user in users)
+            {
+                user.Followers = (await fH.GetFollowers(user.UserName))
+                    .Select(u => u.UserName);
+                user.Following = (await fH.GetFollowings(user.UserName))
+                    .Select(u => u.UserName);
+            }
+            return users;
+        }
 
         public async Task<User?> GetUser(String userName)
             => await _context.Users

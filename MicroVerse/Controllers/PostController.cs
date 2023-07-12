@@ -150,19 +150,103 @@ namespace MicroVerse.Controllers
         }
 
         [HttpGet("UserPostingStats")]
-        public IActionResult UserPostingStatistics()
+        public async Task<IActionResult> UserPostingStatistics()
         {
             var groups = _postHelper.GetPostsGroupedByUser();
             var name = new List<String>();
             var allTime = new List<Int32>();
             var last7 = new List<Int32>();
+            var today = new List<Int32>();
             foreach (var g in groups) {
                 name.Add(g.First().AuthorId);
                 allTime.Add(g.Count());
                 last7.Add(g.Where(p => DateTime.Today - p.CreatedAt < new TimeSpan(7, 0, 0, 0))
                           .Count());
+                today.Add(g.Where(p => DateTime.Today - p.CreatedAt < new TimeSpan(1, 0, 0, 0))
+                          .Count());
             }
-            var stats = new UserPostingStats(name, allTime, last7);
+
+            var mostFollowed = (await _userHelper.GetUsers())
+                .OrderByDescending(u => u.Followers.Count())
+                .Take(5);
+
+            var mostUpvoted = _postHelper.GetPostsGroupedByUser()
+                .OrderByDescending
+                (
+                    g => g.Select(p => p.Votes)
+                    .Select(v => v
+                            .Where(v => v.Upvote == Vote.Votes.Up)
+                            .Count())
+                    .Sum()
+                )
+                .Take(5);
+
+            var mostDownvoted = _postHelper.GetPostsGroupedByUser()
+                .OrderByDescending
+                (
+                    g => g.Select(p => p.Votes)
+                    .Select(v => v
+                            .Where(v => v.Upvote == Vote.Votes.Down)
+                            .Count())
+                    .Sum()
+                )
+                .Take(5);
+
+            var stats = new {
+                UserPosting = new {
+                    Labels = name,
+                    PostsAllTime = allTime,
+                    PostsLastWeek = last7,
+                    PostsToday = today
+                },
+                MostFollowedUsers = new {
+                    Labels = mostFollowed.Select(u => u.UserName).ToList(),
+                    Followers = mostFollowed.Select(u => u.Followers.Count()).ToList(),
+                    Following = mostFollowed.Select(u => u.Following.Count()).ToList()
+                },
+                MostUpvotedPost = new {
+                    Labels = mostUpvoted.Select(g => g.First().AuthorId),
+                    Upvotes = mostUpvoted.Select
+                    (
+                        g => g.Select
+                        (
+                            p => p.Votes.Select(v => v.Upvote)
+                            .Where(v => v == Vote.Votes.Up)
+                            .Count()
+                        ).Sum()
+                    ),
+                    Downvotes = mostUpvoted.Select
+                    (
+                        g => g.Select
+                        (
+                            p => p.Votes.Select(v => v.Upvote)
+                            .Where(v => v == Vote.Votes.Down)
+                            .Count()
+                        ).Sum()
+                    )
+                },
+                MostDownvotedPost = new {
+                    Labels = mostDownvoted.Select(g => g.First().AuthorId),
+                    Upvotes = mostDownvoted.Select
+                    (
+                        g => g.Select
+                        (
+                            p => p.Votes.Select(v => v.Upvote)
+                            .Where(v => v == Vote.Votes.Up)
+                            .Count()
+                        ).Sum()
+                    ),
+                    Downvotes = mostDownvoted.Select
+                    (
+                        g => g.Select
+                        (
+                            p => p.Votes.Select(v => v.Upvote)
+                            .Where(v => v == Vote.Votes.Down)
+                            .Count()
+                        ).Sum()
+                    )
+                }
+            };
 
             return Json(stats);
         }
