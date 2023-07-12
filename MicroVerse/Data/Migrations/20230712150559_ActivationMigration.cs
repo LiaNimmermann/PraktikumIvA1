@@ -8,19 +8,18 @@ namespace MicroVerse.Data.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "Activation",
+            migrationBuilder.RenameColumn(
+                name: "Role",
                 table: "AspNetUsers",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+                newName: "Activation");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            migrationBuilder.RenameColumn(
                 name: "Activation",
-                table: "AspNetUsers");
+                table: "AspNetUsers",
+                newName: "Role");
         }
     }
 }

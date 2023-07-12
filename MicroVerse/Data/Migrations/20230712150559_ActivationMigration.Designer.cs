@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MicroVerse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230620110902_ActivationMigration")]
+    [Migration("20230712150559_ActivationMigration")]
     partial class ActivationMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -262,9 +262,6 @@ namespace MicroVerse.Data.Migrations
 
                     b.Property<byte[]>("Picture")
                         .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
