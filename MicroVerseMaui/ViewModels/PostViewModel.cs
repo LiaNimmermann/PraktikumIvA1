@@ -37,10 +37,21 @@ namespace MicroVerseMaui.ViewModels
 
         }
 
+        [RelayCommand]
+        async Task OpenProfile(Post currentPost)
+        {
+            if (currentPost == null)
+                return;
+
+            await Shell.Current.GoToAsync(nameof(ProfilePage), true, new Dictionary<string, object>
+        {
+            {"Post", currentPost }
+        });
+        }
 
 
         [RelayCommand]
-         async Task GetPostsAsync()
+        async Task GetPostsAsync()
         {
             if (IsBusy)
                 return;

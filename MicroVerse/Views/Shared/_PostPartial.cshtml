@@ -12,14 +12,14 @@
         <div class="post-actions">
             @if (Model.VoteByUser == Vote.Votes.Undefined)
             {
-                <form method="post" asp-action="UpvotePost" asp-controller="api\Post">
-                    <input type="hidden" name="user" value="@User.Identity?.Name" />
-                    <input type="hidden" name="id" value="@Model.Id" />
+                <form method="post" action="/api/Post/Up/@User.Identity?.Name/@Model.Id">
+                    @*<input type="hidden" name="user" value="@User.Identity?.Name" />*@
+                    @*<input type="hidden" name="id" value="@Model.Id" />*@
                     <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
                 </form>
-                <form method="post" asp-action="DownvotePost" asp-controller="api\Post">
-                    <input type="hidden" name="user" value="@User.Identity?.Name" />
-                    <input type="hidden" name="id" value="@Model.Id" />
+                <form method="post" action="/api/Post/Down/@User.Identity?.Name/@Model.Id">
+                    @*<input type="hidden" name="user" value="@User.Identity?.Name" />*@
+                    @*<input type="hidden" name="id" value="@Model.Id" />*@
                     <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
                 </form>
             } else if(Model.VoteByUser == Vote.Votes.Down)

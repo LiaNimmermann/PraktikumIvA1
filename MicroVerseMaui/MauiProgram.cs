@@ -19,7 +19,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .RegisterFirebaseServices()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -35,10 +34,10 @@ public static class MauiProgram
         builder.Services.AddSingleton<LoadingViewModel>();
         builder.Services.AddSingleton<FlyoutViewModel>();
         builder.Services.AddSingleton<CreatePostViewModel>();
+        builder.Services.AddTransient<ProfileViewModel>();
 
 
-
-
+        builder.Services.AddTransient<Views.ProfilePage>();
         builder.Services.AddSingleton<Views.CreatePostPage>();
         builder.Services.AddSingleton<Views.MainPage>();
         builder.Services.AddSingleton<Views.LoginPage>();
@@ -53,25 +52,22 @@ public static class MauiProgram
         return builder.Build();
     }
 
-    private static MauiAppBuilder RegisterFirebaseServices(this MauiAppBuilder builder)
+    private static MauiAppBuilder RegisterFirebase(this MauiAppBuilder builder)
     {
-        builder.ConfigureLifecycleEvents(events => {
+        builder.ConfigureLifecycleEvents(events =>
+        {
 #if IOS
             events.AddiOS(iOS => iOS.FinishedLaunching((app, launchOptions) => {
-                CrossFirebase.Initialize(CreateCrossFirebaseSettings());
-                CrossFirebaseCrashlytics.Current.SetCrashlyticsCollectionEnabled(true);
+                Firebase.Core.App.Configure();
                 return false;
             }));
 #else
-            events.AddAndroid(android => android.OnCreate((activity, _) =>
-            {
-                CrossFirebase.Initialize(activity, CreateCrossFirebaseSettings());
-                CrossFirebaseCrashlytics.Current.SetCrashlyticsCollectionEnabled(true);
+            events.AddAndroid(android => android.OnCreate((activity, bundle) => {
+                Firebase.FirebaseApp.InitializeApp(activity);
             }));
 #endif
         });
 
-        builder.Services.AddSingleton(_ => CrossFirebaseAuth.Current);
         return builder;
     }
 

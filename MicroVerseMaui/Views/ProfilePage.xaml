@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MicroVerseMaui.Views.ProfilePage"
+             xmlns:model="clr-namespace:MicroVerseMaui.Models"
+
+             xmlns:viewmodel="clr-namespace:MicroVerseMaui.ViewModels">
+
+
+    <ScrollView BackgroundColor="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}">
+        <Grid RowDefinitions="Auto,Auto,*"
+              BackgroundColor="White"
+>
+            
+            <BoxView
+                BackgroundColor="GhostWhite"
+                Color="LightGreen"
+
+                Grid.RowSpan="2"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"/>
+
+            <Border StrokeShape="RoundRectangle 90"
+                    StrokeThickness="1"
+                    Stroke="DarkGreen"
+
+                    Margin="0,8,0,0"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Image Aspect="AspectFill"
+                        HeightRequest="160"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        Source="{Binding UserProfile.ProfileImage}"
+                        WidthRequest="160"/>
+            </Border>
+
+            <Label Style="{StaticResource LargeLabel}" 
+                   Grid.Row="1"
+                   TextColor="DarkGreen"
+                   FontAttributes="Bold"
+                   Text="{Binding UserProfile.displayedName}" 
+                   HorizontalOptions="Center"
+                   Margin="0,0,0,8"/>
+
+
+
+
+            <VerticalStackLayout Grid.Row="2" Padding="10" Spacing="10">
+
+                <StackLayout Orientation="Horizontal">
+                    <Label FontSize="18" FontAttributes="Bold" Style="{StaticResource SmallLabel}" Text="@" TextColor="DarkGrey"/>
+
+                    <Label FontSize="18" FontAttributes="Bold" Style="{StaticResource MediumLabel}" Text="{Binding UserProfile.userName}" TextColor="DarkGrey" />
+                </StackLayout>
+
+                    <Label FontSize="18" FontAttributes="Bold" Style="{StaticResource MediumLabel}" Text="{Binding UserProfile.bio}" />
+
+                <CollectionView BackgroundColor="White"
+                          Grid.ColumnSpan="2"
+
+                        ItemsSource="{Binding UserPosts}"
+                        SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+
+                        <DataTemplate x:DataType="model:Post">
+                            <Grid Padding="10">
+    
+
+                                <Grid BackgroundColor="WhiteSmoke" Padding="0"
+                                  ColumnDefinitions="125, *">
+                                    <Image Aspect="AspectFill"
+                                   Source="{Binding AuthorImage}"
+                                   WidthRequest="125"
+                                   HeightRequest="125"/>
+                                    <VerticalStackLayout
+                                 
+                                   Grid.Column="1"
+                                   Padding="10"
+                                   VerticalOptions="Center">
+                                        <Label Text="{Binding CreatedAt}"
+                                           Style="{StaticResource SmallLabel}" TextColor="Grey" Margin="2"/>
+                                        <Label Text="{Binding AuthorId}"
+                                           Style="{StaticResource MediumLabel}" FontAttributes="Bold" TextColor="DarkGreen" Margin="1" />
+                                        <Label Text="{Binding Body}"
+                                           Style="{StaticResource LargeLabel}" Margin="2"/>
+                                                                 
+
+                                    </VerticalStackLayout>
+
+
+                                </Grid>
+
+
+
+
+
+                            </Grid>
+
+
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+
+                </CollectionView>
+
+
+            </VerticalStackLayout>
+
+        </Grid>
+        
+        
+    </ScrollView>
+    
+    
+</ContentPage>
