@@ -20,6 +20,12 @@ namespace MicroVerse.Helper
             ? UpdateCache()
             : _postsCache;
 
+        public IEnumerable<IGrouping<String, Post>> GetPostsGroupedByUser()
+            => GetPosts()
+        .GroupBy(post => post.AuthorId)
+        .OrderByDescending(g => g.Count())
+        .Take(10);
+
         public IEnumerable<Post> GetPostsByUser(String userName)
             => GetPosts().Where(p => p.AuthorId == userName);
 

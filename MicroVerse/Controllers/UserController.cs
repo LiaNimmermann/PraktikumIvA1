@@ -142,7 +142,6 @@ namespace MicroVerse.Controllers
             return Json(users);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpPost("SetUserRole")]
         public async Task<IActionResult> SetUserRole(string userId, string role)
         {

@@ -134,16 +134,10 @@ namespace MicroVerse.Controllers
         }
 
         [Authorize(Roles = "Moderator, Admin")]
-        public IActionResult Moderation()
-        {
-            return View();
-        }
+        public IActionResult Moderation() => View();
 
         [Authorize(Roles = "Moderator, Admin")]
-        public IActionResult Statistics()
-        {
-            return View();
-        }
+        public IActionResult Statistics() => View();
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AdminUserOverview()

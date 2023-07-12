@@ -149,6 +149,24 @@ namespace MicroVerse.Controllers
             return CreatedAtAction("AuthPost", new { id = post.Id }, post);
         }
 
+        [HttpGet("UserPostingStats")]
+        public IActionResult UserPostingStatistics()
+        {
+            var groups = _postHelper.GetPostsGroupedByUser();
+            var name = new List<String>();
+            var allTime = new List<Int32>();
+            var last7 = new List<Int32>();
+            foreach (var g in groups) {
+                name.Add(g.First().AuthorId);
+                allTime.Add(g.Count());
+                last7.Add(g.Where(p => DateTime.Today - p.CreatedAt < new TimeSpan(7, 0, 0, 0))
+                          .Count());
+            }
+            var stats = new UserPostingStats(name, allTime, last7);
+
+            return Json(stats);
+        }
+
         private IActionResult StatusToActionResult(Status status)
             => status switch
             {
