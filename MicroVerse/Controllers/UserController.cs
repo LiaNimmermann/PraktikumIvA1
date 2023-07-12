@@ -144,7 +144,7 @@ namespace MicroVerse.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPost("SetUserRole")]
-        public async Task<IActionResult> SetUserRole(string userId, string role)
+        public async Task<IActionResult> SetUserRole([FromForm] string userId, [FromForm] string role)
         {
             var user = await _context.Users.FirstOrDefaultAsync(user => userId == user.UserName);
             if (user is null)
