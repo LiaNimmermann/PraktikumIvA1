@@ -144,7 +144,7 @@ namespace MicroVerse.Controllers
         {
             var users = await _userHelper.GetUserWithRole();
 
-            return View(users);
+            return View(users.ToList());
         }
     }
 }

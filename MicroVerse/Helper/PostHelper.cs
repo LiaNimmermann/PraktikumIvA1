@@ -176,6 +176,14 @@ namespace MicroVerse.Helper
             _postsCache = _context.Post
                 .OrderByDescending(post => post.CreatedAt)
                 .ToList();
+
+            foreach (var post in _postsCache)
+            {
+                post.Votes = _context.Vote
+                    .Where(v => v.PostId == post.Id)
+                    .ToList();
+            }
+
             return _postsCache;
         }
 
