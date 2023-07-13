@@ -140,10 +140,29 @@ function initMostDownvotedPosts(data) {
     })
 }
 
-initUserPosting(mockData.userPosting);
-initMostFollowedUser(mockData.mostFollowedUsers);
-initMostUpvotedPosts(mockData.mostUpvotedPost);
-initMostDownvotedPosts(mockData.mostDownvotedPost);
+
+function getData() {
+    const xhttp = new XMLHttpRequest();
+    xhttp.onload = function () {
+        var data = this.response.data;
+        initUserPosting(data.userPosting);
+        initMostFollowedUser(data.mostFollowedUsers);
+        initMostUpvotedPosts(data.mostUpvotedPost);
+        initMostDownvotedPosts(data.mostDownvotedPost);
+    }
+    xhttp.open("GET", "https://localhost:7028/api/Post/UserPostingStats");
+    xhttp.send();
+}
+
+
+getData();
+//initUserPosting(mockData.userPosting);
+//initMostFollowedUser(mockData.mostFollowedUsers);
+//initMostUpvotedPosts(mockData.mostUpvotedPost);
+//initMostDownvotedPosts(mockData.mostDownvotedPost);
+
+
+
 //function getPostsLastWeek(array, i,) {
 //    return array[i].postsLastWeek
 //}
