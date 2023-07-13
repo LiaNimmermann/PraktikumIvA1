@@ -22,13 +22,6 @@
                 @follow.DisplayedName
             </a>
         }
-        @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
-        {
-
-            <form method="post" asp-controller="Post" asp-action="" asp-route-id="">
-                <button type="submit" class="delete-button">Create New User</button>
-            </form>
-        }
     </div>
 }
 

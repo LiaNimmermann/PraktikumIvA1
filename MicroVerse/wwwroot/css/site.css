@@ -122,6 +122,16 @@ body {
         gap: 10px;
     }
 
+.main div.info {
+    padding: 2px;
+    background-color: lightgray;
+    border-radius: 5px;
+}
+
+.main div.info p{
+    margin:0;
+}
+
 .main i.fa-circle-up {
     color: green;
     padding: 2px;
@@ -131,7 +141,7 @@ body {
 }
 
 .main button.btn-upvoted {
-    background-color: lightgreen
+    background-color: lightgreen;
 }
 
 .main i.fa-circle-down {
@@ -140,13 +150,22 @@ body {
 }
 
 .main button.btn-downvoted {
-    background-color: lightcoral
+    background-color: lightcoral;
+}
+
+.main button.flagged {
+    background-color: lightblue;
 }
 
 
 
 .main .fa-flag {
-    padding: 8px;
+    padding: 2px;
+    color: black;
+}
+.main .fa-font-awesome {
+    color: blue;
+    padding: 2px;
 }
 
 /* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
