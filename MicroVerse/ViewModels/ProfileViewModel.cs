@@ -7,29 +7,23 @@ namespace MicroVerse.ViewModels
     {
         public ProfileViewModel
         (
-            string username,
-            string displayedName,
-            string bio,
+            User user,
             IEnumerable<User> followers,
             IEnumerable<User> following,
             List<PostViewModel> posts,
             bool follows,
-            string role,
-            byte[] pictureHash
+            string role
         )
         {
-            UserName = username;
-            DisplayedName = displayedName;
-            Bio = bio;
+            UserName = user.UserName;
+            DisplayedName = user.DisplayedName;
+            Bio = user.Bio;
             FollowerCount = followers.Count();
             FollowsCount = following.Count();
             Posts = posts;
-            Follows = new FollowButtonModel(username, follows);
+            Follows = new FollowButtonModel(user.UserName, follows);
             Role = role;
-            if( pictureHash != null )
-            {
-                PictureUrl = "https://picsum.photos/id/" + Encoding.UTF8.GetString(pictureHash) + "/200/200"; ;
-            }
+            PictureUrl = user?.Picture ?? "";
         }
 
 

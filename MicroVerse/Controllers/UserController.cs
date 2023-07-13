@@ -100,8 +100,8 @@ namespace MicroVerse.Controllers
 
         [Authorize]
         [HttpPost("Picture/{userName}")]
-        public async Task<IActionResult> ChangeProfilePicture(String userName, [FromForm] int gravatarMail)
-            => StatusToActionResult(await _userHelper.ChangePicture(userName, gravatarMail));
+        public async Task<IActionResult> ChangeProfilePicture(String userName, [FromForm] String imgURL)
+            => StatusToActionResult(await _userHelper.ChangePicture(userName, imgURL));
 
         // PATCH: api/User/5
         [Authorize(Roles = "Moderator, Admin")]

@@ -1,3 +1,4 @@
+using System.Text;
 using MicroVerse.Models;
 
 namespace MicroVerse.ViewModels
@@ -62,7 +63,9 @@ namespace MicroVerse.ViewModels
             Downvotes = post.Votes
                 .Where(x => x.Upvote == Vote.Votes.Down)
                 .Count();
-            AuthorImage = "https://picsum.photos/200/200";
+            AuthorImage = user?.Picture is null
+                ? "https://picsum.photos/200/200"
+                : user.Picture;
             Status = ((int)post.Activation);
         }
 

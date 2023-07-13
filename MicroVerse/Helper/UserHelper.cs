@@ -137,11 +137,10 @@ namespace MicroVerse.Helper
                 return await PutUser(userName, user);
             });
 
-        public async Task<Status> ChangePicture(string userName, int gravatarMail)
+        public async Task<Status> ChangePicture(string userName, String imgLink)
             => await ChangeUser(userName, async user =>
             {
-                string sourceData = gravatarMail.ToString();
-                user.Picture = Encoding.UTF8.GetBytes(sourceData);
+                user.Picture = imgLink;
                 return await PutUser(userName, user);
             });
 

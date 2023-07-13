@@ -9,7 +9,7 @@ namespace MicroVerse.ViewModels
         public string Email { get; set; }
         public string DisplayedName { get; set; }
 
-        public byte[]? Picture { get; set; }
+        public String? Picture { get; set; }
 
         public string Bio { get; set; }
 

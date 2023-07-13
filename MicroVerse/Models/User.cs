@@ -25,7 +25,7 @@ namespace MicroVerse.Models
         //[Required]
         //public Role Role { get; set; } = Role.user;
 
-        public byte[]? Picture { get; set; }
+        public String? Picture { get; set; }
 
         public string Bio { get; set; } = "Hi, I'm new here!";
 
