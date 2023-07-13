@@ -121,6 +121,13 @@ namespace MicroVerse.Helper
                 return Status.NoContent;
             });
 
+        public async Task<Status> ChangeBio(string userName, string bio)
+            => await ChangeUser(userName, async user =>
+            {
+                user.Bio = bio;
+                return await PutUser(userName, user);
+            });
+
         public async Task<Status> BlockUser(string id)
             => await ChangeUserActivation(id, Activation.blocked);
 
