@@ -18,7 +18,7 @@
         @foreach (var follow in Model.Follows)
         {
             <a href="/Home/Profile/@follow.UserName">
-                <img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" />
+                <img class="profile-picture" src="@follow.Picture" height="35" width="35" />
                 @follow.DisplayedName
             </a>
         }
