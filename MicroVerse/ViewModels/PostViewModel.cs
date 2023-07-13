@@ -47,15 +47,14 @@ namespace MicroVerse.ViewModels
 
         public PostViewModel(Post post, IEnumerable<User> users)
         {
+            var user = users.FirstOrDefault(u => u.UserName == post.AuthorId);
             Id = post.Id;
             Body = post.Body;
             ReactsTo = post.ReactsTo != null
                 ? new PostViewModel(post.ReactsTo, users)
                 : null;
             CreatedAt = post.CreatedAt;
-            DisplayedName = users
-                .FirstOrDefault(u => u.UserName == post.AuthorId)
-                .DisplayedName;
+            DisplayedName = user?.DisplayedName ?? "";
             Username = post.AuthorId;
             Upvotes = post.Votes
                 .Where(x => x.Upvote == Vote.Votes.Up)

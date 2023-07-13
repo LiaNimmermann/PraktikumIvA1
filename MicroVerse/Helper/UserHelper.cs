@@ -128,6 +128,13 @@ namespace MicroVerse.Helper
                 return await PutUser(userName, user);
             });
 
+        public async Task<Status> ChangeDisplayName(string userName, string displayName)
+            => await ChangeUser(userName, async user =>
+            {
+                user.DisplayedName = displayName;
+                return await PutUser(userName, user);
+            });
+
         public async Task<Status> BlockUser(string id)
             => await ChangeUserActivation(id, Activation.blocked);
 
