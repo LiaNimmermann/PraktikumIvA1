@@ -1,64 +1,7 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <title>Moderator Page</title>
-    <link rel="stylesheet" type="text/css" href="site.css">
-</head>
-<body>
-    <div class="main with-sidebar">
-        <div class="user-list">
-            <h4>Moderation</h4>
-            <div class="create-user-button">
-                <button>Create New User</button>
-            </div>
-            <div class="user">
-                <div class="user-details">
-                    <img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" />
-                    <h3>Username 1</h3>
-                </div>
-                <div class="user-moderation">
-                    <button class="block-button">Block</button>
-                    <button class="delete-button">Delete</button>
-                </div>
-            </div>
-            <div class="post-containter">
-                <div class="post-author">
-                    <h3>Post-Title</h3>
-                </div>
-                <div class="post-content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum tortor sed leo blandit, at efficitur nisi pellentesque. Sed lacinia elementum tortor, ac varius neque auctor non. Aliquam non ligula vitae sem sollicitudin interdum.</p>
-                </div>
-                <div class="post-moderation">
-                    <button class="delete-button">Delete</button>
-                    <button class="edit-button">Edit</button>
-                    <button class="approve-button">Approve</button>
-                </div>
-            </div>
-            <div class="user">
-                <div class="user-details">
-                    <img class="profile-picture" src="https://picsum.photos/200/200" height="35" width="35" />
-                    <h3>Username 2</h3>
-                </div>
-                <div class="user-moderation">
-                    <button class="block-button">Block</button>
-                    <button class="delete-button">Delete</button>
-                </div>
-            </div>
-
-            <div class="post-containter">
-                <div class="post-author">
-                    <h3>Post-Title</h3>
-                </div>
-                <div class="post-content">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum tortor sed leo blandit, at efficitur nisi pellentesque. Sed lacinia elementum tortor, ac varius neque auctor non. Aliquam non ligula vitae sem sollicitudin interdum.</p>
-                </div>
-                <div class="post-moderation">
-                    <button class="delete-button">Delete</button>
-                    <button class="edit-button">Edit</button>
-                    <button class="approve-button">Approve</button>
-                </div>
-            </div>
-        </div>
+﻿@using MicroVerse.ViewModels
+@model List<PostViewModel>
+<div class="main">
+    <div class="user-list">
+        <partial name="_PostFeed" for="@Model">
     </div>
-</body>
-</html>
+</div>

@@ -134,7 +134,18 @@ namespace MicroVerse.Controllers
         }
 
         [Authorize(Roles = "Moderator, Admin")]
-        public IActionResult Moderation() => View();
+        public async Task<IActionResult> Moderation()
+        {
+            var currentUser = User?.Identity?.Name ?? "";
+            var users = await _userHelper.GetUsers();
+            var postsList = _postHelper.GetFlaggedPosts()
+                .Select(post => new PostViewModel(post, users)
+                {
+                    VoteByUser = post.VotingByUser(currentUser)
+                })
+                .ToList();
+            return View(postsList);
+        } 
 
         [Authorize(Roles = "Moderator, Admin")]
         public IActionResult Statistics() => View();
