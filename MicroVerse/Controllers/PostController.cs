@@ -97,13 +97,13 @@ namespace MicroVerse.Controllers
 
         // PATCH: api/Post/Flag/5
         [Authorize]
-        [HttpPatch("Flag/{id}")]
+        [HttpPost("Flag/{id}")]
         public async Task<IActionResult> FlagPost(Guid id)
             => StatusToActionResult(await _postHelper.FlagPost(id));
 
         // PATCH: api/Post/Unflag/5
         [Authorize]
-        [HttpPatch("Unflag/{id}")]
+        [HttpPost("Unflag/{id}")]
         public async Task<IActionResult> UnflagPost(Guid id)
             => StatusToActionResult(await _postHelper.ActivatePost(id));
 

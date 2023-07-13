@@ -64,6 +64,7 @@ namespace MicroVerse.ViewModels
                 .Where(x => x.Upvote == Vote.Votes.Down)
                 .Count();
             AuthorImage = "https://picsum.photos/200/200";
+            Status = ((int)post.Activation);
         }
 
     }

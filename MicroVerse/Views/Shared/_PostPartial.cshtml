@@ -9,32 +9,46 @@
             <img class="profile-picture" src="https://picsum.photos/200/200" height="25" width="25" />
             @Model.DisplayedName
         </a>
-        <div class="post-actions">
-            @if (Model.VoteByUser == Vote.Votes.Undefined)
-            {
-                <form method="post" action="/api/Post/Up/@User.Identity?.Name/@Model.Id">
-                    @*<input type="hidden" name="user" value="@User.Identity?.Name" />*@
-                    @*<input type="hidden" name="id" value="@Model.Id" />*@
-                    <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
-                </form>
-                <form method="post" action="/api/Post/Down/@User.Identity?.Name/@Model.Id">
-                    @*<input type="hidden" name="user" value="@User.Identity?.Name" />*@
-                    @*<input type="hidden" name="id" value="@Model.Id" />*@
-                    <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
-                </form>
-            } else if(Model.VoteByUser == Vote.Votes.Down)
-            {
-                <button disabled type="submit" onclick="refreshPage();" class="unactive"><i class="fa-solid fa-circle-up unactive"></i> @Model.Upvotes </button>
-                    <button disabled type="submit" onclick="refreshPage();" class="btn-downvoted"><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
-            }
-            else if (Model.VoteByUser == Vote.Votes.Up)
-            {
-                <button disabled type="submit" onclick="refreshPage();" class="btn-upvoted"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
-                <button disabled type="submit" onclick="refreshPage();" class="unactive"><i class="fa-solid fa-circle-down unactive"></i> @Model.Downvotes</button>
-            }
-
-            <a href="#"><i class="fa-solid fa-flag"></i></a>
-        </div>
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <div class="post-actions">
+                @if (Model.VoteByUser == Vote.Votes.Undefined)
+                {
+                    <form method="post" action="/api/Post/Up/@User.Identity?.Name/@Model.Id">
+                        <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
+                    </form>
+                    <form method="post" action="/api/Post/Down/@User.Identity?.Name/@Model.Id">
+                        <button type="submit" onclick="refreshPage();"><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
+                    </form>
+                } else if(Model.VoteByUser == Vote.Votes.Down)
+                {
+                    <button disabled type="submit" onclick="refreshPage();" class="unactive"><i class="fa-solid fa-circle-up unactive"></i> @Model.Upvotes </button>
+                        <button disabled type="submit" onclick="refreshPage();" class="btn-downvoted"><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
+                }
+                else if (Model.VoteByUser == Vote.Votes.Up)
+                {
+                    <button disabled type="submit" onclick="refreshPage();" class="btn-upvoted"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
+                    <button disabled type="submit" onclick="refreshPage();" class="unactive"><i class="fa-solid fa-circle-down unactive"></i> @Model.Downvotes</button>
+                }
+                @if(Model.Status==0)
+                {
+                    <form method="post" action="/api/Post/Flag/@Model.Id">
+                        <button type="submit" onclick="refreshPage()"><i class="fa-solid fa-flag"></i>flag</button>
+                    </form>
+                } else if(Model.Status==1)
+                {
+                    @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
+                    {
+                        <form method="post" action="/api/Post/Unflag/@Model.Id">
+                            <button type="submit" onclick="refreshPage()" class="flagged"><i class="fa-solid fa-font-awesome"></i>unflag</button>
+                        </form>
+                    } else
+                    {
+                        <div class="info"><p><i class="fa-solid fa-font-awesome"></i> This post is already flagged and will be reviewed by our moderators</p></div>
+                    }
+                }
+            </div>
+        }
     </div>
     <hr>
     <div class="post-body">
