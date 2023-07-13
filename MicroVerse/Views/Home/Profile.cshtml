@@ -21,7 +21,17 @@
             <h2>@@@Model.UserName</h2>
         </div>
         <div class="profile-header-row">
-            <h1>@Model.DisplayedName</h1>
+            @if (SignInManager.IsSignedIn(User) && Model.UserName == @User.Identity?.Name)
+            {
+                <form method="post" action="/api/User/DisplayName/@Model.UserName">
+                    <input value="@Model.DisplayedName" type="text" id="displayName" name="displayName">
+                    <button type="submit">Save</button>
+                </form>
+            }
+            else
+            {
+                <h1>@Model.DisplayedName</h1>
+            }
         </div>
         <div class="profile-header-row">
             <div class="follow-section">
