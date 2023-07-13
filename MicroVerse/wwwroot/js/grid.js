@@ -144,7 +144,7 @@ function initMostDownvotedPosts(data) {
 function getData() {
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
-        var data = this.response.data;
+        var data = JSON.parse(this.responseText);
         initUserPosting(data.userPosting);
         initMostFollowedUser(data.mostFollowedUsers);
         initMostUpvotedPosts(data.mostUpvotedPost);

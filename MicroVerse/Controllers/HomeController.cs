@@ -56,6 +56,22 @@ namespace MicroVerse.Controllers
         }
 
         [Authorize]
+        public async Task<IActionResult> FollowedFeed()
+        {
+            var currentUser = User?.Identity?.Name ?? "";
+            var users = await _userHelper.GetUsers();
+            var followsList = (await _followsHelper.GetFollowings(currentUser)).ToList();
+            var postList = _postHelper.GetPostsByUserAndFollows(User?.Identity?.Name)
+                .Select(post => new PostViewModel(post, users)
+            {
+                VoteByUser = post.VotingByUser(currentUser)
+            })
+                .ToList();
+            var model = new HomeViewModel(followsList, postList);
+            return View(model);
+        }
+
+        [Authorize]
         public async Task<IActionResult> Profile(string id)
         {
             var user = await _userHelper.GetUser(id);
