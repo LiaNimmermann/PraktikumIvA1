@@ -15,14 +15,15 @@
         </tr>
         @foreach(var user in Model)
         {
+            var roleString = user.UserName + "," + user.Role;
             <tr>
-                <td>@user.UserName</td>
+                <td><a asp-controller="Home" asp-action="Profile" asp-route-id="@user.UserName">@user.UserName</a></td>
                 <td>@user.DisplayedName</td>
                 <td>@user.Bio</td>
                 <td>@user.Activation</td>
                 <td>@user.Role</td>
                 <td>
-                    <a ></a>
+                    <partial name="_RoleSelection" for="@roleString">
                 </td>
             </tr>
         }
