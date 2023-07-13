@@ -52,7 +52,8 @@ namespace MicroVerseMaui.ViewModels
                         Preferences.Remove(nameof(App.CurrentUser));
                     }
                     // Save user token
-                    await SecureStorage.SetAsync(nameof(App.Token), response.token);
+                    //await SecureStorage.SetAsync(nameof(App.Token), response.token);
+                    App.Token = response.token;
                     currentUser.Email = EmailInput;
                     string currentUserStr = JsonConvert.SerializeObject(currentUser);
                     Preferences.Set(nameof(App.CurrentUser), currentUserStr);
