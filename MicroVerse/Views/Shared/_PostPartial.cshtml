@@ -6,7 +6,7 @@
 <div class="post-containter">
     <div class="post-header">
         <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@Model.Username">
-            <img class="profile-picture" src="https://picsum.photos/200/200" height="25" width="25" />
+            <img class="profile-picture" src="@Model.AuthorImage" height="25" width="25" />
             @Model.DisplayedName
         </a>
         @if (SignInManager.IsSignedIn(User))
