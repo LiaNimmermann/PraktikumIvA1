@@ -242,37 +242,6 @@ input[type=text] {
             background-color: #45a049;
         }
 
-/* Profile style */
-.profile-header {
-    display: flex;
-    align-items: center;
-}
-
-.profile-picture {
-    border-radius: 50%;
-    margin-right: 10px;
-    margin-bottom: 10px;
-}
-
-.profile-header h1 {
-    margin-bottom: 5px;
-    margin: 0;
-}
-
-h2 {
-    font-size: 20px;
-}
-
-.follow-counts {
-    align-items: center;
-    margin-top: 10px;
-    margin-left: 50px;
-}
-
-    .follow-counts p {
-        margin: 0;
-        margin-left: 10px;
-    }
 
 /* Searched profile style */
 .searched-profile {

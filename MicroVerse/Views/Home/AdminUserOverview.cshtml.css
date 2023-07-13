@@ -1,0 +1,26 @@
+﻿body {
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th,td{
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(2n+1){
+    background-color: lightgray;
+}
+
+
+tr:nth-child(2n) {
+    background-color: white;
+}
+
+th {
+    background-color: darkgreen;
+    color: white;
+}
+

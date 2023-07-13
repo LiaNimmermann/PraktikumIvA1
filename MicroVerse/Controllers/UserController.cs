@@ -89,8 +89,8 @@ namespace MicroVerse.Controllers
             => StatusToActionResult(await _userHelper.DeleteUser(id));
 
         [Authorize]
-        [HttpPut("Bio/{userName}/{bio}")]
-        public async Task<IActionResult> ChangeBio(String userName, String bio)
+        [HttpPost("Bio/{userName}")]
+        public async Task<IActionResult> ChangeBio(String userName, [FromForm] String bio)
             => StatusToActionResult(await _userHelper.ChangeBio(userName, bio));
 
         [Authorize]

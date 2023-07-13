@@ -1,0 +1,64 @@
+﻿body {
+}
+
+/* Profile style */
+.profile-header {
+    align-content:center;
+}
+
+.profile-header-row {
+    justify-content:space-evenly;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px
+}
+
+.profile-picture {
+    border-radius: 50%;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.profile-header h1 {
+    margin-bottom: 5px;
+    margin: 0;
+}
+
+h2 {
+    font-size: 20px;
+    color: #358f38;
+}
+
+.follow-counts {
+    align-items: center;
+    margin-right: 8px;
+}
+
+    .follow-counts p {
+        margin: 0;
+    }
+
+button {
+    margin: inherit inherit inherit 4px;
+}
+
+.follow-section {
+    display:flex;
+    margin: 4px
+}
+
+div.profile-bio {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    width: fit-content;
+}
+
+p.bio {
+    margin:0;
+    font-size: 18px;
+}
+
+p.role-info{
+    margin: auto;
+}
