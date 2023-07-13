@@ -122,8 +122,7 @@ namespace MicroVerse.Controllers
                 .Users(searchTerm)
                 .Select(u => new UserBadgeViewModel
                         (
-                            u.UserName,
-                            u.DisplayedName,
+                            u,
                             follows.Any(f => f == u.UserName)
                         ))
                 .ToList();

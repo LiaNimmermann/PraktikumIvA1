@@ -6,14 +6,14 @@ namespace MicroVerse.ViewModels
     {
         public UserBadgeViewModel
         (
-        	string username,
-        	string displayedName,
+	 	User user,
         	bool follows
         )
         {
-            UserName = username;
-            DisplayedName = displayedName;
-            Follows= new FollowButtonModel(username, follows);
+            UserName = user.UserName;
+            DisplayedName = user.DisplayedName;
+            Follows = new FollowButtonModel(user.UserName, follows);
+	    Picture = user.Picture;
         }
 
 
@@ -21,6 +21,7 @@ namespace MicroVerse.ViewModels
         public string UserName { get; set; }
         public string DisplayedName { get; set; }
         public FollowButtonModel Follows { get; set; }
+	public String Picture { get; set; }
         
     }
 }
