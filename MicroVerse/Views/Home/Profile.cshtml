@@ -14,18 +14,45 @@
 <div class="main">
 
     <div class="profile-header">
-        <img class="profile-picture" src="https://picsum.photos/200/200" height="100" width="100" /> <!-- Mock profile picture -->
-        <h1>@Model.UserName</h1>
-        <div class="follow-counts">
-            <p>Followers: @Model.FollowerCount</p>
-            <p>Following: @Model.FollowsCount</p>
+        <div class="profile-header-row">
+            <img class="profile-picture" src="https://picsum.photos/200/200" height="100" width="100" /> <!-- Mock profile picture -->
+        </div>
+        <div class="profile-header-row">
+            <h2>@@@Model.UserName</h2>
+        </div>
+        <div class="profile-header-row">
+            <h1>@Model.DisplayedName</h1>
+        </div>
+        <div class="profile-header-row">
+            <div class="follow-section">
+                <div class="follow-counts">
+                    <p>Followers: @Model.FollowerCount</p>
+                    <p>Following: @Model.FollowsCount</p>
+                </div>
+                <partial name="_FollowBtn" for="@Model.Follows">
+            </div>
+        </div>
+        <div class="profile-header-row">
+            <div class="profile-bio">
+                @if (SignInManager.IsSignedIn(User) && Model.UserName == @User.Identity?.Name)
+                {
+                    <form method="post" action="/api/User/Bio/@Model.UserName">
+                        <input value="@Model.Bio" type="text" id="bio" name="bio">
+                        <button type="submit">Save</button>
+                    </form>
+                } else
+                {
+                    <p class="bio">@Model.Bio</p>
+                }
+            </div>
+        </div>
+        <div class="profile-header-row">
+            <p class="role-info">Current role: @Model.Role</p>
+        </div>
+        <div class="profile-header-row">
+            <partial name="_RoleSelection" for="@roleSelectionModel">
         </div>
     </div>
-    <partial name="_FollowBtn" for="@Model.Follows">
-    <p>Current role: @Model.Role</p>
-    <partial name="_RoleSelection" for="@roleSelectionModel">
-    <h2>@Model.DisplayedName</h2>
-    <p>@Model.Bio</p>
 
 
     <div class="posts">
