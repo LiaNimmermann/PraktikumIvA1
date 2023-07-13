@@ -88,6 +88,10 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> DeleteUser(string id)
             => StatusToActionResult(await _userHelper.DeleteUser(id));
 
+        [HttpPut("Bio/{userName}/{bio}")]
+        public async Task<IActionResult> ChangeBio(String userName, String bio)
+            => StatusToActionResult(await _userHelper.ChangeBio(userName, bio));
+
         // PATCH: api/User/5
         [Authorize(Roles = "Moderator, Admin")]
         [HttpPatch("{id}")]
