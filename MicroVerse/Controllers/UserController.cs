@@ -94,8 +94,8 @@ namespace MicroVerse.Controllers
             => StatusToActionResult(await _userHelper.ChangeBio(userName, bio));
 
         [Authorize]
-        [HttpPut("DisplayName/{userName}/{displayName}")]
-        public async Task<IActionResult> ChangeDisplayName(String userName, String displayName)
+        [HttpPut("DisplayName/{userName}")]
+        public async Task<IActionResult> ChangeDisplayName(String userName, [FromForm] String displayName)
             => StatusToActionResult(await _userHelper.ChangeDisplayName(userName, displayName));
 
         // PATCH: api/User/5
