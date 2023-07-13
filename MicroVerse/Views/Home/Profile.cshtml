@@ -22,6 +22,7 @@
         </div>
     </div>
     <partial name="_FollowBtn" for="@Model.Follows">
+    <p>Current role: @Model.Role</p>
     <partial name="_RoleSelection" for="@roleSelectionModel">
     <h2>@Model.DisplayedName</h2>
     <p>@Model.Bio</p>

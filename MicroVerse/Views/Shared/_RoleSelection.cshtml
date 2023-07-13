@@ -6,7 +6,6 @@
 
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
-    <p>Current role: @Model.Split(",")[1]</p>
     <form method="post" asp-action="SetUserRole" asp-controller="User">
         <label for="role">Change role to:</label>
         <select name="role" id="role" value="@Model.Split(",")[1]">
