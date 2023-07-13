@@ -7,6 +7,7 @@ using MicroVerse.Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 namespace MicroVerse.Controllers
 {
@@ -82,7 +83,8 @@ namespace MicroVerse.Controllers
                     followsList,
                     postsList,
                     follows,
-                    await _userHelper.GetUserRole(user.UserName)
+                    await _userHelper.GetUserRole(user.UserName),
+                    user.Picture
                 );
 
             return View(model);

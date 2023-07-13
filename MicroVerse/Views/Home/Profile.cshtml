@@ -15,8 +15,17 @@
 
     <div class="profile-header">
         <div class="profile-header-row">
-            <img class="profile-picture" src="https://picsum.photos/200/200" height="100" width="100" /> <!-- Mock profile picture -->
+            <img class="profile-picture" src="@Model.PictureUrl" height="100" width="100" /> <!-- Mock profile picture -->
         </div>
+        @if (SignInManager.IsSignedIn(User) && Model.UserName == @User.Identity?.Name)
+        {
+            <div class="profile-header-row">
+                <form method="post" action="/api/User/picture/@Model.UserName">
+                    <input placeholder="Choose your favourite number" value="" type="text" id="gravatarMail" name="gravatarMail">
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        }
         <div class="profile-header-row">
             <h2>@@@Model.UserName</h2>
         </div>

@@ -98,6 +98,11 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> ChangeDisplayName(String userName, [FromForm] String displayName)
             => StatusToActionResult(await _userHelper.ChangeDisplayName(userName, displayName));
 
+        [Authorize]
+        [HttpPost("Picture/{userName}")]
+        public async Task<IActionResult> ChangeProfilePicture(String userName, [FromForm] int gravatarMail)
+            => StatusToActionResult(await _userHelper.ChangePicture(userName, gravatarMail));
+
         // PATCH: api/User/5
         [Authorize(Roles = "Moderator, Admin")]
         [HttpPatch("{id}")]

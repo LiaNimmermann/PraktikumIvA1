@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 using MicroVerse.Data;
 using MicroVerse.Models;
 using MicroVerse.ViewModels;
+using System.Text;
 
 namespace MicroVerse.Helper
 {
@@ -132,6 +134,14 @@ namespace MicroVerse.Helper
             => await ChangeUser(userName, async user =>
             {
                 user.DisplayedName = displayName;
+                return await PutUser(userName, user);
+            });
+
+        public async Task<Status> ChangePicture(string userName, int gravatarMail)
+            => await ChangeUser(userName, async user =>
+            {
+                string sourceData = gravatarMail.ToString();
+                user.Picture = Encoding.UTF8.GetBytes(sourceData);
                 return await PutUser(userName, user);
             });
 

@@ -1,4 +1,5 @@
 ﻿using MicroVerse.Models;
+using System.Text;
 
 namespace MicroVerse.ViewModels
 {
@@ -13,7 +14,8 @@ namespace MicroVerse.ViewModels
             IEnumerable<User> following,
             List<PostViewModel> posts,
             bool follows,
-            string role
+            string role,
+            byte[] pictureHash
         )
         {
             UserName = username;
@@ -24,6 +26,10 @@ namespace MicroVerse.ViewModels
             Posts = posts;
             Follows = new FollowButtonModel(username, follows);
             Role = role;
+            if( pictureHash != null )
+            {
+                PictureUrl = "https://picsum.photos/id/" + Encoding.UTF8.GetString(pictureHash) + "/200/200"; ;
+            }
         }
 
 
@@ -36,5 +42,6 @@ namespace MicroVerse.ViewModels
         public List<PostViewModel> Posts { get; set; }
         public FollowButtonModel Follows { get; set; }
         public string Role { get; set; }
+        public string PictureUrl { get; set; } = "https://picsum.photos/200/200";
     }
 }
