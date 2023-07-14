@@ -1,0 +1,50 @@
+﻿body {
+}
+
+/* Searched profile style */
+h1 {
+    margin: 0 auto 20px auto;
+    text-align:center;
+}
+
+.searched-profile {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: white;
+    width: 550px;
+    margin: 0 auto 20px auto;
+}
+
+.searched-style {
+    display: flex;
+    align-items: center;
+}
+
+.searched-profile img {
+    margin-right: 10px;
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+}
+a.user-details {
+    text-decoration:none;
+}
+
+    .user-details h2 {
+        margin: auto auto auto 15px ;
+        color: black;
+        text-decoration-color:white;
+        width: 300px;
+    }
+
+.search-results-container {
+    display:block
+}
+
+.follow-btn-container {
+    margin-right: 20px;
+    align-self:auto;
+}

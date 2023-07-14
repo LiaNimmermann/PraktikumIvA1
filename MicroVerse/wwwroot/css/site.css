@@ -245,22 +245,6 @@ input[type=text] {
         }
 
 
-/* Searched profile style */
-.searched-profile {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.searched-style {
-    display: flex;
-    align-items: center;
-}
-
-.searched-profile img {
-    margin-right: 10px;
-}
-
 .follow-button {
     padding: 10px 20px;
     background-color: #4CAF50;
@@ -297,14 +281,7 @@ input[type=text] {
     margin-bottom: 10px;
 }
 
-.user-details {
-    display: flex;
-    align-items: center;
-}
 
-    .user-details h3 {
-        margin-left: 10px;
-    }
 
 .user-moderation {
     display: flex;
