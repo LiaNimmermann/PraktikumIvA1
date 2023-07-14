@@ -11,7 +11,7 @@ namespace MicroVerseMaui.Models
 
         public string bio { get; set; }
         public string displayedName { get; set; }
-        public string ProfileImage { get; set; } = "https://picsum.photos/200/200";
+        public string Picture { get; set; }
         public string userName { get; set; }
 
 

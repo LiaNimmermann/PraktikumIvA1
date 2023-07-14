@@ -27,6 +27,8 @@ namespace MicroVerseMaui.Models
         [Required]
         public string AuthorId { get; set; }
 
+        public string displayedName { get; set; }
+
         public Post? ReactsTo { get; set; }
 
         [Required]
@@ -38,7 +40,7 @@ namespace MicroVerseMaui.Models
         [Required]
         public List<Vote> Votes { get; set; } = new List<Vote>();
         
-        public string AuthorImage  { get; set; } = "https://picsum.photos/200/200";
+        public string Picture  { get; set; } 
 
     }
 }

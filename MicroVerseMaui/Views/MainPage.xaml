@@ -30,7 +30,7 @@
                             <Grid Padding="0"
                                   ColumnDefinitions="125, *">
                                 <Image Aspect="AspectFill"
-                                   Source="{Binding AuthorImage}"
+                                   Source="{Binding Picture}"
                                    WidthRequest="125"
                                    HeightRequest="125"/>
                                 <VerticalStackLayout
@@ -40,10 +40,11 @@
                                    VerticalOptions="Center">
                                     <Label Text="{Binding CreatedAt}"
                                            Style="{StaticResource SmallLabel}" TextColor="Grey" Margin="2"/>
-                                    <Label Text="{Binding AuthorId}"
+                                    <Label Text="{Binding displayedName}"
                                            Style="{StaticResource MediumLabel}" FontAttributes="Bold" TextColor="DarkGreen" Margin="1" />
                                     <Label Text="{Binding Body}"
-                                           Style="{StaticResource LargeLabel}" Margin="2"/>
+                                           Style="{StaticResource MediumLabel}" Margin="2"/>
+
 
 
                                 </VerticalStackLayout>

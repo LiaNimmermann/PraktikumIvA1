@@ -31,9 +31,12 @@ namespace MicroVerseMaui.ViewModels
 
         ProfileInfo _userProfile;
 
+
+        public ObservableCollection<Post> UserPosts { get; } = new();
+
         [ObservableProperty]
 
-        List<Post> _userPosts;
+        List<Post> _tempUserPosts;
 
         [RelayCommand]
         async Task ProfileView()
@@ -82,8 +85,38 @@ namespace MicroVerseMaui.ViewModels
             }
 
 
-            UserPosts = await response2.Content.ReadFromJsonAsync<List<Post>>();
+            TempUserPosts = await response2.Content.ReadFromJsonAsync<List<Post>>();
+            foreach (var post in TempUserPosts)
+            {
 
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                {
+                    var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
+                    var httpClient = devSslHelper.HttpClient;
+                    var url = $"/api/User/{post.AuthorId}";
+
+                    response = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url);
+
+                }
+
+                else
+                {
+                    var httpClient = new HttpClient();
+                    var url = $"https://localhost:7028/api/User/{post.AuthorId}";
+                    response = await httpClient.GetAsync(url);
+                }
+
+
+                UserProfile = await response.Content.ReadFromJsonAsync<ProfileInfo>();
+                post.Picture = UserProfile.Picture;
+                post.displayedName = UserProfile.displayedName;
+
+
+
+
+
+                UserPosts.Add(post);
+            }
         }
     }
 }

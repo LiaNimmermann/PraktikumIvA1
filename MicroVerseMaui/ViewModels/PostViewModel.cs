@@ -12,6 +12,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.Input;
 using Newtonsoft.Json;
 using MicroVerseMaui.Views;
+using System.Net.Http.Json;
 
 namespace MicroVerseMaui.ViewModels
 {
@@ -19,6 +20,12 @@ namespace MicroVerseMaui.ViewModels
     public partial class PostViewModel : BaseViewModel
     {
         ApiService getPosts;
+
+
+        HttpResponseMessage response;
+        [ObservableProperty]
+
+        ProfileInfo _userProfile;
 
         public ObservableCollection<Post> Posts { get; } = new();
         public PostViewModel(ApiService getPosts)
@@ -61,8 +68,35 @@ namespace MicroVerseMaui.ViewModels
                 var posts = await getPosts.GetPosts();
                 if (Posts.Count != 0)
                     Posts.Clear();
-                foreach (var post in posts)
-                    Posts.Add(post);
+                foreach (var post in posts) { 
+
+                    if (DeviceInfo.Platform == DevicePlatform.Android)
+                    {
+                        var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
+                        var httpClient = devSslHelper.HttpClient;
+                        var url = $"/api/User/{post.AuthorId}";
+
+                        response = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url);
+
+                    }
+
+                    else
+                    {
+                        var httpClient = new HttpClient();
+                        var url = $"https://localhost:7028/api/User/{post.AuthorId}";
+                        response = await httpClient.GetAsync(url);
+                    }
+
+
+                UserProfile = await response.Content.ReadFromJsonAsync<ProfileInfo>();
+                post.Picture = UserProfile.Picture;
+                post.displayedName = UserProfile.displayedName;
+
+
+
+
+                Posts.Add(post);
+                }
             }
             catch (Exception ex)
             {
