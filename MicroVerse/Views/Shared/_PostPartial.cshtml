@@ -9,9 +9,9 @@
             <img class="profile-picture" src="@Model.AuthorImage" height="25" width="25" />
             @Model.DisplayedName
         </a>
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <div class="post-actions">
+        <div class="post-actions">
+            @if (SignInManager.IsSignedIn(User))
+            {
                 @if (Model.VoteByUser == Vote.Votes.Undefined)
                 {
                     <form method="post" action="/api/Post/Up/@User.Identity?.Name/@Model.Id">
@@ -47,8 +47,12 @@
                         <div class="info"><p><i class="fa-solid fa-font-awesome"></i> This post is already flagged and will be reviewed by our moderators</p></div>
                     }
                 }
-            </div>
-        }
+            } else
+            {
+                <button disabled><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
+                <button disabled><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
+            }
+        </div>
     </div>
     <hr>
     <div class="post-body">
@@ -69,7 +73,7 @@
                 <button type="submit">><i class="fa-solid fa-retweet"></i> React </button>
             </form>
         </div>
-        @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
+        @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || Model.Username == @User.Identity?.Name)
         {
 
             <form method="post" asp-controller="Post" asp-action="DeletePost" asp-route-id="@Model.Id" style="position: relative; top: 10px; right: 10px;">
