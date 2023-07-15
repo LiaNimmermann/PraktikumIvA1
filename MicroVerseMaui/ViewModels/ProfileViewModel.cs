@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 
 namespace MicroVerseMaui.ViewModels
 {
+    //ViewModel for the Profile Page.
+
     [QueryProperty("Post","Post")]
     public partial class ProfileViewModel : BaseViewModel
     {
@@ -32,27 +34,31 @@ namespace MicroVerseMaui.ViewModels
         ProfileInfo _userProfile;
 
 
+        // Gets the collection of posts by the user.
         public ObservableCollection<Post> UserPosts { get; } = new();
+
 
         [ObservableProperty]
 
-        List<Post> _tempUserPosts;
+        List<Post> _getUserPosts;
 
         [RelayCommand]
+
+        // Gets user info for current profile page, including list of all posts by the author
         async Task ProfileView()
 
         {
-            HttpResponseMessage response;
-            HttpResponseMessage response2;
+            HttpResponseMessage profileResponse;
+            HttpResponseMessage postsResponse;
 
             // Get user info for the profile page
-            if (DeviceInfo.Platform == DevicePlatform.Android)
+            if (DeviceInfo.Platform == DevicePlatform.Android)  // Use Helper 
             {
                 var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
                 var httpClient = devSslHelper.HttpClient;
                 var url = $"/api/User/{Post.AuthorId}";
 
-                response = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url);
+                profileResponse = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url);
 
             }
 
@@ -60,42 +66,42 @@ namespace MicroVerseMaui.ViewModels
             {
                 var httpClient = new HttpClient();
                 var url = $"https://localhost:7028/api/User/{Post.AuthorId}";
-                response = await httpClient.GetAsync(url);
+                profileResponse = await httpClient.GetAsync(url);
             }
-            UserProfile = await response.Content.ReadFromJsonAsync<ProfileInfo>();
+            UserProfile = await profileResponse.Content.ReadFromJsonAsync<ProfileInfo>();
 
 
             // Get all posts by the user
-            if (DeviceInfo.Platform == DevicePlatform.Android)
+            if (DeviceInfo.Platform == DevicePlatform.Android) //  Use Helper 
             {
                 var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
                 var httpClient = devSslHelper.HttpClient;
                 var url2 = $"/api/Post/fromuser?userName={UserProfile.userName}";
 
-                response2 = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url2);
+                postsResponse = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url2);
 
             }
             else
             {
                 var httpClient2 = new HttpClient();
                 var url2 = $"https://localhost:7028/api/Post/fromuser?userName={UserProfile.userName}";
-                response2 = await httpClient2.GetAsync(url2);
+                postsResponse = await httpClient2.GetAsync(url2);
 
 
             }
 
 
-            TempUserPosts = await response2.Content.ReadFromJsonAsync<List<Post>>();
-            foreach (var post in TempUserPosts)
+            GetUserPosts = await postsResponse.Content.ReadFromJsonAsync<List<Post>>();
+            foreach (var post in GetUserPosts)
             {
 
-                if (DeviceInfo.Platform == DevicePlatform.Android)
+                if (DeviceInfo.Platform == DevicePlatform.Android) //  Use Helper 
                 {
-                    var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
+                    var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028); 
                     var httpClient = devSslHelper.HttpClient;
                     var url = $"/api/User/{post.AuthorId}";
 
-                    response = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url);
+                    profileResponse = await httpClient.GetAsync(devSslHelper.DevServerRootUrl + url);
 
                 }
 
@@ -103,17 +109,13 @@ namespace MicroVerseMaui.ViewModels
                 {
                     var httpClient = new HttpClient();
                     var url = $"https://localhost:7028/api/User/{post.AuthorId}";
-                    response = await httpClient.GetAsync(url);
+                    profileResponse = await httpClient.GetAsync(url);
                 }
 
 
-                UserProfile = await response.Content.ReadFromJsonAsync<ProfileInfo>();
+                UserProfile = await profileResponse.Content.ReadFromJsonAsync<ProfileInfo>();
                 post.Picture = UserProfile.Picture;
                 post.displayedName = UserProfile.displayedName;
-
-
-
-
 
                 UserPosts.Add(post);
             }

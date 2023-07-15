@@ -6,14 +6,15 @@ using System.Text;
 
 namespace MicroVerseMaui.Services
 {
-    // Get Api data from local host
-    public class ApiService
+    // Class that handles getting Posts from API
+    public class ApiGetPosts
     {
-        public ApiService()
+        public ApiGetPosts()
         {
         }
         List<Post> postsList = new();
-        //Get list of all posts
+        // Gets list of all posts
+        // Return: List of posts ordered by most recent
         public async Task<List<Post>> GetPosts()
         {
             HttpResponseMessage response;

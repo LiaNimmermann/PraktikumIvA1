@@ -16,10 +16,10 @@ using System.Net.Http.Json;
 
 namespace MicroVerseMaui.ViewModels
 {
-    //Call Get Posts from the Api Service, store in an ObservableCollection
+    // ViewModel for the Posts Page.
     public partial class PostViewModel : BaseViewModel
     {
-        ApiService getPosts;
+        ApiGetPosts getPosts; // Get posts from API
 
 
         HttpResponseMessage response;
@@ -28,13 +28,16 @@ namespace MicroVerseMaui.ViewModels
         ProfileInfo _userProfile;
 
         public ObservableCollection<Post> Posts { get; } = new();
-        public PostViewModel(ApiService getPosts)
+
+        // Initializes a new instance of the PostViewModel class.
+        // Input: getPosts of type of ApiGetPosts class.
+        public PostViewModel(ApiGetPosts getPosts)
         {
             Title = "MicroVerse";
             this.getPosts = getPosts;
 
         }
-
+        //  Navigates to the CreatePostPage.
         [RelayCommand]
         async Task CreatePage()
 
@@ -44,6 +47,8 @@ namespace MicroVerseMaui.ViewModels
 
         }
 
+        //  Opens the profileview page for author of selected post, while passing over parameter for clicked post info.
+        // Input: currentPost of Type Post
         [RelayCommand]
         async Task OpenProfile(Post currentPost)
         {
@@ -56,6 +61,7 @@ namespace MicroVerseMaui.ViewModels
         });
         }
 
+        // Gets list of all posts, and attach relevant profile info.
 
         [RelayCommand]
         async Task GetPostsAsync()
@@ -69,8 +75,8 @@ namespace MicroVerseMaui.ViewModels
                 if (Posts.Count != 0)
                     Posts.Clear();
                 foreach (var post in posts) { 
-
-                    if (DeviceInfo.Platform == DevicePlatform.Android)
+                    // Use an API call to get relevant profile info for each post's Author
+                    if (DeviceInfo.Platform == DevicePlatform.Android) // Use Helper if device is Android, for HTTPS requests over localhost
                     {
                         var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
                         var httpClient = devSslHelper.HttpClient;

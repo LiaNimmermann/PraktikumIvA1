@@ -8,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace MicroVerseMaui.ViewModels 
 {
+    // ViewModel for the Start Page.
     public partial class StartViewModel : BaseViewModel
     {
+
+        // Performs the logout operation and navigate to login page.
         [RelayCommand]
         async void LogOut()
         {

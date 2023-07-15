@@ -11,18 +11,19 @@ using System.Threading.Tasks;
 
 namespace MicroVerseMaui.ViewModels
 {
+    // ViewModel for the loading screen.
     public partial class LoadingViewModel : BaseViewModel
     {
         public LoadingViewModel()
         {
         }
 
-        [RelayCommand]
         // Check if a returning user or a new visitor
+        [RelayCommand]
          async Task ReturningUserCheck()
         {
             string userDetailsStr = Preferences.Get(nameof(App.CurrentUser), "");
-            // No data for current visitor, navigate to Login Page
+            // No active session for current visitor, navigate to Login Page
 
             if (string.IsNullOrWhiteSpace(userDetailsStr))
             {
@@ -37,7 +38,7 @@ namespace MicroVerseMaui.ViewModels
                 var jsonToken = handler.ReadToken(UserToken) as JwtSecurityToken;
 
                 // Ensure authentication token is still valid
-                if (jsonToken.ValidTo < DateTime.UtcNow) {
+                if (jsonToken.ValidTo < DateTime.UtcNow) { // = Token expired
                     await Shell.Current.DisplayAlert("The user session has expired", "Please login again", "OK");
                     await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
                 }

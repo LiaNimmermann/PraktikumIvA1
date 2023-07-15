@@ -10,9 +10,7 @@ namespace MicroVerseMaui.Services
 
     public interface IApiLogin
     {
+        // Authenticates the user with the provided LoginInfo and returns a LoginResponse.
         Task<LoginResponse> Authenticate(LoginInfo loginRequest); 
     }
 }
-
-
-

@@ -1,8 +1,11 @@
 namespace MicroVerseMaui.ViewModels;
 
+
+// ViewModel for the Flyout header.
+
 public partial class FlyoutViewModel : StackLayout
 {
-    // add name of logged in user to Flyoutheader
+    // Add info of logged in user to Flyoutheader
 	public FlyoutViewModel()
 	{
 		InitializeComponent();

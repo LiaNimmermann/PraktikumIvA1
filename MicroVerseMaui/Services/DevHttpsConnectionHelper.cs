@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 namespace MicroVerseMaui.Services;
 using System.Net.Security;
 
+// Helper to allow Android to access https over localhost
+// Source: https://github.com/dotnet/maui/discussions/8131
 public class DevHttpsConnectionHelper
 {
-    // Helper to allow Android to access https over localhost
-    // https://github.com/dotnet/maui/discussions/8131
+
+    // Constructs url and makes an HTTP client 
+    // Input: sslPort of type: Int
     public DevHttpsConnectionHelper(int sslPort)
     {
         SslPort = sslPort;
@@ -34,6 +37,8 @@ public class DevHttpsConnectionHelper
     private Lazy<HttpClient> LazyHttpClient;
     public HttpClient HttpClient => LazyHttpClient.Value;
 
+
+    // Handels ssl certification depending on platform
     public HttpMessageHandler? GetPlatformMessageHandler()
     {
 #if WINDOWS

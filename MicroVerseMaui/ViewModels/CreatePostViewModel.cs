@@ -12,12 +12,16 @@ using System.Threading.Tasks;
 
 namespace MicroVerseMaui.ViewModels
 {
+    // This class represents a view model for creating a new post.
+
+
     public partial class CreatePostViewModel : BaseViewModel
     {
         [ObservableProperty]
         private string _newPostInput; // Accessed as NewPostInput
 
 
+        // Creates a new post based on the input provided.
         [RelayCommand]
         async Task CreatePost()
 
@@ -27,7 +31,7 @@ namespace MicroVerseMaui.ViewModels
             HttpResponseMessage response;
             string postStr = JsonConvert.SerializeObject(newPost);
 
-            // If android, use helper for https request
+            // If the device is android, use helper for HTTPS request
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
                 var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
@@ -46,7 +50,7 @@ namespace MicroVerseMaui.ViewModels
                 new StringContent(postStr, Encoding.UTF8, "application/json"));
             }
 
-
+            // Check if the post creation was successful.
             if (response.IsSuccessStatusCode)
             {
                 await AppShell.Current.DisplayAlert("Success", "Post created successfully!" , "Ok");
@@ -57,12 +61,14 @@ namespace MicroVerseMaui.ViewModels
             }
             else
             {
+                // Error
                 await AppShell.Current.DisplayAlert("Error", "Post couldn't be created", "Ok");
 
             }
 
 
         }
+        // Navigate to Mainpage
         [RelayCommand]
         async Task Home()
 

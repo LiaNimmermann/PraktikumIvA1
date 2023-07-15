@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 
 namespace MicroVerseMaui.ViewModels
 {
+    // ViewModel for the Login Page.
     public partial class LoginPageViewModel : BaseViewModel
     {
 
@@ -24,6 +25,9 @@ namespace MicroVerseMaui.ViewModels
 
         private readonly IApiLogin _apiLogin;
 
+
+        // Initializes a new instance of the LoginPageViewModel class.
+        // Input: apiLogin of type IApiLogin interface.
         public LoginPageViewModel(IApiLogin apiLogin)
         {
 
@@ -31,7 +35,7 @@ namespace MicroVerseMaui.ViewModels
             _apiLogin = apiLogin;
         }
 
-
+        // Performs the login operation over API, and by success saves auth token/user info
         [RelayCommand]
         async void Login()
 
@@ -52,7 +56,6 @@ namespace MicroVerseMaui.ViewModels
                         Preferences.Remove(nameof(App.CurrentUser));
                     }
                     // Save user token
-                    //await SecureStorage.SetAsync(nameof(App.Token), response.token);
                     App.Token = response.token;
                     currentUser.Email = EmailInput;
                     string currentUserStr = JsonConvert.SerializeObject(currentUser);

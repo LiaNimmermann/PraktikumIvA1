@@ -39,7 +39,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<Views.LoadingPage>();
 
 
-        builder.Services.AddSingleton<ApiService>();
+        builder.Services.AddSingleton<ApiGetPosts>();
 
 
 

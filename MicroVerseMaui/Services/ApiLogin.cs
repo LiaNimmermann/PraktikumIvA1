@@ -8,12 +8,16 @@ using System.Threading.Tasks;
 
 namespace MicroVerseMaui.Services
 {
+    // Class handles login requests over API
     public class ApiLogin : IApiLogin
 
 
 
     {
-        // Log in using API
+        // Log in over API using email and password
+
+        // Input: loginRequest of type LoginInfo
+        // Output: jsonResponse of type LoginResponse
 
         public async Task<LoginResponse> Authenticate(LoginInfo loginRequest)
         {
