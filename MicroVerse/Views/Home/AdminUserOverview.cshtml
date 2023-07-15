@@ -6,6 +6,7 @@
 <div class="body">
     <table>
         <tr>
+            <th>Picture</th>
             <th>Username</th>
             <th>Displayed Name</th>
             <th>Bio</th>
@@ -17,6 +18,7 @@
         {
             var roleString = user.UserName + "," + user.Role;
             <tr>
+                <td><img src="@user.Picture" width="80" height="80"/></td>
                 <td><a asp-controller="Home" asp-action="Profile" asp-route-id="@user.UserName">@user.UserName</a></td>
                 <td>@user.DisplayedName</td>
                 <td>@user.Bio</td>

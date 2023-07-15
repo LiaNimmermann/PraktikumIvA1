@@ -9,6 +9,7 @@
             <img class="profile-picture" src="@Model.AuthorImage" height="25" width="25" />
             @Model.DisplayedName
         </a>
+        <p class="post-time">@Model.CreatedAt</p>
         <div class="post-actions">
             @if (SignInManager.IsSignedIn(User))
             {
