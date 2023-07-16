@@ -4,38 +4,12 @@
 // Write your JavaScript code.
 
 
-
-const mockData = {
-    userPosting : {
-        labels: ["User1", "User2", "User3", "User4", "User5"],
-        postsAllTime: [5, 24, 6, 22, 8],
-        postsLastWeek: [5, 24, 6, 22, 8],
-        postsToday: [5, 24, 6, 22, 8]
-    },
-    mostFollowedUsers : {
-        labels: ["User1", "User2", "User3", "User4", "User5"],
-        followers: [50, 45, 30, 18, 10],
-        following: [1, 14, 3, 12, 7]
-    },
-
-    mostUpvotedPost : {     //All votes accumulated to users aka Users with most upvotes
-        labels: ["User1", "User2", "User3", "User4", "User5"],
-        upvotes: [50, 45, 30, 18, 10],
-        downvotes: [1, 14, 3, 12, 7]
-    },
-
-    mostDownvotedPost: {   //All votes accumulated to users aka Users with most downvotes
-        labels: ["User1", "User2", "User3", "User4", "User5"],
-        upvotes: [1, 14, 3, 12, 7],
-        downvotes: [50, 45, 30, 18, 10]
-    }
-}
-
 var userPostingGrid;
 var mostFollowedUserGrid;
 var mostUpvotedPostsGrid;
 var mostDownvotedPostsGrid;
 
+//initializing Chart of Userposting
 function initUserPosting(data) {
     var userPostingData = {
         labels: data.labels,
@@ -67,6 +41,7 @@ function initUserPosting(data) {
     })
 }
 
+//Initializing Chart of most followed users with data
 function initMostFollowedUser(data) {
     var mostFollowedUserData = {
         labels: data.labels,
@@ -91,6 +66,7 @@ function initMostFollowedUser(data) {
     })
 }
 
+//Initializing Chart of most upvoted users with data
 function initMostUpvotedPosts(data) {
     var mostUpvotedPostsData = {
         labels: data.labels,
@@ -115,6 +91,8 @@ function initMostUpvotedPosts(data) {
         }
     })
 }
+
+//Initializing Chart of most downvoted users with data
 function initMostDownvotedPosts(data) {
     var mostDownvotedPostsData = {
         labels: data.labels,
@@ -141,6 +119,7 @@ function initMostDownvotedPosts(data) {
 }
 
 
+//Getting data from the backend and calling the chart initializer functions with corresponding data
 function getData() {
     const xhttp = new XMLHttpRequest();
     xhttp.onload = function () {
@@ -156,29 +135,3 @@ function getData() {
 
 
 getData();
-//initUserPosting(mockData.userPosting);
-//initMostFollowedUser(mockData.mostFollowedUsers);
-//initMostUpvotedPosts(mockData.mostUpvotedPost);
-//initMostDownvotedPosts(mockData.mostDownvotedPost);
-
-
-
-//function getPostsLastWeek(array, i,) {
-//    return array[i].postsLastWeek
-//}
-
-//function extractLabels(array, getValue) {
-//    var labels = [];
-//    for (var i = 0; i < array.size; i++) {
-//        labels[i] = array[i].id;
-//    }
-//    return labels;
-//}
-
-//function extractValue(array) {
-//    var values = [];
-//    for (var i = 0; i<array.size; i++) {
-//        values[i] = array[i].value;
-//    }
-//    return values;
-//}

@@ -2,6 +2,9 @@
 @inject SignInManager<User> SignInManager
 @inject UserManager<User> UserManager
 
+
+<!-- LOGIN SECTION HEADER; USER INFORMATION LINKS WHEN LOGGED IN -->
+
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {

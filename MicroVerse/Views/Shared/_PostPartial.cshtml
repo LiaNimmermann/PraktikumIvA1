@@ -3,16 +3,31 @@
 @model MicroVerse.ViewModels.PostViewModel
 
 
+<!-- POST BOX -->
+
 <div class="post-containter">
+
+    <!-- Post header -->
     <div class="post-header">
+
+        <!-- Author information -->
         <a class="post-author" asp-controller="Home" asp-action="Profile" asp-route-id="@Model.Username">
             <img class="profile-picture" src="@Model.AuthorImage" height="25" width="25" />
             @Model.DisplayedName
         </a>
+
+        <!-- Post time -->
         <p class="post-time">@Model.CreatedAt</p>
+
+        <!-- post action section-->
         <div class="post-actions">
+
+            <!-- Actions for signed in users-->
             @if (SignInManager.IsSignedIn(User))
             {
+
+
+                <!-- Voting buttons depending on voting status-->
                 @if (Model.VoteByUser == Vote.Votes.Undefined)
                 {
                     <form method="post" action="/api/Post/Up/@User.Identity?.Name/@Model.Id">
@@ -31,6 +46,8 @@
                     <button disabled type="submit" onclick="refreshPage();" class="btn-upvoted"><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
                     <button disabled type="submit" onclick="refreshPage();" class="unactive"><i class="fa-solid fa-circle-down unactive"></i> @Model.Downvotes</button>
                 }
+
+                <!-- Flagging button depending on post status-->
                 @if(Model.Status==0)
                 {
                     <form method="post" action="/api/Post/Flag/@Model.Id">
@@ -38,6 +55,7 @@
                     </form>
                 } else if(Model.Status==1)
                 {
+                    <!-- option to "unflag" for moderator an admin only -->
                     @if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
                     {
                         <form method="post" action="/api/Post/Unflag/@Model.Id">
@@ -50,19 +68,21 @@
                 }
             } else
             {
+            
+                <!-- disabled voting buttons for users not logged in -->
                 <button disabled><i class="fa-solid fa-circle-up"></i> @Model.Upvotes </button>
                 <button disabled><i class="fa-solid fa-circle-down"></i> @Model.Downvotes</button>
             }
         </div>
     </div>
     <hr>
+    
+    <!-- Post content -->
     <div class="post-body">
         @Model.Body
     </div>
-    @if (User.Identity.IsAuthenticated)
-    {
-       
-    }
+
+    <!-- Delete button; For moderator, admin and author only-->
     @if (SignInManager.IsSignedIn(User))
     {
 
@@ -81,14 +101,12 @@
                 <button type="submit" class="delete-button">Delete</button>
             </form>
         }
-
-
-
-        
     }
+
+
+    <!-- Potentially referenced post; recursive -->
     @if(Model.ReactsTo!=null)
     {
-
         <hr>
         <p>This is a reaction to: </p>
         <partial name="_PostPartial" for="@Model.ReactsTo" />

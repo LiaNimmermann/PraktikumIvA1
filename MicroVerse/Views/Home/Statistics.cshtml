@@ -2,24 +2,36 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <script src="~/js/grid.js" asp-append-version="true"></script>
 }
+
+
+<!-- STATISTICS PAGE; ONLY VISIBLE TO ADMIN AND MOD; CONTAINS 4 STATISTICS -->
+
+
+<!-- Chart of post amount ofer different times-->    
 <div class="col-6">
     <div class="white">
         <h2>Number of posts by user</h2>
         <canvas id="userPosting"></canvas>
     </div>
 </div>
+
+<!-- Chart of most followed users, also displaying following count -->
 <div class="col-6">
     <div class="white">
         <h2>Most followed users</h2>
         <canvas id="mostFollowedUsers"></canvas>
     </div>
 </div>
+
+<!-- Chart of users with most upvotes recieved, also displaying downvotes -->
 <div class="col-6">
     <div class="white">
         <h2>Most upvoted users</h2>
         <canvas id="mostUpvotedPosts"></canvas>
     </div>
 </div>
+
+<!-- Chart of users with most downvotes recieved, also displaying upvotes -->
 <div class="col-6">
     <div class="white">
         <h2>Most downvoted users</h2>

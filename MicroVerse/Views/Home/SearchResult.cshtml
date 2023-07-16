@@ -5,10 +5,14 @@
     ViewData["Title"] = "Search Results";
 }
 
+
+<!-- SEARCH RESULTS; LOGGED IN USERS ONLY; LIST OF USERS FOUND BY SEARCH -->
+
 <h1>Search Results</h1>
 <div class="search-results-container">
 @if (Model.Count > 0)
 {
+    //Loop over Search results
     foreach (var user in Model)
     {
         <div class="searched-profile">

@@ -10,13 +10,21 @@
     string roleSelectionModel = Model.UserName + "," + @Model.Role;
 }
 
+
+<!-- PORFILE PAGE; VISIBLE TO LOGGED IN USERS ONLY; PARTIALLY EDITABLE IF LOGGED IN USERS PROFILE -->
+
+
 <!-- Page content -->
 <div class="main">
 
+    <!-- Profile information -->
     <div class="profile-header">
         <div class="profile-header-row">
-            <img class="profile-picture" src="@Model.PictureUrl" height="100" width="100" /> <!-- Mock profile picture -->
+            <img class="profile-picture" src="@Model.PictureUrl" height="100" width="100" /> 
         </div>
+
+
+        <!-- Picture URL Input if profile of logged in user-->
         @if (SignInManager.IsSignedIn(User) && Model.UserName == @User.Identity?.Name)
         {
             <div class="profile-header-row">
@@ -30,6 +38,7 @@
             <h2>@@@Model.UserName</h2>
         </div>
         <div class="profile-header-row">
+            <!-- Display Name, editable for logged in users profile -->
             @if (SignInManager.IsSignedIn(User) && Model.UserName == @User.Identity?.Name)
             {
                 <form method="post" action="/api/User/DisplayName/@Model.UserName">
@@ -42,6 +51,7 @@
                 <h1>@Model.DisplayedName</h1>
             }
         </div>
+        <!-- Follow information -->
         <div class="profile-header-row">
             <div class="follow-section">
                 <div class="follow-counts">
@@ -51,6 +61,8 @@
                 <partial name="_FollowBtn" for="@Model.Follows">
             </div>
         </div>
+
+        <!-- Profile bio, editable for logged in users profile -->
         <div class="profile-header-row">
             <div class="profile-bio">
                 @if (SignInManager.IsSignedIn(User) && Model.UserName == @User.Identity?.Name)
@@ -65,22 +77,29 @@
                 }
             </div>
         </div>
+
+        <!-- Role Information -->
         <div class="profile-header-row">
             <p class="role-info">Current role: @Model.Role</p>
         </div>
+        <!-- Role selection for admins -->
         <div class="profile-header-row">
             <partial name="_RoleSelection" for="@roleSelectionModel">
         </div>
     </div>
 
 
+    <!-- Post section -->
     <div class="posts">
+
+        <!-- Create post box for logged in users profile -->
          @if (SignInManager.IsSignedIn(User) && Model.UserName == @User.Identity?.Name)
         {
             <div>
                 <partial name="_CreatePostPartial">
             </div>
         }
-            <partial name="_PostFeed" for="@Model.Posts">
+        <!-- Post feed-->
+        <partial name="_PostFeed" for="@Model.Posts">
     </div>
 </div>

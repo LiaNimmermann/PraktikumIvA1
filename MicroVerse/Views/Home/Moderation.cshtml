@@ -1,6 +1,12 @@
 ﻿@using MicroVerse.ViewModels
 @model List<PostViewModel>
+
+
+<!-- MODERATION VIEW; VISIBLE ONLY TO ADMIN AND MOD; CONTAINS ALL FLAGGED POSTS -->
+
+
 <div class="main">
+    <!-- Feed of all flagged posts -->
     <div class="user-list">
         <partial name="_PostFeed" for="@Model">
     </div>

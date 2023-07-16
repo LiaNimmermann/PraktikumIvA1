@@ -2,6 +2,9 @@
 @inject SignInManager<User> SignInManager
 @model IEnumerable<MicroVerse.ViewModels.PostViewModel>
 
+
+<!-- POST-FEED; LIST OF POSTS -->
+
 @foreach (var post in Model)
 {
     <partial name="_PostPartial" for="@post" />

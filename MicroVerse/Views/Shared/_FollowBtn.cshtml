@@ -3,6 +3,7 @@
 @inject SignInManager<User> SignInManager
 @model FollowButtonModel
 
+<!-- FOLLOW BUTTON -->
 
 @if (SignInManager.IsSignedIn(User) && Model.User != @User.Identity?.Name)
 {

@@ -11,6 +11,7 @@
 </head>
 <body>
     <header>
+        <!-- Navigation bar-->
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MicroVerse</a>
@@ -20,15 +21,23 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Public</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="FollowedFeed">Feed</a>
-                        </li>
+
+                        <!-- Link to personalized feed for logged in users only-->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="FollowedFeed">Feed</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+
+                        <!-- Links with certain permissions-->
                         @if (User.Identity.IsAuthenticated)
                         {
                             if (User.IsInRole("Moderator") || User.IsInRole("Admin"))
@@ -60,17 +69,22 @@
                             </form>
                         </li>
                     </ul>
+
+                    <!-- Login section -->
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+
+    <!-- Main container-->
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <!-- Footer -->
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - MicroVerse - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

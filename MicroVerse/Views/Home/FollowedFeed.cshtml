@@ -6,7 +6,10 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
 
-     @if (SignInManager.IsSignedIn(User))
+<!-- FEED PAGE; VISIBLE TO LOGGED IN USERS ONLY; CONTAINING FEED FROM FOLLOWES USERS AND LOGGED IN USER, SIDEBAR WITH FOLLOWED PROFILES-->
+
+
+@if (SignInManager.IsSignedIn(User))
 {
     <!-- Side Follow-List-->
     <div class="sidebar">
@@ -31,6 +34,6 @@
     <!-- Post creation container -->
     <partial name="_CreatePostPartial">
 
-    <!--PostFeed-->
+    <!--PostFeed follows and user only-->
     <partial name="_PostFeed" for="@Model.Posts">
 </div>

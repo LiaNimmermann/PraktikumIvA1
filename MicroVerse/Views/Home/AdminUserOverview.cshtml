@@ -2,6 +2,8 @@
 
 @model List<UserWithRole>
 
+<!-- ADMINISTRATION PAGE; VISIBLE TO ADMIN ONLY; LIST OF ALL USERS AND ABILITY TO CHANGE ROLES-->
+
 
 <div class="body">
     <table>
@@ -14,6 +16,8 @@
             <th>Roles</th>
             <th>Actions</th>
         </tr>
+
+        <!-- Loop over all users -->
         @foreach(var user in Model)
         {
             var roleString = user.UserName + "," + user.Role;

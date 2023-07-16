@@ -4,16 +4,22 @@
 @model string
 
 
+<!-- ROLE SELECTION-->
+
+<!-- admin only-->
 @if (SignInManager.IsSignedIn(User) && User.IsInRole("Admin"))
 {
     <form method="post" asp-action="SetUserRole" asp-controller="User">
         <label for="role">Change role to:</label>
+        <!-- Dropdown selection -->
         <select name="role" id="role" value="@Model.Split(",")[1]">
             <option value="Admin">Administrator</option>
             <option value="Moderator">Moderator</option>
             <option value="User">User</option>
         </select>
         <input type="hidden" name="userId" value="@Model.Split(",")[0]" />
+
+        <!-- Submit button -->
         <button type="submit" onclick="refreshPage();" class="follow-button">Save</button>
     </form>
 }
