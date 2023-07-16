@@ -4,6 +4,7 @@ using MicroVerse.Models;
 
 namespace MicroVerse.Helper
 {
+    // The follows helper manages database access for all things follows related
     public class FollowsHelper
     {
         private readonly ApplicationDbContext _context;
@@ -13,9 +14,11 @@ namespace MicroVerse.Helper
             _context = context;
         }
 
+        // get all follows relationships
         public async Task<IEnumerable<Follows>> GetFollows()
             => await _context.Follows.ToListAsync();
 
+        // get all followers of a certain user
         public async Task<IEnumerable<User>> GetFollowers(String userName)
             => await _context.Follows
             .Where(f => f.FollowedUserId == userName)
@@ -28,6 +31,7 @@ namespace MicroVerse.Helper
             )
             .ToListAsync();
 
+        // get all users that a certain user follows
         public async Task<IEnumerable<User>> GetFollowings(String userName)
             => await _context.Follows
             .Where(f => f.FollowingUserId == userName)
@@ -40,10 +44,12 @@ namespace MicroVerse.Helper
                     )
             .ToListAsync();
 
+        // true if following follows followed
         public async Task<Boolean> Follows(String following, String followed)
             => (await GetFollowers(followed))
             .Any(u => u.UserName == following);
 
+        // follow a user
         public async Task FollowUser(String follower, String followed)
         {
             var follows = new Follows(follower, followed);
@@ -51,6 +57,7 @@ namespace MicroVerse.Helper
             await _context.SaveChangesAsync();
         }
 
+        // unfollow a user
         public async Task UnfollowUser(string followerId, string followedId)
         {
             var toDelete = _context.Follows.First(f => f.FollowingUserId == followerId && f.FollowedUserId == followedId);

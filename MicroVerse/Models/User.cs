@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Transactions;
 
 namespace MicroVerse.Models
 {
+    // the user data class
     public class User : IdentityUser
     {
         public User()
@@ -29,15 +29,19 @@ namespace MicroVerse.Models
 
         public string Bio { get; set; } = "Hi, I'm new here!";
 
+        // the activation of the user (active, blocked, banned)
         [Required]
         public Activation Activation { get; set; } = Activation.active;
 
+        // the usernames of the followers of the user
         [NotMapped]
         public IEnumerable<String> Followers { get; set; } = new List<String>();
 
+        // the usernames of the users that this user follows
         [NotMapped]
         public IEnumerable<String> Following { get; set; } = new List<String>();
 
+        // match phrase against all data of this user
         public Boolean FuzzyMatches(String phrase)
         {
         	var lcPhrase = phrase.ToLower();

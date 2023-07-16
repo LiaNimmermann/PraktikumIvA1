@@ -1,5 +1,6 @@
 namespace MicroVerse.Models
 {
+    // the activation of a post or user
     public enum Activation
     {
         active = 0,

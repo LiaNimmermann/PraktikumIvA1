@@ -9,6 +9,7 @@ using System.Security.Claims;
 
 namespace MicroVerse.Controllers
 {
+    // The PostController provides an API for posts
     [Route("api/[controller]")]
     [ApiController]
     public class PostController : Controller
@@ -24,21 +25,25 @@ namespace MicroVerse.Controllers
             _userHelper = new UserHelper(context);
         }
 
+        // get a list with all posts
         // GET: api/Post
         [HttpGet]
         public ActionResult<IEnumerable<Post>> GetPost()
             => Json(_postHelper.GetPosts());
 
+        // get a list with all posts by a certain user
         // GET: api/Post
         [HttpGet("by/{authorId}")]
         public ActionResult<IEnumerable<Post>> GetPost(String userName)
             => Json(_postHelper.GetPostsByUser(userName));
 
+        // get a list with all posts by a certain user and the users that he follows
         // GET: api/Post
         [HttpGet("by/follows/{authorId}")]
-        public ActionResult<IEnumerable<Post>> GetPosts(String userName)
-            => Json(_postHelper.GetPostsByUserAndFollows(userName));
+        public async Task<ActionResult<IEnumerable<Post>>> GetPosts(String userName)
+            => Json(await _postHelper.GetPostsByUserAndFollows(userName));
 
+        // get a single post
         // GET: api/Post/5
         [HttpGet("{id}")]
         public ActionResult<Post> GetPost(Guid id)
@@ -53,6 +58,7 @@ namespace MicroVerse.Controllers
             return Json(post);
         }
 
+        // modify an existing post
         // PUT: api/Post/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
@@ -60,6 +66,7 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> PutPost(Guid id, Post post)
             => StatusToActionResult(await _postHelper.PutPost(id, post));
 
+        // create a new post
         // POST: api/Post
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
@@ -67,6 +74,7 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> Post([FromForm] String text)
             => await React(text, null);
 
+        // create a new post that reacts to an existing post
         // POST: api/React
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
@@ -78,6 +86,7 @@ namespace MicroVerse.Controllers
             return new LocalRedirectResult("/Home/Index");
         }
 
+        // delete an existing post
         // POST: api/Post/DeletePost/5
         [Authorize]
         [HttpPost("DeletePost/{id}")]
@@ -89,45 +98,47 @@ namespace MicroVerse.Controllers
                 _ => BadRequest()
             };
 
+        // block a post
         // PATCH: api/Post/5
         [Authorize]
         [HttpPatch("{id}")]
         public async Task<IActionResult> BlockPost(Guid id)
             => StatusToActionResult(await _postHelper.BlockPost(id));
 
+        // flag a post
         // PATCH: api/Post/Flag/5
         [Authorize]
         [HttpPost("Flag/{id}")]
         public async Task<IActionResult> FlagPost(Guid id)
             => StatusToActionResult(await _postHelper.FlagPost(id));
 
+        // unflag a post
         // PATCH: api/Post/Unflag/5
         [Authorize]
         [HttpPost("Unflag/{id}")]
         public async Task<IActionResult> UnflagPost(Guid id)
             => StatusToActionResult(await _postHelper.ActivatePost(id));
 
+        // get all flagged posts
         // GET: api/Post/Flagged
         [Authorize]
         [HttpGet("Flagged")]
         public IActionResult GetFlaggedPosts()
             => Json(_postHelper.GetFlaggedPosts());
 
+        // upvote a post
         // POST: api/Post/Up/user@id.com/5
         [Authorize]
         [HttpPost("Up/{user}/{id}")]
         public async Task<IActionResult> UpvotePost(String user, Guid id)
             => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Up));
 
+        // downvote a post
         // POST: api/Post/Down/user@id.com/5
         [Authorize]
         [HttpPost("Down/{user}/{id}")]
         public async Task<IActionResult> DownvotePost(String user, Guid id)
             => StatusToActionResult(await _postHelper.VotePost(id, user, Vote.Votes.Down));
-
-        [HttpGet("Search/{phrase}")]
-        public IActionResult SearchPosts(String phrase)
-            => Json(_searchHelper.Posts(phrase));
 
         // Create a post using token for user authentication
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -136,9 +147,8 @@ namespace MicroVerse.Controllers
         //api/Post/AuthPost
         public async Task<IActionResult> AuthPost([FromBody] AuthPostViewModel model)
         {
-            User user = new();
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            user = await _userHelper.GetUserId(userId);
+            var user = await _userHelper.GetUserId(userId);
             if (user is null)
             {
                 return NotFound();
@@ -149,6 +159,7 @@ namespace MicroVerse.Controllers
             return CreatedAtAction("AuthPost", new { id = post.Id }, post);
         }
 
+        // get all statistics about posts
         [HttpGet("UserPostingStats")]
         public async Task<IActionResult> UserPostingStatistics()
         {
@@ -166,11 +177,11 @@ namespace MicroVerse.Controllers
                           .Count());
             }
 
-            var mostFollowed = (await _userHelper.GetUsers())
+            var mostFollowed = (await _userHelper.GetUsersWithFollows())
                 .OrderByDescending(u => u.Followers.Count())
                 .Take(5);
 
-            var mostUpvoted = _postHelper.GetPostsGroupedByUser()
+            var mostUpvoted = groups
                 .OrderByDescending
                 (
                     g => g.Select(p => p.Votes)
@@ -181,7 +192,7 @@ namespace MicroVerse.Controllers
                 )
                 .Take(5);
 
-            var mostDownvoted = _postHelper.GetPostsGroupedByUser()
+            var mostDownvoted = groups
                 .OrderByDescending
                 (
                     g => g.Select(p => p.Votes)
@@ -251,6 +262,8 @@ namespace MicroVerse.Controllers
             return Json(stats);
         }
 
+        // helper method to convert a Status (result of PostHelper methods) into
+        // an ActionResult
         private IActionResult StatusToActionResult(Status status)
             => status switch
             {
@@ -263,7 +276,6 @@ namespace MicroVerse.Controllers
         // GET: api/Post/fromuser?userName=xxxxx
         [HttpGet]
         [Route("fromuser")]
-
         public ActionResult<IEnumerable<Post>> GetUserPost(String userName)
         => Json(_postHelper.GetPostsByUser(userName));
     }

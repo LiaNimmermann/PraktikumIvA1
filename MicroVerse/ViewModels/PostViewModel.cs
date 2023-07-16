@@ -1,8 +1,8 @@
-using System.Text;
 using MicroVerse.Models;
 
 namespace MicroVerse.ViewModels
 {
+    // A view model for posts
     public class PostViewModel
     {
         public Guid Id { get; set; }
@@ -18,33 +18,6 @@ namespace MicroVerse.ViewModels
         public Vote.Votes VoteByUser { get; set; } = Vote.Votes.Undefined; // vote by currently logged in user
 
         public PostViewModel() { }
-
-        public PostViewModel(Guid id, string body, PostViewModel reactsTo, DateTime createdAt, string displayName, string authorImage, string username, int upvotes, int downvotes, int status)
-        {
-            Id = id;
-            Body = body;
-            ReactsTo = reactsTo;
-            CreatedAt = createdAt;
-            DisplayedName = displayName;
-            AuthorImage = authorImage;
-            Username = username;
-            Upvotes = upvotes;
-            Downvotes = downvotes;
-            Status = status;
-        }
-
-        public PostViewModel(Guid id, string body, PostViewModel? reactsTo, DateTime createdAt, string displayName, string username, int upvotes, int downvotes)
-        {
-            Id = id;
-            Body = body;
-            ReactsTo = reactsTo;
-            CreatedAt = createdAt;
-            DisplayedName = displayName;
-            Username = username;
-            Upvotes = upvotes;
-            Downvotes = downvotes;
-            AuthorImage = "https://picsum.photos/200/200";
-        }
 
         public PostViewModel(Post post, IEnumerable<User> users)
         {

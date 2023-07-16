@@ -1,15 +1,13 @@
 ﻿using MicroVerse.Models;
-using System.Text;
 
 namespace MicroVerse.ViewModels
 {
+    // a view model for the profile view
     public class ProfileViewModel
     {
         public ProfileViewModel
         (
             User user,
-            IEnumerable<User> followers,
-            IEnumerable<User> following,
             List<PostViewModel> posts,
             bool follows,
             string role
@@ -18,8 +16,8 @@ namespace MicroVerse.ViewModels
             UserName = user.UserName;
             DisplayedName = user.DisplayedName;
             Bio = user.Bio;
-            FollowerCount = followers.Count();
-            FollowsCount = following.Count();
+            FollowerCount = user.Followers.Count();
+            FollowsCount = user.Following.Count();
             Posts = posts;
             Follows = new FollowButtonModel(user.UserName, follows);
             Role = role;

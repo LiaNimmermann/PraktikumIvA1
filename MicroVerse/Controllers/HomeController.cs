@@ -21,32 +21,29 @@ namespace MicroVerse.Controllers
         private readonly FollowsHelper _followsHelper;
 
         public HomeController
-        (
-            ILogger<HomeController> logger,
-            ApplicationDbContext context,
-            UserManager<User> userManager,
-            IConfiguration configuration
-        )
-        {
-            _logger = logger;
-            _context = context;
-            _userManager = userManager;
-            _userHelper = new UserHelper(_context, _userManager);
-            _postHelper = new PostHelper(_context);
-            _searchHelper = new SearchHelper(_context);
-            _followsHelper = new FollowsHelper(_context);
-        }
+            (
+                ILogger<HomeController> logger,
+                ApplicationDbContext context,
+                UserManager<User> userManager,
+                IConfiguration configuration
+            )
+            {
+                _logger = logger;
+                _context = context;
+                _userManager = userManager;
+                _userHelper = new UserHelper(_context, _userManager);
+                _postHelper = new PostHelper(_context);
+                _searchHelper = new SearchHelper(_context);
+                _followsHelper = new FollowsHelper(_context);
+            }
 
+        // The Route for the Home Page
         public async Task<IActionResult> Index()
         {
-            var currentUser = User?.Identity?.Name ?? "";
-            var users = await _userHelper.GetUsers();
+            var currentUser = GetCurrentUser();
+            var users = _userHelper.GetUsers();
             var postsList = _postHelper.GetPosts()
-                .Select(post => new PostViewModel(post, users)
-                {
-                    VoteByUser = post.VotingByUser(currentUser)
-                })
-                .ToList();
+                .PostsToViewModel(users, currentUser);
 
             var followsList = (await _followsHelper.GetFollowings(currentUser))
                 .ToList();
@@ -55,45 +52,49 @@ namespace MicroVerse.Controllers
             return View(model);
         }
 
+        // The Followed Feed shows a logged-in user his own posts and all posts
+        // by other users that he followed.
         [Authorize]
         public async Task<IActionResult> FollowedFeed()
         {
-            var currentUser = User?.Identity?.Name ?? "";
-            var users = await _userHelper.GetUsers();
+            var currentUser = GetCurrentUser();
             var followsList = (await _followsHelper.GetFollowings(currentUser)).ToList();
-            var postList = _postHelper.GetPostsByUserAndFollows(User?.Identity?.Name)
-                .Select(post => new PostViewModel(post, users)
-            {
-                VoteByUser = post.VotingByUser(currentUser)
-            })
-                .ToList();
+            var postList = _postHelper.GetPostsByUserAndFollows
+                (
+                    currentUser,
+                    followsList.Select(u => u.UserName).Append(currentUser)
+                ).PostsToViewModel(_userHelper.GetUsers(), currentUser);
+
             var model = new HomeViewModel(followsList, postList);
             return View(model);
         }
 
+        // Shows a user's Profile: his username, displayed name, number of
+        // followers and followings, bio and posts by the user and all users he
+        // follows. 
         [Authorize]
         public async Task<IActionResult> Profile(string id)
         {
-            var user = await _userHelper.GetUser(id);
+            var users = _userHelper.GetUsers();
+            var user = await _userHelper.GetUserWithFollows(id);
+            var currentUser = GetCurrentUser();
 
             if (user is null)
             {
                 return NotFound();
             }
 
-            var postsList = await InitializePostList(user);
-
-            var currentUser = User?.Identity?.Name ?? "";
-
-            var followsList = await _followsHelper.GetFollowings(id);
-            var followerList = await _followsHelper.GetFollowers(id);
             var follows = await _followsHelper.Follows(currentUser, id);
+
+            var postsList = _postHelper.GetPostsByUserAndFollows
+                (
+                    user.UserName,
+                    user.Following
+                ).PostsToViewModel(users, currentUser);
 
             var model = new ProfileViewModel
                 (
                     user,
-                    followerList,
-                    followsList,
                     postsList,
                     follows,
                     await _userHelper.GetUserRole(user.UserName)
@@ -111,19 +112,7 @@ namespace MicroVerse.Controllers
         public IActionResult Error()
             => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 
-        private async Task<List<PostViewModel>> InitializePostList(User user)
-        {
-            var users = await _userHelper.GetUsers();
-            var currentUser = User?.Identity?.Name ?? "";
-
-            return _postHelper.GetPostsByUserAndFollows(user.UserName)
-                .Select(post => new PostViewModel(post, users)
-                {
-                    VoteByUser = post.VotingByUser(currentUser)
-                })
-                .ToList();
-        }
-
+        // Searches for a user
         [Authorize]
         [HttpPost] //Search functionality (using Displayed Name)
         public async Task<IActionResult> Search(string searchTerm)
@@ -146,25 +135,26 @@ namespace MicroVerse.Controllers
             return View("SearchResult", searchResults);
         }
 
+        // The moderation page
         [Authorize(Roles = "Moderator, Admin")]
-        public async Task<IActionResult> Moderation()
+        public IActionResult Moderation()
         {
-            var currentUser = User?.Identity?.Name ?? "";
-            var users = await _userHelper.GetUsers();
+            var currentUser = GetCurrentUser();
+            var users = _userHelper.GetUsers();
             var postsList = _postHelper.GetFlaggedPosts()
-                .Select(post => new PostViewModel(post, users)
-                {
-                    VoteByUser = post.VotingByUser(currentUser)
-                })
-                .ToList();
+                .PostsToViewModel(users, currentUser);
             return View(postsList);
-        } 
+        }
 
+        // The statistics page
         [Authorize(Roles = "Moderator, Admin")]
         public IActionResult Statistics() => View();
 
+        // An overview of users for admins
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> AdminUserOverview()
-            => View((await _userHelper.GetUserWithRole()).ToList());
+        public IActionResult AdminUserOverview()
+            => View(_userHelper.GetUserWithRole().ToList());
+
+        private string GetCurrentUser() => User?.Identity?.Name ?? "";
     }
 }

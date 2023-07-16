@@ -4,52 +4,93 @@ using MicroVerse.Models;
 
 namespace MicroVerse.Helper
 {
+    // The post helper manages database access for all things post related
     public class PostHelper
     {
         private readonly ApplicationDbContext _context;
-        private List<Post> _postsCache = new List<Post>();
-        private Boolean _modified = true;
 
         public PostHelper(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        // get a list with all posts
         public IEnumerable<Post> GetPosts()
-            => _modified
-            ? UpdateCache()
-            : _postsCache;
-
-        public IEnumerable<IGrouping<String, Post>> GetPostsGroupedByUser()
-            => GetPosts()
-        .GroupBy(post => post.AuthorId)
-        .OrderByDescending(g => g.Count())
-        .Take(10);
-
-        public IEnumerable<Post> GetPostsByUser(String userName)
-            => GetPosts().Where(p => p.AuthorId == userName);
-
-        public IEnumerable<Post> GetPostsByUserAndFollows(String userName)
         {
-            var followsList = _context.Follows
-                .Where(f => f.FollowingUserId == userName)
-                .Select(f => f.FollowedUserId)
+            var posts = _context.Post
+                .OrderByDescending(post => post.CreatedAt)
                 .ToList();
-            followsList.Add(userName);
-            var posts = followsList
-                .SelectMany(f => GetPostsByUser(f))
-                .OrderByDescending(post => post.CreatedAt);
+
+            var votes = _context.Vote.AsEnumerable();
+
+            foreach (var post in posts)
+            {
+                post.Votes = votes
+                    .Where(v => v.PostId == post.Id)
+                    .ToList();
+            }
+
             return posts;
         }
 
+        // get a certain post
+        public Post? GetPost(Guid id)
+        {
+            var post = _context.Post.FirstOrDefault(p => p.Id == id);
+
+            if (post is null)
+            {
+                return post;
+            }
+
+            var votes = _context.Vote.AsEnumerable();
+
+            post.Votes = votes
+                .Where(v => v.PostId == post.Id)
+                .ToList();
+
+            return post;
+        }
+
+        // get all posts grouped by user
+        public IEnumerable<IGrouping<String, Post>> GetPostsGroupedByUser()
+            => GetPosts()
+            .GroupBy(post => post.AuthorId)
+            .OrderByDescending(g => g.Count())
+            .Take(10);
+
+        // get all posts by a certain user
+        public IEnumerable<Post> GetPostsByUser(String userName)
+            => GetPosts().Where(p => p.AuthorId == userName);
+
+        // get all posts by a certain user and by all users that that user
+        // follows
+        public async Task<IEnumerable<Post>> GetPostsByUserAndFollows(String userName)
+        {
+            var followsList = (await (new FollowsHelper(_context))
+                               .GetFollowings(userName))
+                .Select(u => u.UserName)
+                .Append(userName);
+            return GetPostsByUserAndFollows(userName, followsList);
+        }
+
+        // same as above, but the followsList should be provided as an argument
+        public IEnumerable<Post> GetPostsByUserAndFollows
+        (
+            String userName,
+            IEnumerable<String> followsList
+        )
+            => GetPostsGroupedByUser()
+            .Where(g => followsList.Any(f => f == g.First<Post>().AuthorId))
+            .SelectMany(p => p)
+            .OrderByDescending(post => post.CreatedAt);
+
+        // get all flagged posts
         public IEnumerable<Post> GetFlaggedPosts()
             => GetPosts()
             .Where(p => p.Activation == Activation.flagged);
 
-        public Post? GetPost(Guid id)
-            => GetPosts()
-            .FirstOrDefault(p => p.Id == id);
-
+        // change an existing post
         public async Task<Status> PutPost(Guid id, Post post)
         {
             if (id != post.Id)
@@ -62,7 +103,6 @@ namespace MicroVerse.Helper
             try
             {
                 await _context.SaveChangesAsync();
-                _modified = true;
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -79,6 +119,7 @@ namespace MicroVerse.Helper
             return Status.NoContent;
         }
 
+        // create a new post
         public async Task<Post> Post
         (
             String text,
@@ -86,28 +127,18 @@ namespace MicroVerse.Helper
             Guid? postId
         )
         {
-            try
+            var reactsTo = postId is null ? null : GetPost(postId.Value);
+            var post = new Post(text, userName)
             {
-                var reactsTo = postId is null ? null : GetPost(postId.Value);
-                var post = new Post(text, userName)
-                {
-                    ReactsTo = reactsTo
-                };
-                _context.Post.Add(post);
-                await _context.SaveChangesAsync();
+                ReactsTo = reactsTo
+            };
+            _context.Post.Add(post);
+            await _context.SaveChangesAsync();
 
-                return post;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                _modified = true;
-            }
+            return post;
         }
 
+        // delete post
         public async Task<Status> DeletePost(Guid id)
             => await ModifyPost(id, async post =>
             {
@@ -117,15 +148,19 @@ namespace MicroVerse.Helper
                 return Status.Redirect;
             });
 
+        // block a post
         public async Task<Status> BlockPost(Guid id)
             => await ModifyPostActivation(id, Activation.blocked);
 
+        // flag a post
         public async Task<Status> FlagPost(Guid id)
             => await ModifyPostActivation(id, Activation.flagged);
 
+        // activate a post
         public async Task<Status> ActivatePost(Guid id)
             => await ModifyPostActivation(id, Activation.active);
 
+        // modify the activation of a post
         public async Task<Status> ModifyPostActivation
         (
             Guid id,
@@ -137,6 +172,7 @@ namespace MicroVerse.Helper
             return await PutPost(id, post);
         });
 
+        // vote on a post
         public async Task<Status> VotePost(Guid id, String user, Vote.Votes upvote)
             => await ModifyPost(id, async post =>
             {
@@ -145,48 +181,21 @@ namespace MicroVerse.Helper
                 return await PutPost(id, post);
             });
 
+        // modify a post
         public async Task<Status> ModifyPost
         (
             Guid id,
             Func<Post, Task<Status>> change
         )
         {
-            try
-            {
-                var post = await _context.Post.FindAsync(id);
-                if (post is null)
-                {
-                    return Status.NotFound;
-                }
+            var post = await _context.Post.FindAsync(id);
 
-                return await change(post);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                _modified = true;
-            }
+            return post is null
+                ? Status.NotFound
+                : await change(post);
         }
 
-        private IEnumerable<Post> UpdateCache()
-        {
-            _postsCache = _context.Post
-                .OrderByDescending(post => post.CreatedAt)
-                .ToList();
-
-            foreach (var post in _postsCache)
-            {
-                post.Votes = _context.Vote
-                    .Where(v => v.PostId == post.Id)
-                    .ToList();
-            }
-
-            return _postsCache;
-        }
-
+        // check if a post with the given id exists
         private bool PostExists(Guid id)
         {
             return GetPosts().Any(e => e.Id == id);

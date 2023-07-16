@@ -2,6 +2,7 @@
 
 namespace MicroVerse.Models
 {
+    // the data class for a post
     public class Post
     {
 
@@ -10,13 +11,6 @@ namespace MicroVerse.Models
             Id = Guid.NewGuid();
             Body = body;
             AuthorId = authorId;
-        }
-        public Post(string body, string authorId, Post reactsTo)
-        {
-            Id = Guid.NewGuid();
-            Body = body;
-            AuthorId = authorId;
-            ReactsTo = reactsTo;
         }
 
         [Key]
@@ -31,6 +25,7 @@ namespace MicroVerse.Models
 
         public Post? ReactsTo { get; set; }
 
+        // The activation of the post (active, blocked, flagged)
         [Required]
         public Activation Activation { get; set; } = Activation.active;
 
@@ -40,13 +35,9 @@ namespace MicroVerse.Models
         [Required]
         public List<Vote> Votes { get; set; } = new List<Vote>();
 
+        // If a certain user has voted this post, this returns his vote. Else undefined.
         public Vote.Votes VotingByUser(String userName)
             => Votes.FirstOrDefault(v => v.UserId == userName)?.Upvote
             ?? Vote.Votes.Undefined;
-
-        public Boolean FuzzyMatches(String phrase)
-            => AuthorId.Contains(phrase)
-            || Body.Contains(phrase)
-            || (ReactsTo?.Body.Contains(phrase) ?? false);
     }
 }

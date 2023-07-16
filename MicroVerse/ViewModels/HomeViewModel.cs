@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using MicroVerse.Models;
+﻿using MicroVerse.Models;
 
 namespace MicroVerse.ViewModels
 {

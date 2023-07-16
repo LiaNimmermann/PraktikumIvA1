@@ -2,6 +2,7 @@
 
 namespace MicroVerse.Models
 {
+    // a follows relationship
     public class Follows
     {
         public Follows(string followingUserId, string followedUserId)

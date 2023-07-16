@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MicroVerse.Controllers
 {
+    // The UserController provides an API for all things user related.
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : Controller
@@ -45,27 +46,31 @@ namespace MicroVerse.Controllers
         }
 
 
+        // get all users
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser()
-            => Json(await _userHelper.GetUsers());
+        public ActionResult<IEnumerable<User>> GetUser()
+            => Json(_userHelper.GetUsers());
 
+        // get a user with role
         // GET: api/User/WithRole
         [HttpGet("WithRole")]
         public async Task<ActionResult<IEnumerable<UserWithRole>>> GetUserWithRole()
-            => Json(await _userHelper.GetUserWithRole());
+            => Json(_userHelper.GetUserWithRole());
 
+        // get a user by his username
         // GET: api/User/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(string id)
+        [HttpGet("{userName}")]
+        public async Task<ActionResult<User>> GetUser(string userName)
         {
-            var user = await _userHelper.GetUser(id);
+            var user = await _userHelper.GetUser(userName);
 
             return user is null
                 ? NotFound()
                 : user;
         }
 
+        // change an existing user
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
@@ -73,6 +78,7 @@ namespace MicroVerse.Controllers
         public async Task<IActionResult> PutUser(string id, User userModel)
             => StatusToActionResult(await _userHelper.PutUser(id, userModel));
 
+        // change an existing user
         // POST: api/User
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [Authorize]
@@ -82,39 +88,46 @@ namespace MicroVerse.Controllers
             ? Conflict()
             : CreatedAtAction("GetUser", new { id = userModel.UserName }, userModel);
 
+        // delete an existing user
         // DELETE: api/User/5
         [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
             => StatusToActionResult(await _userHelper.DeleteUser(id));
 
+        // change a user's bio
         [Authorize]
         [HttpPost("Bio/{userName}")]
         public async Task<IActionResult> ChangeBio(String userName, [FromForm] String bio)
             => StatusToActionResult(await _userHelper.ChangeBio(userName, bio));
 
+        // change a user's display name
         [Authorize]
         [HttpPost("DisplayName/{userName}")]
         public async Task<IActionResult> ChangeDisplayName(String userName, [FromForm] String displayName)
             => StatusToActionResult(await _userHelper.ChangeDisplayName(userName, displayName));
 
+        // change a user's profile picture
         [Authorize]
         [HttpPost("Picture/{userName}")]
         public async Task<IActionResult> ChangeProfilePicture(String userName, [FromForm] String imgURL)
             => StatusToActionResult(await _userHelper.ChangePicture(userName, imgURL));
 
+        // block a user
         // PATCH: api/User/5
         [Authorize(Roles = "Moderator, Admin")]
         [HttpPatch("{id}")]
         public async Task<IActionResult> BlockUser(string id)
             => StatusToActionResult(await _userHelper.BlockUser(id));
 
+        // ban a user
         // PATCH: api/User/Ban/5
         [Authorize(Roles = "Admin")]
         [HttpPatch("Ban/{id}")]
         public async Task<IActionResult> BanUser(string id)
             => StatusToActionResult(await _userHelper.BanUser(id));
 
+        // follow a user.
         [Authorize]
         [HttpPost("FollowUser")]
         public async Task<IActionResult> FollowUser([FromForm] string followerId, [FromForm] string followedId)
@@ -124,6 +137,7 @@ namespace MicroVerse.Controllers
             return new LocalRedirectResult("/Home/Profile/"+followedId);
         }
 
+        // unfollow a user
         [Authorize]
         [HttpPost("UnfollowUser")]
         public async Task<IActionResult> UnfollowUser([FromForm] string followerId, [FromForm] string followedId)
@@ -135,20 +149,24 @@ namespace MicroVerse.Controllers
             return new LocalRedirectResult("/Home/Profile/" + followedId);
         }
 
+        // get all users that a specific user follows
         // GET: api/User/Follows/id@user.com
         [HttpGet("Follows/{id}")]
         public async Task<IActionResult> GetFollows(string id)
             => Json(await _followsHelper.GetFollowings(id));
 
+        // get all users that follow a specific user
         // GET: api/User/Follower/id@user.com
         [HttpGet("Follower/{id}")]
         public async Task<IActionResult> GetFollower(string id)
             => Json(await _followsHelper.GetFollowers(id));
 
+        // get all follow relationships
         [HttpGet("Follows")]
         public async Task<IActionResult> GetAllFollows()
             => Json(await _followsHelper.GetFollows());
 
+        // search for a user
         [HttpGet("Search/{phrase}")]
         public IActionResult SearchUsers(String phrase)
         {
@@ -157,6 +175,7 @@ namespace MicroVerse.Controllers
             return Json(users);
         }
 
+        // set a user's role
         [HttpPost("SetUserRole")]
         public async Task<IActionResult> SetUserRole([FromForm] string userId, [FromForm] string role)
         {
@@ -184,6 +203,7 @@ namespace MicroVerse.Controllers
             return NoContent();
         }
 
+        // get a user's role
         [HttpGet("GetUserRole")]
         public async Task<string> GetUserRole(string id)
             => await _userHelper.GetUserRole(id);
@@ -224,6 +244,8 @@ namespace MicroVerse.Controllers
             return Unauthorized();
         }
 
+        // a helper method that converts a Status (returned by UserHelper
+        // methods) to an ActionResult
         private IActionResult StatusToActionResult(Status status)
             => status switch
             {

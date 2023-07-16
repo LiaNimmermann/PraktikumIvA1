@@ -3,22 +3,17 @@ using MicroVerse.Models;
 
 namespace MicroVerse.Helper
 {
+    // A helper for search actions
     public class SearchHelper
     {
     	private readonly ApplicationDbContext _context;
 
         public SearchHelper(ApplicationDbContext context)
         {
-        	_context =context;
+        	_context = context;
         }
-        
-        public IEnumerable<Post> Posts(String phrase)
-        {
-        	return _context.Post
-                .AsEnumerable()
-                .Where(p => p.FuzzyMatches(phrase));
-        }
-        
+
+        // search all users which contain the string phrase in their data
         public IEnumerable<User> Users(String phrase)
         {
         	return _context.Users

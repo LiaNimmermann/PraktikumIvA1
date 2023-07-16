@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
 using MicroVerse.Data;
 using MicroVerse.Models;
 using MicroVerse.ViewModels;
-using System.Text;
 
 namespace MicroVerse.Helper
 {
+    // The user helper manages database access for all things user related
     public class UserHelper
     {
         private readonly ApplicationDbContext _context;
@@ -28,29 +27,69 @@ namespace MicroVerse.Helper
           _userManager = userManager;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
-        {
-            var fH = new FollowsHelper(_context);
-            var users = _context.Users.ToList();
-            foreach (var user in users)
-            {
-                user.Followers = (await fH.GetFollowers(user.UserName))
-                    .Select(u => u.UserName);
-                user.Following = (await fH.GetFollowings(user.UserName))
-                    .Select(u => u.UserName);
-            }
-            return users;
-        }
+        // Get a list with all users
+        public IEnumerable<User> GetUsers() => _context.Users.ToList();
 
+        // Get a specific user using his username
         public async Task<User?> GetUser(String userName)
             => await _context.Users
             .FirstOrDefaultAsync(user => userName == user.UserName);
 
-
+        // Get a specific user using his userId
         public async Task<User?> GetUserId(String userId)
             => await _context.Users
             .FirstOrDefaultAsync(user => userId == user.Id);
 
+        // Get a specific user object with all his follows
+        public async Task<User?> GetUserWithFollows(String userName)
+        {
+            var fH = new FollowsHelper(_context);
+            var user = await GetUser(userName);
+            if (user is null)
+            {
+                return null;
+            }
+            var grouped = (await fH.GetFollows())
+                .Where(f => f.FollowedUserId == user.UserName || f.FollowingUserId == user.UserName)
+                .AsEnumerable()
+                .GroupBy(f => f.FollowedUserId == user.UserName);
+
+            user.Followers = grouped
+                .FirstOrDefault(g => g.First().FollowedUserId == user.UserName)
+                ?.Select(f => f.FollowingUserId) ?? Enumerable.Empty<String>();
+            user.Following = grouped
+                .FirstOrDefault(g => g.First().FollowingUserId == user.UserName)
+                ?.Select(f => f.FollowedUserId) ?? Enumerable.Empty<String>();
+
+            return user;
+        }
+
+        // Get all users with all their follows
+        public async Task<IEnumerable<User>> GetUsersWithFollows()
+        {
+            var fH = new FollowsHelper(_context);
+            var users = GetUsers();
+
+            var follows = await fH.GetFollows();
+            foreach (var user in users)
+            {
+                var grouped = follows
+                    .Where(f => f.FollowedUserId == user.UserName || f.FollowingUserId == user.UserName)
+                    .AsEnumerable()
+                    .GroupBy(f => f.FollowedUserId == user.UserName);
+
+                user.Followers = grouped
+                    .FirstOrDefault(g => g.First().FollowedUserId == user.UserName)
+                    ?.Select(f => f.FollowingUserId) ?? Enumerable.Empty<String>();
+                user.Following = grouped
+                    .FirstOrDefault(g => g.First().FollowingUserId == user.UserName)
+                    ?.Select(f => f.FollowedUserId) ?? Enumerable.Empty<String>();
+            }
+
+            return users;
+        }
+
+        // Change an existing user in the database
         public async Task<Status> PutUser(String userName, User userModel)
         {
             if (userName != userModel.UserName)
@@ -77,6 +116,7 @@ namespace MicroVerse.Helper
             return Status.NoContent;
         }
 
+        // Change an existing user in the database
         public async Task<User?> PostUser(User userModel)
         {
             _context.Users.Add(userModel);
@@ -99,21 +139,21 @@ namespace MicroVerse.Helper
             return userModel;
         }
 
-        public async Task<IEnumerable<UserWithRole>> GetUserWithRole()
-        {
-            var users = await GetUsers();
-
-            return users.Select(u => new UserWithRole
-                                (
-                                    u,
-                                    new IdentityRole
-                                    (
-                                        GetRoleOfUser(u).Result
-                                    )
-                                )
+        // Get a UserWithRole, i.e. a user object also including the user's role
+        // (user, mod, admin)
+        public IEnumerable<UserWithRole> GetUserWithRole()
+            => GetUsers()
+            .Select(u => new UserWithRole
+                    (
+                        u,
+                        new IdentityRole
+                        (
+                            GetRoleOfUser(u).Result
+                        )
+                    )
             );
-        }
 
+        // Delete a user
         public async Task<Status> DeleteUser(String userName)
             => await ChangeUser(userName, async user =>
             {
@@ -123,6 +163,7 @@ namespace MicroVerse.Helper
                 return Status.NoContent;
             });
 
+        // Change the bio of a user
         public async Task<Status> ChangeBio(string userName, string bio)
             => await ChangeUser(userName, async user =>
             {
@@ -130,6 +171,7 @@ namespace MicroVerse.Helper
                 return await PutUser(userName, user);
             });
 
+        // Change the display name of a user
         public async Task<Status> ChangeDisplayName(string userName, string displayName)
             => await ChangeUser(userName, async user =>
             {
@@ -137,6 +179,7 @@ namespace MicroVerse.Helper
                 return await PutUser(userName, user);
             });
 
+        // Change the profile picture of a user
         public async Task<Status> ChangePicture(string userName, String imgLink)
             => await ChangeUser(userName, async user =>
             {
@@ -144,12 +187,15 @@ namespace MicroVerse.Helper
                 return await PutUser(userName, user);
             });
 
+        // Block a user
         public async Task<Status> BlockUser(string id)
             => await ChangeUserActivation(id, Activation.blocked);
 
+        // Ban a user
         public async Task<Status> BanUser(string id)
             => await ChangeUserActivation(id, Activation.banned);
 
+        // Change the activation of a user (active, blocked, banned)
         private async Task<Status> ChangeUserActivation(String id, Activation activation)
             => await ChangeUser(id, async user =>
             {
@@ -157,6 +203,7 @@ namespace MicroVerse.Helper
                 return await PutUser(id, user);
             });
 
+        // Get the role of a user
         public async Task<String> GetUserRole(string id)
         {
             var user = await GetUser(id)
@@ -165,6 +212,7 @@ namespace MicroVerse.Helper
             return await GetRoleOfUser(user);
         }
 
+        // Get the role of a user (helper method)
         private async Task<String> GetRoleOfUser(User user)
         {
             if (_userManager is null)
@@ -186,6 +234,7 @@ namespace MicroVerse.Helper
             }
         }
 
+        // change a user
         private async Task<Status> ChangeUser
         (
             String id,
@@ -201,6 +250,7 @@ namespace MicroVerse.Helper
             return await change(user);
         }
 
+        // test if a user exists
         private bool UserExists(string id)
         {
             return _context.Users.Any(e => e.UserName == id);

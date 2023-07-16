@@ -22,6 +22,8 @@ namespace MicroVerse.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // setup composite keys
             modelBuilder.Entity<Vote>()
                 .HasKey(v => new { v.PostId, v.UserId });
             modelBuilder.Entity<Follows>()
