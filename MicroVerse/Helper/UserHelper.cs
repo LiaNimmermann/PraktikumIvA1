@@ -35,6 +35,11 @@ namespace MicroVerse.Helper
             => await _context.Users
             .FirstOrDefaultAsync(user => userName == user.UserName);
 
+        // Get a specific user using his email
+        public async Task<User?> GetUserEmail(String Email)
+            => await _context.Users
+            .FirstOrDefaultAsync(user => Email == user.Email);
+
         // Get a specific user using his userId
         public async Task<User?> GetUserId(String userId)
             => await _context.Users

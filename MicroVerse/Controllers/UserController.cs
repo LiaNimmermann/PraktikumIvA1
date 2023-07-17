@@ -70,6 +70,20 @@ namespace MicroVerse.Controllers
                 : user;
         }
 
+        // Get a user by his Email
+        // GET: api/User/GetuserEmail?Email=xxxxx
+        [HttpGet]
+        [Route("GetuserEmail")]
+        public async Task<ActionResult<User>> GetUserEmail(string Email)
+        {
+            var user = await _userHelper.GetUserEmail(Email);
+
+            return user is null
+                ? NotFound()
+                : user;
+        }
+
+
         // change an existing user
         // PUT: api/User/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
