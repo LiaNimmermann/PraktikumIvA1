@@ -23,6 +23,11 @@
         Route="LoginPage" />
 
     <ShellContent
+        Title="View My Profile" FlyoutItemIsVisible="True" 
+        ContentTemplate="{DataTemplate view:MyProfile}"
+        Route="MyProfile" />
+    
+    <ShellContent
         Title="MicroVerse - CreatePostPage" FlyoutItemIsVisible="False" 
         ContentTemplate="{DataTemplate view:CreatePostPage}"
         Route="CreatePostPage" />

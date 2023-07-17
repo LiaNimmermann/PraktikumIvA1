@@ -29,7 +29,10 @@ public static class MauiProgram
         builder.Services.AddSingleton<FlyoutViewModel>();
         builder.Services.AddSingleton<CreatePostViewModel>();
         builder.Services.AddTransient<ProfileViewModel>();
+        builder.Services.AddTransient<MyProfileViewModel>();
 
+
+        builder.Services.AddTransient<Views.MyProfile>();
 
         builder.Services.AddTransient<Views.ProfilePage>();
         builder.Services.AddSingleton<Views.CreatePostPage>();
