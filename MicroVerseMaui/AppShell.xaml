@@ -5,6 +5,7 @@
     xmlns:view="clr-namespace:MicroVerseMaui.Views"
     TitleColor="{DynamicResource DarkGreen}"
     Shell.FlyoutBehavior="Flyout"
+    Shell.BackgroundColor="White"
     Shell.ForegroundColor="DarkGreen">
 
 

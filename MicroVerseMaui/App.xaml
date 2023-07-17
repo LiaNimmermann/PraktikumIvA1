@@ -6,59 +6,56 @@
 
     <Application.Resources>
         <ResourceDictionary>
+
             <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
             <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
-            <Color x:Key="Primary">#FFC107</Color>
-            <Color x:Key="PrimaryDark">#FFA000</Color>
-            <Color x:Key="Accent">#00BCD4</Color>
+            <Color x:Key="Primary">#5bed1c</Color>
+            <Color x:Key="PrimaryDark">#244e12</Color>
+            <Color x:Key="Accent">#244e12</Color>
 
             <Color x:Key="LightBackground">#FAF9F8</Color>
             <Color x:Key="DarkBackground">Black</Color>
 
             <Color x:Key="CardBackground">White</Color>
-            <Color x:Key="CardBackgroundDark">#1C1C1E</Color>
+            <Color x:Key="CardBackgroundDark">#18181b</Color>
 
-            <Color x:Key="LabelText">#1F1F1F</Color>
+            <Color x:Key="LabelText">#18181b</Color>
             <Color x:Key="LabelTextDark">White</Color>
 
             <Style ApplyToDerivedTypes="True" TargetType="Page">
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource LightBackground}" />
             </Style>
 
             <Style ApplyToDerivedTypes="True" TargetType="NavigationPage">
-                <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
+                <Setter Property="BackgroundColor" Value="{StaticResource LightBackground}" />
                 <Setter Property="BarBackgroundColor" Value="{StaticResource Primary}" />
                 <Setter Property="BarTextColor" Value="White" />
             </Style>
 
             <Style TargetType="Label" x:Key="BaseLabel">
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
-                <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource LabelText}, Dark={StaticResource LabelTextDark}}" />
-            </Style>
-
-            <Style x:Key="MicroLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
-                <Setter Property="FontSize" Value="10"/>
+                <Setter Property="TextColor" Value="{StaticResource LabelText}" />
             </Style>
 
             <Style x:Key="SmallLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
-                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontSize" Value="11"/>
             </Style>
 
             <Style x:Key="MediumLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
-                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="FontSize" Value="15"/>
             </Style>
 
             <Style x:Key="LargeLabel" BasedOn="{StaticResource BaseLabel}" TargetType="Label">
-                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontSize" Value="18"/>
             </Style>
 
             <Style ApplyToDerivedTypes="True" TargetType="RefreshView">
                 <Setter Property="RefreshColor" Value="{StaticResource Primary}" />
-                <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
+                <Setter Property="Background" Value="{StaticResource LightBackground}" />
             </Style>
 
             <Style x:Key="ButtonOutline" TargetType="Button">
-                <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource LightBackground}, Dark={StaticResource DarkBackground}}" />
+                <Setter Property="Background" Value="{StaticResource LightBackground}" />
                 <Setter Property="TextColor" Value="{StaticResource Primary}" />
                 <Setter Property="BorderColor" Value="{StaticResource Primary}" />
                 <Setter Property="BorderWidth" Value="2" />
@@ -67,9 +64,9 @@
             </Style>
             <Style x:Key="CardView" TargetType="Frame">
                 <Setter Property="BorderColor" Value="#DDDDDD" />
-                <Setter Property="HasShadow" Value="{OnPlatform iOS=false, MacCatalyst=false, Default=true}" />
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="Background" Value="{AppThemeBinding Light={StaticResource CardBackground}, Dark={StaticResource CardBackgroundDark}}" />
+                <Setter Property="Background" Value="{StaticResource CardBackground}" />
+
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="IsClippedToBounds" Value="True"/>
             </Style>

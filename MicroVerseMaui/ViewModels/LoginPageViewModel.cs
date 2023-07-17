@@ -65,7 +65,9 @@ namespace MicroVerseMaui.ViewModels
 
                     await Shell.Current.GoToAsync($"//{nameof(StartPage)}");
 
-
+                    // Clear login input fields
+                    EmailInput = string.Empty;
+                    PasswordInput = string.Empty;
                 }
                 else
                 {

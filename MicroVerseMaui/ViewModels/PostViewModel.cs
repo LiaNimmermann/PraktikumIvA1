@@ -37,7 +37,7 @@ namespace MicroVerseMaui.ViewModels
             this.getPosts = getPosts;
 
         }
-        //  Navigates to the CreatePostPage.
+        // Navigates to the CreatePostPage.
         [RelayCommand]
         async Task CreatePage()
 
@@ -47,7 +47,7 @@ namespace MicroVerseMaui.ViewModels
 
         }
 
-        //  Opens the profileview page for author of selected post, while passing over parameter for clicked post info.
+        // Opens the profileview page for author of selected post, while passing over parameter for clicked post info.
         // Input: currentPost of Type Post
         [RelayCommand]
         async Task OpenProfile(Post currentPost)
@@ -76,7 +76,7 @@ namespace MicroVerseMaui.ViewModels
                     Posts.Clear();
                 foreach (var post in posts) { 
                     // Use an API call to get relevant profile info for each post's Author
-                    if (DeviceInfo.Platform == DevicePlatform.Android) // Use Helper if device is Android, for HTTPS requests over localhost
+                    if (DeviceInfo.Platform == DevicePlatform.Android) // Use Helper
                     {
                         var devSslHelper = new DevHttpsConnectionHelper(sslPort: 7028);
                         var httpClient = devSslHelper.HttpClient;

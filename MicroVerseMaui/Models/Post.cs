@@ -29,16 +29,11 @@ namespace MicroVerseMaui.Models
 
         public string displayedName { get; set; }
 
-        public Post? ReactsTo { get; set; }
-
-        [Required]
-        public Activation Activation { get; set; } = Activation.active;
 
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        [Required]
-        public List<Vote> Votes { get; set; } = new List<Vote>();
+
         
         public string Picture  { get; set; } 
 
